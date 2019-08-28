@@ -15,7 +15,7 @@ services:
       - database1
 
   nginx:
-    image: nginx:1.13
+    image: nginx:1.17.3-alpine
     ports:
       - 80:80
     volumes:

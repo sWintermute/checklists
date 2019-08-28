@@ -93,18 +93,15 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-# as declared in NginX conf, it must match /opt/services/djangoapp/static/
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-# do the same for media files, it must match /opt/services/djangoapp/media/
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-
 }
 
 SWAGGER_SETTINGS = {
