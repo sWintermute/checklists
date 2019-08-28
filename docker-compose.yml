@@ -4,6 +4,7 @@ services:
 
   djangoapp:
     build: .
+    restart: always
     volumes:
       - .:/app
       - ./static:/app/static
@@ -16,6 +17,7 @@ services:
 
   nginx:
     image: nginx:1.17.3-alpine
+    restart: always
     ports:
       - 80:80
     volumes:
@@ -29,6 +31,7 @@ services:
 
   database1:
     image: postgres:12-alpine
+    restart: always
     env_file:
       - config/db/database1_env
     networks:
