@@ -1,14 +1,15 @@
-FROM python:3.7
+FROM python:3.7-alpine3.9
 
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY Pipfile /app/
-RUN pip install pipenv
-RUN pipenv lock
-RUN pipenv install --system
-
 COPY . /app
+RUN pip install pipenv
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+ pipenv install --system --deploy --ignore-pipfile && \
+ apk --purge del .build-deps
 
 EXPOSE 8000
 
