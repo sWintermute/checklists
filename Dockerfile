@@ -3,7 +3,8 @@ FROM python:3.7-alpine3.9
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY . /app
+COPY Pipfile /app/Pipfile
+COPY Pipfile.lock /app/Pipfile.lock
 
 RUN \
  apk add --no-cache postgresql-libs && \
@@ -13,6 +14,8 @@ RUN \
  apk --purge del .build-deps
 
 EXPOSE 8000
+
+COPY . /app
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
