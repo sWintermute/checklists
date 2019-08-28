@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  djangoapp:
+    build: .
+    volumes:
+      - .:/app
+      - ./static:/app/static
+      - ./media:/app/media
+    networks:
+      - nginx_network
+      - db_network
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 8000:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/app/static
+      - ./media:/app/media
+    depends_on:
+      - djangoapp
+    networks:
+      - nginx_network
+
+  db:
+    image: postgres:12-alpine
+    env_file:
+      - config/db/database1_env
+    networks:
+      - db_network
+    volumes:
+      - database1_volume:/var/lib/postgresql/data
+
+networks:
+  nginx_network:
+    driver: bridge
+  db_network:
+    driver: bridge
+
+volumes:
+  database1_volume:

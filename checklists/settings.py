@@ -56,8 +56,12 @@ WSGI_APPLICATION = 'checklists.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'database1',
+        'USER': 'database1_role',
+        'PASSWORD': 'database1_password',
+        'HOST': 'database1',
+        'PORT': '5432',
     }
 }
 
@@ -89,6 +93,12 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+# as declared in NginX conf, it must match /opt/services/djangoapp/static/
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+# do the same for media files, it must match /opt/services/djangoapp/media/
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
