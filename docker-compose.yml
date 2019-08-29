@@ -4,10 +4,11 @@ services:
 
   backend:
     env_file: .env
-    build: .
+    build:
+      context: ./backend
     restart: on-failure
     volumes:
-      - .:/app
+      - ./backend:/app
       - ./static:/app/static
       - ./media:/app/media
     depends_on:
