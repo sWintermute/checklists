@@ -1,9 +1,8 @@
 version: '3'
 
 services:
-
   backend:
-    container_name: checklists_backend_dev
+    container_name: checklists_backend
     env_file: .env
     build:
       context: ./backend
@@ -17,7 +16,7 @@ services:
         ipv4_address: 10.5.0.5
 
   postgres_db:
-    container_name: checklists_postgres_db_dev
+    container_name: checklists_postgres_db
     env_file: .env
     image: postgres:11-alpine
     restart: on-failure
@@ -28,13 +27,15 @@ services:
         ipv4_address: 10.5.0.6
 
   nginx:
-    container_name: checklists_nginx_dev
-    image: nginx:1.17.3-alpine
+    container_name: checklists_nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
     restart: on-failure
     ports:
       - 80:80
     volumes:
-      - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
       - ./backend/static:/app/static
       - ./backend/media:/app/media
     depends_on:
@@ -44,18 +45,14 @@ services:
         ipv4_address: 10.5.0.7
       default:
 
-  frontend:
-    container_name: checklists_frontend_dev
-    image: node:10-alpine
-    command: npm run serve
-    volumes:
-      - ./.env:/app/.env:ro
-      - ./frontend:/app
-    working_dir: /app
+  postgres_backups:
+    container_name: checklists_postgres_backups
+    image: prodrigestivill/postgres-backup-local:11-alpine
     restart: on-failure
-    networks:
-      private_network:
-        ipv4_address: 10.5.0.8
+    depends_on:
+      - postgres_db
+    volumes:
+      - /tmp/backups/:/backups/
 
 networks:
   private_network:
