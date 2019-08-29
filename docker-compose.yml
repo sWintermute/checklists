@@ -3,18 +3,29 @@ version: '3'
 services:
 
   backend:
+    env_file: .env
     build: .
     restart: on-failure
     volumes:
       - .:/app
       - ./static:/app/static
       - ./media:/app/media
-    networks:
-      - nginx_network
-      - db_network
     depends_on:
       - postgres_db
+
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.5
+
+  postgres_db:
     env_file: .env
+    image: postgres:11-alpine
+    restart: on-failure
+    volumes:
+      - postgres_db_volume:/var/lib/postgresql/data
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.6
 
   nginx:
     image: nginx:1.17.3-alpine
@@ -28,22 +39,18 @@ services:
     depends_on:
       - backend
     networks:
-      - nginx_network
+      private_network:
+        ipv4_address: 10.5.0.7
+      default:
 
-  postgres_db:
-    image: postgres:11-alpine
-    restart: on-failure
-    env_file: .env
-    networks:
-      - db_network
-    volumes:
-      - postgres_db_volume:/var/lib/postgresql/data
 
 networks:
-  nginx_network:
-    driver: bridge
-  db_network:
-    driver: bridge
+  private_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+
 
 volumes:
   postgres_db_volume:
