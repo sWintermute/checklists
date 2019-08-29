@@ -118,5 +118,7 @@ venv.bak/
 **/static/drf-yasg/
 **/static/rest_framework/
 
+**/node_modules/
+
 # PyCharm
 .idea/
