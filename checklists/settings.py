@@ -57,10 +57,10 @@ WSGI_APPLICATION = 'checklists.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'database1',
-        'USER': 'database1_role',
-        'PASSWORD': 'database1_password',
-        'HOST': 'database1',
+        'NAME': 'postgres_db',
+        'USER': 'postgres_db_role',
+        'PASSWORD': 'postgres_db_password',
+        'HOST': 'postgres_db',
         'PORT': '5432',
     }
 }

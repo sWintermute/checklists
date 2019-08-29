@@ -2,9 +2,9 @@ version: '3'
 
 services:
 
-  djangoapp:
+  backend:
     build: .
-    restart: always
+    restart: on-failure
     volumes:
       - .:/app
       - ./static:/app/static
@@ -13,11 +13,11 @@ services:
       - nginx_network
       - db_network
     depends_on:
-      - database1
+      - postgres_db
 
   nginx:
     image: nginx:1.17.3-alpine
-    restart: always
+    restart: on-failure
     ports:
       - 80:80
     volumes:
@@ -25,19 +25,21 @@ services:
       - ./static:/app/static
       - ./media:/app/media
     depends_on:
-      - djangoapp
+      - backend
     networks:
       - nginx_network
 
-  database1:
-    image: postgres:12-alpine
-    restart: always
-    env_file:
-      - config/db/database1_env
+  postgres_db:
+    image: postgres:11-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_db_role
+      POSTGRES_PASSWORD: postgres_db_password
     networks:
       - db_network
     volumes:
-      - database1_volume:/var/lib/postgresql/data
+      - postgres_db_volume:/var/lib/postgresql/data
 
 networks:
   nginx_network:
@@ -46,4 +48,4 @@ networks:
     driver: bridge
 
 volumes:
-  database1_volume:
+  postgres_db_volume:
