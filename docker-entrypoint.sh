@@ -1,8 +1,5 @@
 #! /usr/bin/env sh
 
-echo Make migrations
-python manage.py makemigrations
-
 echo Migrating
 python manage.py migrate
 

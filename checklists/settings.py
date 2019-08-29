@@ -20,8 +20,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'djoser',
-    'cuser',
 
+    'user_profile',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +65,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'cuser.CUser'
+AUTH_USER_MODEL = 'user_profile.UserProfile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

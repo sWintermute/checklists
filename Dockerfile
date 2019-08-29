@@ -18,4 +18,3 @@ EXPOSE 8000
 COPY . /app
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
-
