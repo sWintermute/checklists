@@ -9,7 +9,7 @@ COPY Pipfile.lock /app/Pipfile.lock
 RUN \
  apk add --no-cache postgresql-libs && \
  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
- pip install pipenv && \
+ pip install pipenv gunicorn meinheld && \
  pipenv install --system --deploy --ignore-pipfile && \
  apk --purge del .build-deps
 
