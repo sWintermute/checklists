@@ -10,7 +10,7 @@ drf-yasg = "==1.16.1"
 packaging = "==19.1"
 djoser = "==2.0.1"
 psycopg2-binary = "==2.8.3"
-
+django-environ = "==0.4.5"
 
 [dev-packages]
 

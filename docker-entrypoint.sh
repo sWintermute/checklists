@@ -8,6 +8,7 @@ python manage.py collectstatic --noinput
 
 echo Starting Gunicorn.
 exec gunicorn checklists.wsgi:application \
+  -k egg:meinheld#gunicorn_worker \
   --name checklists \
   --bind 0.0.0.0:8000 \
   --workers 3 \

@@ -1,28 +1,40 @@
 import os
+import environ
+
+env = environ.Env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'g+nnvwg%z(rd8-01e0hk_0^row9_+zz_l#d*2-f$xdu#uc3e%g'
+DEBUG = env.bool('DEBUG')
 
-DEBUG = True
+SECRET_KEY = env.str('SECRET_KEY')
 
 ALLOWED_HOSTS = ["*"]
 
-INSTALLED_APPS = [
+# APP CONFIGURATION
+# ------------------------------------------------------------------------------
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
+THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
     'djoser',
+]
 
+LOCAL_APPS = [
     'user_profile',
 ]
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,9 +69,9 @@ WSGI_APPLICATION = 'checklists.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres_db',
-        'USER': 'postgres_db_role',
-        'PASSWORD': 'postgres_db_password',
+        'NAME': env.str('POSTGRES_DB'),
+        'USER': env.str('POSTGRES_USER'),
+        'PASSWORD': env.str('POSTGRES_PASSWORD'),
         'HOST': 'postgres_db',
         'PORT': '5432',
     }
