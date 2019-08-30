@@ -11,7 +11,7 @@ from .settings import USERPROFILE_SETTINGS
 
 @admin.register(UserProfile)
 class UserAdmin(BaseUserAdmin):
-    add_form_template = 'admin/cuser/cuser/add_form.html'
+    add_form_template = 'admin/user_profile/user_profile/add_form.html'
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),

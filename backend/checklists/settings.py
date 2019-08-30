@@ -27,10 +27,12 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'djoser',
+    'simple_history',
 ]
 
 LOCAL_APPS = [
     'user_profile',
+    'lists'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -44,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'checklists.urls'

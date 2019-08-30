@@ -24,6 +24,8 @@ sh:
 prod-sh:
 	docker exec -it /checklists_backend /bin/sh
 migrations:
-	docker exec -it /checklists_backend python manage.py makemigrations
-superuser:
+	docker exec -it /checklists_backend_dev python manage.py makemigrations
+su:
+	docker exec -it /checklists_backend_dev python manage.py createsuperuser
+prod-su:
 	docker exec -it /checklists_backend python manage.py createsuperuser
