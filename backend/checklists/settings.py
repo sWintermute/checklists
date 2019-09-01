@@ -114,8 +114,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
 }
 
@@ -128,4 +134,9 @@ SWAGGER_SETTINGS = {
             'in': 'header'
         }
     },
+    'VALIDATOR_URL': None,
 }
+
+CHOICES_SEPARATOR = ';'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True

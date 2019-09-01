@@ -44,7 +44,7 @@ class Question(models.Model):
     SHORT_TEXT = "short-text"
     RADIO = "radio"
     SELECT = "select"
-    SELECT_IMAGE = "select_image"
+    SELECT_IMAGE = "select-image"
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
 

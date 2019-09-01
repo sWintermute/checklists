@@ -1,9 +1,13 @@
-import djoser
 from django.contrib import admin
 from django.urls import path, include, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+
+admin.site.site_header = "Адмнистрирование"
+admin.site.site_title = "Адмнистрирование"
+admin.site.index_title = None
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,7 +16,8 @@ urlpatterns = [
 # API
 urlpatterns += [
     # path('api/', include('djoser.urls')),
-    path('api/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('api/', include('lists.urls')),
 ]
 
 
