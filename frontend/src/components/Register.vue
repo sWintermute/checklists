@@ -11,12 +11,12 @@
             <div>
                 <input id="email" type="email" v-model="email" required>
             </div>
-             
+
             <label for="password">Password</label>
             <div>
                 <input id="password" type="password" v-model="password" required>
             </div>
-            
+
             <label for="password-confirm">Confirm Password</label>
             <div>
                 <input id="password-confirm" type="password" v-model="password_confirmation" required>
@@ -46,7 +46,7 @@
                     email: this.email,
                     password: this.password,
                     is_admin: this.is_admin
-                }
+                };
                 this.$store.dispatch('register', data)
                .then(() => this.$router.push('/'))
                .catch(err => console.log(err))

@@ -158,7 +158,6 @@ a { text-decoration: none; }
   display: none;
 }
 @media only screen and (max-width:900px) {
-
   .nav-fostrap {
     background: #fff;
     width: 200px;
@@ -166,14 +165,13 @@ a { text-decoration: none; }
     display: block;
     position: fixed;
     left: -200px;
-    top: 0px;
+    top: 0;
     transition: left 0.25s ease;
     margin: 0;
     border: 0;
     border-radius: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 100%;
   }
   .title-mobile {
     position: fixed;
@@ -186,11 +184,7 @@ a { text-decoration: none; }
     color: #FFF;
   }
   .nav-fostrap.visible {
-    left: 0px;
-    -webkit-transition: left 0.25s ease;
-    -moz-transition: left 0.25s ease;
-    -ms-transition: left 0.25s ease;
-    -o-transition: left 0.25s ease;
+    left: 0;
     transition: left 0.25s ease;
   }
 
@@ -201,14 +195,10 @@ a { text-decoration: none; }
     height: 50px;
     margin: 0;
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     background: #28d;
     padding: 12px 0 0 10px;
-    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    -ms-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    -o-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   }
 
