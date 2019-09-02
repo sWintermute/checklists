@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from lists.models import Report
 from .models import Response, Survey, Question, Category, Answer
 
 
@@ -36,3 +37,8 @@ class ResponseAdmin(admin.ModelAdmin):
     inlines = [AnswerBaseInline]
     # specifies the order as well as which fields to act on
     readonly_fields = ("survey", "created", "updated", "interview_uuid", "user")
+
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    pass

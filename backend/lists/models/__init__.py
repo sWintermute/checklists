@@ -8,5 +8,6 @@ from .category import Category
 from .question import Question
 from .response import Response
 from .survey import Survey
+from .report import Report
 
-__all__ = ["Category", "Answer", "Category", "Response", "Survey", "Question"]
+__all__ = ["Category", "Answer", "Category", "Response", "Survey", "Question", "Report"]
