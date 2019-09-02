@@ -21,7 +21,7 @@
 		   		let email = this.email;
 		   		let password = this.password;
 		   		this.$store.dispatch('login', { email, password })
-		   		.then(() => this.$router.push('/secure'))
+		   		.then(() => this.$router.go('/secure'))
 		   		.catch(err => console.log(err))
 		   	}
 		}

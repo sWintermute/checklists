@@ -64,8 +64,29 @@
         </tr>
       </tbody>
     </table>
+    <div>
+      {{ lists }}
+    </div>
   </div>
 </template>
+
+<script>
+  import axios from 'axios';
+
+  export default {
+    name: 'home',
+    data() {
+      return {
+        lists: [],
+        errors: []
+      }
+    },
+    methods: {
+
+    }
+  }
+</script>
+
 
 <style>
   div.table-title {

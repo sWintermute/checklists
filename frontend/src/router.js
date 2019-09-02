@@ -38,7 +38,13 @@ let router = new Router({
     {
       path: '/about',
       name: 'about',
-      component: About
+      component: About,
+      meta: {
+        requiresAuth: true
+      },
+      params: {
+        token: "b15f978bfb506ac42623c96b9f39f60cc755e2da"
+      }
     }
   ]
 });
