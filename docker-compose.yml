@@ -5,6 +5,8 @@ services:
   backend:
     container_name: checklists_backend_dev
     env_file: .env
+    environment:
+      - DEBUG=True
     build:
       context: ./backend
     restart: on-failure
