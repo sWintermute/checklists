@@ -120,6 +120,8 @@ venv.bak/
 **/static/import_export/
 
 **/node_modules/
+**/package-lock.json
+
 
 # PyCharm
 .idea/
