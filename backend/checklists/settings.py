@@ -25,6 +25,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'drf_yasg',
     'djoser',
     'simple_history',
@@ -40,6 +41,7 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -143,3 +145,5 @@ CHOICES_SEPARATOR = ';'
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 APPEND_SLASH = True
+
+CORS_ORIGIN_ALLOW_ALL = True
