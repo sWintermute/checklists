@@ -32,7 +32,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    'user_profile',
+    'user_profile.apps.UserProfileConfig',
     'lists'
 ]
 
