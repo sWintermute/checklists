@@ -9,14 +9,11 @@ from . import models, serializers
 class SurveyViewset(GenericViewSet, RetrieveModelMixin, ListModelMixin):
     questions = Question.objects.all()
     queryset = models.Survey.objects.all()
-    serializer_class = serializers.SurveySerializer
+    serializer_class = serializers.SurveyListSerializer
 
     def list(self, request):
-        score = request.GET.get('score', None)
         queryset = models.Survey.objects.all()
-        if score:
-            queryset = queryset.filter(score__gte=score)
-        serializer = serializers.SurveySerializer(queryset, many=True)
+        serializer = serializers.SurveyListSerializer(queryset, many=True)
         return Response(data=serializer.data)
 
 

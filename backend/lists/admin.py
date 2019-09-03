@@ -48,7 +48,6 @@ class ResponseAdmin(admin.ModelAdmin):
     list_filter = ("survey", "created")
     date_hierarchy = "created"
     inlines = [AnswerBaseInline]
-    # specifies the order as well as which fields to act on
     readonly_fields = ("survey", "created", "updated", "interview_uuid", "user")
 
 
