@@ -28,7 +28,6 @@ def get_file_path(instance, filename):
     return os.path.join('files', slugify(name, allow_unicode=True) + ext)
 
 
-
 class FixedQuerySet(models.query.QuerySet):
 
     def delete(self):
@@ -42,20 +41,17 @@ class AuthorModel(models.Model):
     """
     Абстрактный класс всех моделей, для которых нужно реализовать логику добавления модератора и времени
     """
-    datetime_create = models.DateTimeField('Время добавления', auto_now_add=True)
-    datetime_update = models.DateTimeField('Время обновления', auto_now=True)
-    author = models.ForeignKey(user_model, verbose_name="Автор",
-                               related_name='author_%(class)s',
-                               blank=True,
-                               null=True,
-                               on_delete=models.SET_NULL)
+    # datetime_create = models.DateTimeField('Время добавления', auto_now_add=True)
+    # datetime_update = models.DateTimeField('Время обновления', auto_now=True)
+    # author = models.ForeignKey(user_model, verbose_name="Автор",
+    #                            related_name='author_%(class)s',
+    #                            blank=True,
+    #                            null=True,
+    #                            on_delete=models.SET_NULL)
 
-    author_updated = models.ForeignKey(user_model,
-                                       verbose_name="Редактор",
-                                       related_name='author_updated_%(class)s',
-                                       blank=True,
-                                       null=True,
-                                       on_delete=models.SET_NULL)
+    @property
+    def _history_user(self):
+        return self.changed_by
 
     class Meta:
         abstract = True

@@ -61,6 +61,7 @@ class Question(models.Model):
     text = models.TextField("Текст")
     order = models.IntegerField("Номер")
     required = models.BooleanField("Обязателен?")
+    is_key = models.BooleanField("Ключевой?")
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
