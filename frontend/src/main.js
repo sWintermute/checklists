@@ -1,18 +1,20 @@
 import Vue from 'vue'
-import store from '@/store'
-import router from '@/router'
+import App from './App.vue'
+import router from './router'
+import store from './store'
 
-import axios from 'axios'
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+import Axios from 'axios'
 
-import App from '@/App.vue'
-import './registerServiceWorker'
+Vue.prototype.$http = Axios;
+const token = localStorage.getItem('user-token');
+if (token) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = token
+}
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

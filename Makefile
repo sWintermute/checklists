@@ -8,7 +8,7 @@ upb:
 prod-upb:
 	docker-compose -f docker-compose-prod.yml up -d --force-recreate --build
 stop:
-	docker-compose down
+	docker-compose stop
 prod-stop:
 	docker-compose -f docker-compose-prod.yml stop
 down:
