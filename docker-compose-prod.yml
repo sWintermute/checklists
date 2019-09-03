@@ -22,6 +22,7 @@ services:
     env_file: .env
     image: postgres:11-alpine
     restart: on-failure
+    command: -p ${POSTGRES_PORT}
     volumes:
       - postgres_db_volume:/var/lib/postgresql/data
     networks:
@@ -49,8 +50,11 @@ services:
 
   postgres_backups:
     container_name: checklists_postgres_backups
+    env_file: .env
     image: prodrigestivill/postgres-backup-local:11-alpine
-    restart: on-failure
+    restart: always
+    links:
+      - postgres_db
     depends_on:
       - postgres_db
     volumes:

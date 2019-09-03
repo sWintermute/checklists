@@ -10,6 +10,7 @@ services:
     build:
       context: ./backend
     restart: on-failure
+    command: -p ${POSTGRES_PORT}
     volumes:
       - ./backend:/app
     depends_on:
@@ -23,6 +24,7 @@ services:
     env_file: .env
     image: postgres:11-alpine
     restart: on-failure
+    command: -p ${POSTGRES_PORT}
     volumes:
       - postgres_db_volume:/var/lib/postgresql/data
     networks:
@@ -48,7 +50,7 @@ services:
 
   frontend:
     container_name: checklists_frontend_dev
-    image: node:10-alpine
+    image: node:12.9-alpine
     command: npm run serve
     volumes:
       - ./.env:/app/.env:ro
