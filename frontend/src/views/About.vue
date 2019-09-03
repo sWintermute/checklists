@@ -64,25 +64,26 @@
         </tr>
       </tbody>
     </table>
-    <div>
-      {{ lists }}
-    </div>
+    {{ lists }}
   </div>
 </template>
 
 <script>
-  import axios from 'axios';
+  import { mapState } from 'vuex';
 
   export default {
     name: 'home',
     data() {
       return {
-        lists: [],
-        errors: []
       }
     },
+    created: function () {
+      this.$store.dispatch('lists');
+    },
+    computed: {
+      ...mapState(["lists"])
+    },
     methods: {
-
     }
   }
 </script>
