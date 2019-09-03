@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     'drf_yasg',
     'djoser',
     'simple_history',
+    'import_export',
 ]
 
 LOCAL_APPS = [

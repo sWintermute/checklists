@@ -117,6 +117,7 @@ venv.bak/
 **/static/admin/
 **/static/drf-yasg/
 **/static/rest_framework/
+**/static/import_export/
 
 **/node_modules/
 

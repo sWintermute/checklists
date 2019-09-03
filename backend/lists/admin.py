@@ -1,7 +1,19 @@
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ExportMixin
 
 from lists.models import Report
 from .models import Response, Survey, Question, Category, Answer
+
+
+class SurveyResource(resources.ModelResource):
+    class Meta:
+        model = Survey
+
+
+class ReportResource(resources.ModelResource):
+    class Meta:
+        model = Report
 
 
 class QuestionInline(admin.TabularInline):
@@ -16,7 +28,8 @@ class CategoryInline(admin.TabularInline):
 
 
 @admin.register(Survey)
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = SurveyResource
     list_display = ("name", "is_published", "need_logged_user", "template")
     list_filter = ("is_published", "need_logged_user")
     inlines = [QuestionInline]
@@ -40,5 +53,5 @@ class ResponseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
-    pass
+class ReportAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = ReportResource

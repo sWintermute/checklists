@@ -14,3 +14,15 @@ class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Survey
         fields = ('id', 'name', 'description', 'latest_answer_date', 'questions')
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Report
+        fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
+
+
+class ResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Response
+        fields = ('id', 'created', 'updated', 'survey', 'user')

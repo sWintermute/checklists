@@ -11,9 +11,9 @@ class Survey(FixedModel):
     description = models.TextField("Описание", blank=True, null=True)
     is_published = models.BooleanField("Users can see it and answer it", default=True, editable=False)
     need_logged_user = models.BooleanField(
-        "Only authenticated users can see it and answer it",  default=True, editable=False
+        "Only authenticated users can see it and answer it", default=True, editable=False
     )
-    display_by_question = models.BooleanField("Display by question",  default=False, editable=False)
+    display_by_question = models.BooleanField("Display by question", default=False, editable=False)
     template = models.CharField("Template", max_length=255, null=True, blank=True, editable=False)
 
     class Meta(object):
