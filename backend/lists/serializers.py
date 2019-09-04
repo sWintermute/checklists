@@ -40,7 +40,7 @@ class ReportGetSerializer(serializers.ModelSerializer):
 class ResponseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', 'user')
+        fields = ('id', 'created', 'updated', 'survey')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -48,13 +48,22 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = models.Answer
         fields = ('id', 'question', 'body')
 
+# CRUD serializers for response
 
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', 'user', 'interview_uuid', "answers")
+        fields = ('id', 'created', 'updated', 'survey', 'interview_uuid', "answers")
+
+    def create(self, validated_data):
+        profile_data = validated_data.pop('answers')
+        response = models.Response.objects.create(**validated_data)
+
+        for i in profile_data:
+            models.Answer.objects.create(response=response, **i)
+        return response
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -4,9 +4,9 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-admin.site.site_header = "Адмнистрирование"
-admin.site.site_title = "Адмнистрирование"
-admin.site.index_title = None
+admin.site.site_header = "Адмнистрирование чеклистов"
+admin.site.site_title = "Адмнистрирование чеклистов"
+admin.site.index_title = "Чеклисты"
 
 
 urlpatterns = [
