@@ -1,10 +1,10 @@
 <template>
   <div class="login">
-    <h2 class="login-header">Log in</h2>
+    <h2 class="login-header">Введите свои данные</h2>
     <form class="login-container"  @submit.prevent="login">
       <p><input required v-model="email" type="email" placeholder="Email"></p>
       <p><input required v-model="password" type="password" placeholder="Password"></p>
-      <p><input type="submit" value="Log in"></p>
+      <p><input type="submit" value="Войти"></p>
     </form>
   </div>
 </template>
@@ -21,7 +21,7 @@
 		   		let email = this.email;
 		   		let password = this.password;
 		   		this.$store.dispatch('login', { email, password })
-		   		.then(() => this.$router.go('/secure'))
+		   		.then(() => this.$router.push('/profile'))
 		   		.catch(err => console.log(err))
 		   	}
 		}
@@ -60,7 +60,7 @@
     font-size: 1.4em;
     font-weight: normal;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: none;
     color: #fff;
   }
 
