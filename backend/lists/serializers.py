@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from . import models
+from user_profile import models as umodels
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -54,3 +55,9 @@ class ResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Response
         fields = ('id', 'created', 'updated', 'survey', 'user', 'interview_uuid', "answers")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = umodels.UserProfile
+        fields = ('id', 'email', 'first_name', 'last_name', 'position')

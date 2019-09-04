@@ -70,7 +70,7 @@ class AbstractUserProfile(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    position = models.CharField(max_length=100, verbose_name="Должность", default="")
+    position = models.CharField(verbose_name="Должность", max_length=150, blank=True)
     objects = UserProfileManager()
 
     EMAIL_FIELD = 'email'
