@@ -53,10 +53,6 @@ html, body {
 }
 
 body {
-  background: #F0F0F0;
-  font-size: 15px;
-  color: #666;
-  font-family: 'Roboto', sans-serif;
   margin: 0;
 }
 

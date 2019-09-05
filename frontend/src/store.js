@@ -6,7 +6,6 @@ import store from "@vue/cli-service/generator/vuex/template/src/store";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-	strict:true,
 	state: {
 		status: '',
 		token: localStorage.getItem('token') || '',
@@ -15,6 +14,14 @@ export default new Vuex.Store({
 		lists: [],
 		reports: []
 	},
+    getters : {
+        GET_LISTS: state => state.lists,
+        GET_LIST_BY_ID: (state) => id => {
+            return state.lists.find(user => user.id === id);
+        },
+        isLoggedIn: state => !!state.token,
+        authStatus: state => state.status,
+    },
 	mutations: {
 		SET_USER(state,payload) {
 			state.user = payload
@@ -22,16 +29,19 @@ export default new Vuex.Store({
 		SET_LIST(state, payload) {
 			state.list = payload
 		},
+        SET_LIST_QUESTIONS(state, payload) {
+            state.list.questions = payload
+        },
 		SET_LISTS(state, payload) {
 			state.lists = payload
 		},
 		SET_REPORTS(state, payload) {
 			state.reports = payload
 		},
-		SET_AUTH_REQUEST(state) { //SET_AUTH_REQUEST
+		SET_AUTH_REQUEST(state) {
 			state.status = 'loading'
 		},
-		SET_AUTH_SUCCESS(state, token, user) { //SET_AUTH_ERROR
+		SET_AUTH_SUCCESS(state, token, user) {
 			state.status = 'success';
 			state.token = token;
 			state.user = user
@@ -64,6 +74,29 @@ export default new Vuex.Store({
 				})
 			})
 		},
+        change_list({commit, state}, list_id, answers){
+            return new Promise((resolve, reject) => {
+                state.list.answers = [];
+                state.list.interview_uuid = [];
+                state.list.survey = [];
+
+                axios({
+                    url: '/api/v1/response/',
+                    headers: {
+                        Authorization: 'Token ' + state.token,
+                    },
+                    method: 'POST'
+                }).then(response => {
+                    const list = response.data;
+                    localStorage.setItem('list', list);
+                    commit('SET_LIST', list);
+                    resolve(response)
+                }).catch(error => {
+                    console.log(error);
+                    reject(error)
+                })
+            })
+        },
 		list({commit, state}, list_id) {
 			return new Promise((resolve, reject) => {
 				axios({
@@ -144,15 +177,11 @@ export default new Vuex.Store({
 		logout({commit}){
 			return new Promise((resolve, reject) => {
 				commit('SET_LOGOUT');
+				// POST REQUEST
 				localStorage.removeItem('token');
 				delete axios.defaults.headers.common['Authorization'];
 				resolve()
 			})
 		}
-	},
-	getters : {
-		lists: state => state.lists,
-		isLoggedIn: state => !!state.token,
-		authStatus: state => state.status,
 	}
 })

@@ -31,15 +31,6 @@
 <style>
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 
-  body {
-    background-color: #f0f0f0;
-    color: #1b1e24;
-    font-family: "Roboto", helvetica, arial, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    text-rendering: optimizeLegibility;
-  }
-
   .login {
     max-width: 400px;
     margin: 60px auto;

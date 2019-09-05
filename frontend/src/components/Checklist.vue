@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form @submit.prevent="sendChecklist">
         <div class="checklist__info__wrap">
             <div class="checklist__info">
                 <div class="info__id">
@@ -12,17 +12,60 @@
                     <p class="info__description__text">{{list.description}}</p>
                 </div>
             </div>
+
+            <fieldset v-for="question in list.questions">
+                <div v-if="question.type === 'textarea'">
+                    <label for="textarea">{{question.text}}</label>
+                    <textarea :type="question.type" name="textarea" id="textarea" placeholder="Введите текст ..."></textarea>
+                </div>
+                <div v-else-if="question.type === 'radio'">
+                    <legend>{{question.text}}</legend>
+                    <div v-for="choice in question.choices.split(';')" v-model="answers[question.id]" v-bind="answers[question.id] = []">
+                        <input type="radio" id="radio1" name="radios" :value="choice">
+                        <label for="radio1">{{choice}}</label><br>
+                    </div>
+                </div>
+                <div v-else-if="question.type === 'select-multiple'">
+                    <legend>{{question.text}}</legend>
+                    <div v-for="choice in question.choices.split(';')" v-model="answers[question.id]" v-bind="answers[question.id] = []">
+                        <input type="checkbox" id="check1" name="checkboxes" :value="choice">
+                        <label for="check1">{{choice}}</label><br>
+                    </div>
+                </div>
+                <div v-else>
+                    <label for="firstName">{{question.text}}</label>
+                    <input v-model="answers[question.id]" :type="question.type" name="name" id="firstName" placeholder="Введите текст ...">
+                </div>
+            </fieldset>
+            <!--
+            <fieldset>
+                <label for="select-choice">Transformers fan?</label>
+                <select name="select-choice" id="select-choice">
+                    <option value="Choice 1">- - select one - -</option>
+                    <option value="Choice 2">Yes!</option>
+                    <option value="Choice 3">They're kinda cool, yeah.</option>
+                    <option value="Choice 4">Meh... not really.</option>
+                    <option value="Choice 5">What's Transformers?</option>
+                </select>
+            </fieldset>
+-->
+            <button>Submit</button>
+            {{list}}
+            <br>
+            {{answers}}
         </div>
     </form>
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapGetters } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: "checklist",
         data() {
             return {
+                answers: {},
             }
         },
         created: function () {
@@ -32,52 +75,13 @@
             ...mapState(["list"])
         },
         methods: {
+            sendChecklist() {
+                this.$store.dispatch('change_list', this.$route.params.id, this.answers);
+            }
         }
     }
 /*
-<fieldset v-for="question in list.questions">
-            <label for="firstName">Чеклист {{question.text}}</label>
-            <input :type="question.type" name="name" id="firstName" placeholder="Введите текст ...">
-        </fieldset>
 
-        <fieldset>
-            <label for="textarea">Bio</label>
-            <textarea name="textarea" id="textarea" placeholder="Tell us about yourself..."></textarea>
-        </fieldset>
-
-        <fieldset>
-            <legend>Group 1</legend>
-            <input type="checkbox" id="check1" name="checkboxes" checked>
-            <label for="check1">Checkbox 1</label><br>
-            <input type="checkbox" id="check2" name="checkboxes">
-            <label for="check2">Checkbox 2</label><br>
-            <input type="checkbox" id="check3" name="checkboxes">
-            <label for="check3">Checkbox 3</label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Group 2</legend>
-            <input type="radio" id="radio1" name="radios" checked>
-            <label for="radio1">Radio 1</label><br>
-            <input type="radio" id="radio2" name="radios">
-            <label for="radio2">Radio 2</label><br>
-            <input type="radio" id="radio3" name="radios">
-            <label for="radio3">Radio 3</label>
-        </fieldset>
-
-        <fieldset>
-            <label for="select-choice">Transformers fan?</label>
-            <select name="select-choice" id="select-choice">
-                <option value="Choice 1">- - select one - -</option>
-                <option value="Choice 2">Yes!</option>
-                <option value="Choice 3">They're kinda cool, yeah.</option>
-                <option value="Choice 4">Meh... not really.</option>
-                <option value="Choice 5">What's Transformers?</option>
-            </select>
-        </fieldset>
-
-        <button>Submit</button>
-        <div></div> {{ list }}
  */
 </script>
 
@@ -87,6 +91,8 @@
 
     form {
         max-width: 300px;
+        background: #FFFFFF;
+        padding: 10px 20px;
     }
 
     fieldset {
@@ -118,10 +124,10 @@
 
         /* List some properties that might change */
         transition-property: none;
-        transition-duration: none;
+        transition-duration: inherit;
 
         &:focus {
-            border-color: rgb(239,126,173);
+            border-color: #2980B9;
         }
     }
 
@@ -154,20 +160,20 @@
 
         /* List some properties that might change */
         transition-property: none;
-        transition-duration: none;
+        transition-duration: inherit;
     }
 
     input[type='checkbox'] {
         border-radius: 5px;
 
     &:checked {
-         background-color: rgb(239,126,173);
+         background-color: #2980B9;
          border: none;
 
     &:after {
          display: block;
          content: '';
-         height: 4px;
+         height: 8px;
          width: 10px;
          border-bottom: 3px solid #fff;
          border-left: 3px solid #fff;
@@ -181,7 +187,7 @@
         &:checked {
              border-width: 5px;
              border-color: white;
-             background-color: rgb(239,126,173);
+             background-color: #2980B9;
          }
     }
 
@@ -195,7 +201,7 @@
         color: white;
         border: none;
         border-radius: .25rem;
-        background-color: rgb(239,126,173);
+        background-color: #2980B9;
         outline: none;
         box-shadow: 0 .4rem .1rem -.3rem rgba(0,0,0,.1);
 
@@ -208,17 +214,17 @@
         transition-property: none;
 
         /* This applies to all of the above properties */
-        transition-duration: none;
+        transition-duration: inherit;
 
     &:hover {
          cursor: pointer;
-         background-color: rgb(255,150,200);
+         background-color: #2980B9;
          box-shadow: 0 0 0 0 rgba(0,0,0,0);
          transform: scale(1.1) rotateX(0);
      }
 
     &:active {
-         background-color: rgb(239,126,173);
+         background-color: #2980B9;
          transform: scale(1.05) rotateX(-10deg);
      }
     }

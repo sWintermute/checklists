@@ -40,8 +40,8 @@ class SortAnswer(object):
 
 
 class Question(models.Model):
-    TEXT = "text"
-    SHORT_TEXT = "short-text"
+    TEXT = "textarea"
+    SHORT_TEXT = "text"
     RADIO = "radio"
     SELECT = "select"
     SELECT_IMAGE = "select-image"
