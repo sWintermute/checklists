@@ -76,15 +76,25 @@ export default new Vuex.Store({
 		},
         change_list({commit, state}, list_id, answers){
             return new Promise((resolve, reject) => {
-                state.list.answers = [];
-                state.list.interview_uuid = [];
-                state.list.survey = [];
+				state.list.id = 1;
+				state.list.created = "";
+				state.list.updated = "";
+				state.list.survey = 1;
+				state.list.user = 1;
+				state.list.interview_uuid = "12345678";
+                state.list.answers = [{
+                	id: 1,
+					question: 1,
+					body: "123"
+				}];
+                console.log(state.list);
 
                 axios({
                     url: '/api/v1/response/',
                     headers: {
                         Authorization: 'Token ' + state.token,
                     },
+					data: state.list,
                     method: 'POST'
                 }).then(response => {
                     const list = response.data;
