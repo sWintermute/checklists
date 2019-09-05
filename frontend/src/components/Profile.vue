@@ -29,6 +29,7 @@
                 span.empposition__text {{ user.position }}
             div.profile__email
                 span.email__text {{ user.email }}
+        div {{user}}
 </template>
 
 <script>

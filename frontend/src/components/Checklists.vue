@@ -64,13 +64,13 @@
   }
 
   h2 {
-    font-size:1em;
+    font-size: 1.5em;
     font-weight: 300;
     text-align: center;
     display: block;
-    line-height:1em;
-    padding-bottom: 2em;
-    color: #FB667A;
+    line-height: 1em;
+    padding-bottom: 0.4em;
+    color: #000000;
   }
 
   h2 a {

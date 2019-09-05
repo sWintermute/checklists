@@ -17,7 +17,7 @@
                 <td><a :href="'checklist/' + report.id">Отчет № {{report.id}}</a></td>
                 <td>{{ report.name }}</td>
                 <td>{{ report.date_from }}</td>
-                <td v-bind:is="formatDate(report.date_to)"></td>
+                <td>{{ report.date_to }}</td>
                 <td>{{ report.checklists }}</td>
             </tr>
             </tbody>
@@ -28,6 +28,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: 'reports',
