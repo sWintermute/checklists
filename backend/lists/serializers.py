@@ -49,7 +49,6 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = ('id', 'question', 'body')
 
 
-# CRUD serializers for response
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 
