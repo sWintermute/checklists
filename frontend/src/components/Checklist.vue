@@ -15,33 +15,44 @@
                 div(v-else-if="question.type === 'radio'")
                     legend {{question.text}}
                     div(v-for="choice in question.choices.split(';')")
-                        input#radio1(type='radio' name='radios' :value='choice' v-model='answers[question.id]')
+                        input#radio1(v-model='answers[question.id]' :value='choice' type='radio' name='radios')
                         label(for='radio1') {{choice}}
                         br
                 div(v-else-if="question.type === 'select-multiple'")
                     legend {{question.text}}
                     div(v-for="(choice, id) in question.choices.split(';')")
-                        input(type='checkbox' :id="'check'+ id" name='checkboxes' :value='choice' v-model='answers[question.id]')
+                        input(v-model='answers[question.id]' :value='choice' :id="'check'+ id" type='checkbox' name='checkboxes')
                         label(:for="'check'+ id") {{choice}}
+                        br
+                div(v-else-if="question.type === 'select-image'")
+                    div
+                        div(v-if="!image")
+                            h2 Select an image
+                            input(type="file" @change="onFileChange")
+                        div(v-else)
+                            img(:src="image")
+                            button(@click="removeImage") Remove image
                         br
                 div(v-else='')
                     label(for='firstName') {{question.text}}
                     input#firstName(v-model='answers[question.id]' :type='question.type' name='name' placeholder='Введите текст ...')
             button Отправить
-            |             {{list}}
+            | {{list}}
             br
-            |             {{answers}}
+            | {{answers}}
+            br
+            | {{image}}
 </template>
 
 <script>
-    import { mapState, mapGetters } from 'vuex';
-    import axios from 'axios';
+    import { mapState } from 'vuex';
 
     export default {
         name: "checklist",
         data() {
             return {
                 answers: {},
+                image: ""
             }
         },
         created: function () {
@@ -52,7 +63,22 @@
         },
         methods: {
             sendChecklist() {
-                this.$store.dispatch('change_list', this.$route.params.id, this.answers);
+                this.$store.dispatch('change_list', this.$route.params.id, this.image);
+            },
+            onFileChange(e) {
+                let files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                this.createImage(files[0]);
+            },
+            createImage(file) {
+                let reader = new FileReader();
+                reader.onload = e => {
+                    this.image = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+            removeImage: function() {
+                this.image = "";
             }
         }
     }
@@ -62,6 +88,9 @@
 </script>
 
 <style lang="sass" scoped>
+    img
+        width: 100%
+
     form
         max-width: 300px
         background: #FFFFFF
@@ -141,7 +170,7 @@
 
     button
         display: block
-        margin: 3em auto
+        margin: 1em auto
         padding: .5rem 2rem
         font-size: 125%
         color: white
