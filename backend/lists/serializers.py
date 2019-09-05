@@ -48,8 +48,8 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = models.Answer
         fields = ('id', 'question', 'body')
 
-# CRUD serializers for response
 
+# CRUD serializers for response
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
 

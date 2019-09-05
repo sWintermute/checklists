@@ -2,8 +2,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateMode
     DestroyModelMixin
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from user_profile import models as umodels
 from . import models, serializers
@@ -14,9 +13,16 @@ class SurveyListViewset(GenericViewSet, ListModelMixin):
     serializer_class = serializers.SurveyListSerializer
 
 
-class ResponseListViewset(ListModelMixin, GenericViewSet):
+class ResponseListViewset(GenericViewSet, ListModelMixin):
     queryset = models.Response.objects.all()
     serializer_class = serializers.ResponseListSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return models.Response.objects.filter(user=self.request.user)
 
 
 class SurveyViewset(GenericViewSet, RetrieveModelMixin):
@@ -44,6 +50,16 @@ class ResponseViewset(GenericViewSet, CreateModelMixin, RetrieveModelMixin, Upda
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.update(user=self.request.user)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        return models.Response.objects.filter(user=self.request.user)
 
 
 class UserViewset(GenericViewSet, ListModelMixin):
