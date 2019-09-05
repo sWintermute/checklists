@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store.js'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
 import Login from './components/Login.vue'
-import Secure from './components/Secure.vue'
-import Register from './components/Register.vue'
+import Checklists from './components/Checklists.vue'
+import Checklist from './components/Checklist.vue'
+import Reports from './components/Reports.vue'
+import Profile from './components/Profile.vue'
 
 Vue.use(Router);
 
@@ -13,39 +13,42 @@ let router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login
     },
     {
-      path: '/register',
-      name: 'register',
-      component: Register
-    },
-    {
-      path: '/secure',
-      name: 'secure',
-      component: Secure,
+      path: '/',
+      name: 'checklists',
+      component: Checklists,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/about',
-      name: 'about',
-      component: About,
+      path: '/reports',
+      name: 'reports',
+      component: Reports,
       meta: {
         requiresAuth: true
-      },
-      params: {
-        token: "b15f978bfb506ac42623c96b9f39f60cc755e2da"
       }
-    }
+    },
+    {
+      path: '/checklist/:id',
+      name: 'checklist',
+      component: Checklist,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
   ]
 });
 
