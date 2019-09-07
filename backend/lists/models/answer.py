@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.core.exceptions import ValidationError
-from django.conf import settings
 from django.db import models
 
 from .question import Question
@@ -43,7 +42,7 @@ class Answer(models.Model):
         #  eval(self.body)
         #  It would permit to inject code into answer though.
         values = []
-        raw_values = self.body.split(f"'{settings.CHOICES_SEPARATOR}u'")
+        raw_values = self.body.split(f"', u'")
         nb_values = len(raw_values)
         for i, value in enumerate(raw_values):
             if i == 0:
@@ -59,7 +58,7 @@ class Answer(models.Model):
             if body:
                 if body[0] == "[":
                     answers = []
-                    for i, part in enumerate(body.split("'")):
+                    for i, part in enumerate(body.split('"')):
                         if i % 2 == 1:
                             answers.append(part)
                 else:
