@@ -2,7 +2,6 @@ from rest_framework import serializers
 from . import models
 from user_profile import models as umodels
 
-
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
@@ -69,29 +68,32 @@ class UserSerializer(serializers.ModelSerializer):
 class ReportQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'key_choices')
+        fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'is_key', 'key_choices')
+
+
+class ReportSurveySerializer(serializers.ModelSerializer):
+    questions = ReportQuestionSerializer(many=True)
+
+    class Meta:
+        model = models.Survey
+        fields = ('id', 'name', 'description', 'questions')
 
 
 class ReportResponseSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
-    questions = serializers.SerializerMethodField()
 
     def get_answers(self, obj):
         answers = models.Answer.objects.all()
         return AnswerSerializer(answers, many=True).data
 
-    def get_questions(self, obj):
-        questions = models.Question.objects.all()
-        return ReportQuestionSerializer(questions, many=True).data
-
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', "answers", 'questions')
+        fields = ('id', 'created', 'updated', "answers")
 
 
 class ReportGetEntitySerializer(serializers.ModelSerializer):
     responses = serializers.SerializerMethodField()
-    checklists = SurveyListSerializer(many=True)
+    checklists = ReportSurveySerializer(many=True)
 
     def get_responses(self, obj):
         responses = models.Response.objects.all()

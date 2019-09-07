@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, \
     DestroyModelMixin
 from rest_framework.permissions import IsAdminUser
@@ -65,7 +64,7 @@ class UserViewset(GenericViewSet, ListModelMixin):
         return Response(serializer.data)
 
 
-# Report viewasets
+# Report viewsets
 class ReportListViewset(GenericViewSet, ListModelMixin, CreateModelMixin, DestroyModelMixin):
     queryset = models.Report.objects.all()
     serializer_class = serializers.ReportSerializer
@@ -76,13 +75,3 @@ class ReportViewset(GenericViewSet, RetrieveModelMixin):
     queryset = models.Report.objects.all()
     serializer_class = serializers.ReportGetEntitySerializer
     permission_classes = (IsAdminUser,)
-
-    # def get_object(self):
-    #     queryset = self.get_queryset()
-    #     qfilter = {}
-    #
-    #     qfilter['pk'] = self.lookup_field
-    #
-    #     obj = get_object_or_404(queryset, **qfilter)
-    #     obj.responses = models.Response.objects.all()
-    #     return obj
