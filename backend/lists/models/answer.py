@@ -56,13 +56,11 @@ class Answer(models.Model):
         if question.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:
             choices = question.get_clean_choices()
             if body:
-                if body[0] == "[":
-                    answers = []
-                    for i, part in enumerate(body.split('"')):
-                        if i % 2 == 1:
-                            answers.append(part)
-                else:
-                    answers = [body]
+                answers = []
+                for i, part in enumerate(body.split("'")):
+                    if i % 2 == 1:
+                        answers.append(part)
+
             for answer in answers:
                 if answer not in choices:
                     msg = "Impossible answer '{}'".format(body)
