@@ -44,7 +44,7 @@ class AnswerBaseInline(admin.StackedInline):
 
 @admin.register(Response)
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ("interview_uuid", "survey", "created", "user")
+    list_display = ("id", "survey", "created", "user")
     list_filter = ("survey", "created")
     date_hierarchy = "created"
     inlines = [AnswerBaseInline]

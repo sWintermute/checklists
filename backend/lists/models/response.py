@@ -41,8 +41,8 @@ class Response(FixedModel):
     interview_uuid = models.CharField("Interview unique identifier", max_length=36)
 
     class Meta(object):
-        verbose_name = "Set of answers to surveys"
-        verbose_name_plural = "Sets of answers to surveys"
+        verbose_name = "Ответ на чеклист"
+        verbose_name_plural = "Ответы начеклисты"
 
     def __str__(self):
         msg = "Response to {} by {}".format(self.survey, self.user)
