@@ -11,37 +11,77 @@
             fieldset(v-for='question in list.questions')
                 div(v-if="question.type === 'textarea'")
                     label(for='textarea') {{question.text}}
-                    textarea#textarea(:type='question.type' name='textarea' placeholder='Введите текст ...')
+                    textarea#textarea(
+                        :type='question.type'
+                        name='textarea'
+                        placeholder='Введите текст ...'
+                        )
                 div(v-else-if="question.type === 'radio'")
                     legend {{question.text}}
                     div(v-for="choice in question.choices.split(';')")
-                        input#radio1(type='radio' name='radios' :value='choice' v-model='answers[question.id]')
+                        input#radio1(
+                            type='radio'
+                            name='radios'
+                            :value='choice'
+                            v-model='answers[question.id]'
+                            )
                         label(for='radio1') {{choice}}
                         br
                 div(v-else-if="question.type === 'select-multiple'")
                     legend {{question.text}}
                     div(v-for="(choice, id) in question.choices.split(';')")
-                        input(type='checkbox' :id="'check'+ id" name='checkboxes' :value='choice' v-model='answers[question.id]')
+                        input(
+                            type='checkbox'
+                            :id="'check'+ id"
+                            :value="choice"
+                            name='checkboxes'
+                            v-model='test'
+                            @change="answers[question.id] = test.join(';')"
+                            )
                         label(:for="'check'+ id") {{choice}}
                         br
+                div(v-else-if="question.type === 'select-image'")
+                    div(v-if="!answers[question.id]")
+                        h2 Select an image
+                        input(
+                            type="file"
+                            @change="onFileChange($event, question.id)"
+                            )
+                    div(v-else)
+                        img(
+                            :src="image"
+                            )
+                        button(
+                            @click="removeImage(question.id)"
+                            ) Remove image
+                    br
                 div(v-else='')
                     label(for='firstName') {{question.text}}
-                    input#firstName(v-model='answers[question.id]' :type='question.type' name='name' placeholder='Введите текст ...')
+                    input#firstName(
+                        v-model='answers[question.id]'
+                        :type='question.type'
+                        name='name'
+                        placeholder='Введите текст ...'
+                        )
             button Отправить
-            |             {{list}}
+            | {{list}}
             br
-            |             {{answers}}
+            | {{answers}}
+            br
+            | {{test}}
 </template>
 
 <script>
-    import { mapState, mapGetters } from 'vuex';
-    import axios from 'axios';
+    import { mapState } from 'vuex';
 
     export default {
         name: "checklist",
         data() {
             return {
-                answers: {},
+                test: [],
+                image: "",
+                answers: {
+                },
             }
         },
         created: function () {
@@ -52,16 +92,36 @@
         },
         methods: {
             sendChecklist() {
-                this.$store.dispatch('change_list', this.$route.params.id, this.answers);
+                this.$store.commit('SET_ANSWERS', this.answers);
+                this.$store.dispatch('create_list', this.$route.params.id);
+            },
+            onFileChange(e, id) {
+                console.log(e);
+                console.log(id);
+                let files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                this.createImage(files[0], id);
+            },
+            createImage(file, id) {
+                let reader = new FileReader();
+                reader.onload = e => {
+                    this.image = e.target.result;
+                    this.answers[id] = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+            removeImage(id) {
+                this.answers[id] = "";
+                this.image = "";
             }
         }
     }
-/*
-
- */
 </script>
 
 <style lang="sass" scoped>
+    img
+        width: 100%
+
     form
         max-width: 300px
         background: #FFFFFF
@@ -141,7 +201,7 @@
 
     button
         display: block
-        margin: 3em auto
+        margin: 1em auto
         padding: .5rem 2rem
         font-size: 125%
         color: white

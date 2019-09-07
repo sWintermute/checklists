@@ -21,12 +21,11 @@
                     td {{ report.date_from }}
                     td {{ report.date_to }}
                     td {{ report.checklists }}
-        |         {{reports}}
+        | {{reports}}
 </template>
 
 <script>
     import { mapState } from 'vuex';
-    import axios from 'axios';
 
     export default {
         name: 'reports',

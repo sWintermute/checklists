@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 
 import Axios from 'axios'
+import VueFormGenerator from 'vue-form-generator';
+
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('user-token');
@@ -12,6 +14,8 @@ if (token) {
 }
 
 Vue.config.productionTip = false;
+
+Vue.use(VueFormGenerator);
 
 new Vue({
   router,

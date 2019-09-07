@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from './store.js'
 import Login from './components/Login.vue'
 import Checklists from './components/Checklists.vue'
-import Checklist from './components/Checklist.vue'
+import Checklist from './views/Checklist.vue'
 import Reports from './components/Reports.vue'
 import Profile from './components/Profile.vue'
 

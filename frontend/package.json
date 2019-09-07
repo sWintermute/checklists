@@ -13,7 +13,8 @@
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vue-form-generator": "^3.0.0-beta.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.1",

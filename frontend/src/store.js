@@ -6,16 +6,19 @@ import store from "@vue/cli-service/generator/vuex/template/src/store";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+	strict: true,
 	state: {
 		status: '',
 		token: localStorage.getItem('token') || '',
 		user: {},
 		list: {},
 		lists: [],
+		answers: [],
 		reports: []
 	},
     getters : {
         GET_LISTS: state => state.lists,
+		GET_LIST: state => state.list,
         GET_LIST_BY_ID: (state) => id => {
             return state.lists.find(user => user.id === id);
         },
@@ -25,6 +28,10 @@ export default new Vuex.Store({
 	mutations: {
 		SET_USER(state,payload) {
 			state.user = payload
+		},
+		SET_ANSWERS(state, payload) {
+			console.log(state);
+			state.answers = payload
 		},
 		SET_LIST(state, payload) {
 			state.list = payload
@@ -74,20 +81,20 @@ export default new Vuex.Store({
 				})
 			})
 		},
-        change_list({commit, state}, list_id, answers){
+		create_list({commit, state}, list_id){
             return new Promise((resolve, reject) => {
 				state.list.id = 1;
 				state.list.created = "";
 				state.list.updated = "";
-				state.list.survey = 1;
+				state.list.survey = list_id;
 				state.list.user = 1;
-				state.list.interview_uuid = "12345678";
-                state.list.answers = [{
-                	id: 1,
-					question: 1,
-					body: "123"
-				}];
-                console.log(state.list);
+                state.list.answers = [];
+                var test = state.answers;
+				console.log(test);
+				for (let [key, value] of Object.entries(test)) {
+					state.list.answers.push({question: key, body: value});
+				}
+                console.log(state.list.answers);
 
                 axios({
                     url: '/api/v1/response/',
