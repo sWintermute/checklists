@@ -3,8 +3,7 @@ FROM python:3.7-alpine3.9
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY Pipfile /app/Pipfile
-COPY Pipfile.lock /app/Pipfile.lock
+COPY Pipfile Pipfile.lock /app/
 
 RUN \
  apk add --no-cache postgresql-libs && \

@@ -41,7 +41,7 @@ class Response(models.Model):
 
     class Meta(object):
         verbose_name = "Ответ на чеклист"
-        verbose_name_plural = "Ответы начеклисты"
+        verbose_name_plural = "Ответы на чеклисты"
 
     def __str__(self):
         msg = "Response to {} by {}".format(self.survey, self.user)
