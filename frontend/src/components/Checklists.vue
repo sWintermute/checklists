@@ -1,23 +1,20 @@
 <template lang="pug">
-  .checklists__block
-    .table__title
-      h3.table__title__text &CHcy;&iecy;&kcy;-&lcy;&icy;&scy;&tcy;&ycy;
-    table.table__container
-      thead
-        tr
-          th
-            h1 № п/п
-          th
-            h1 Параметры
-          th
-            h1 Примечание
-      tbody
-        tr(v-for='list in lists')
-          td
-            a(:href="'checklist/' + list.id") Чек-лист № {{list.id}}
-          td {{ list.name }}
-          td {{ list.description }}
-    |     {{lists}}
+    .quiz-window
+        .quiz-window-header
+            .quiz-window-title Чеклисты
+        .quiz-window-body
+            .gui-window-awards
+                ul.guiz-awards-row.guiz-awards-header
+                    li.guiz-awards-header-title № п/п
+                    li.guiz-awards-header-track Параметры
+                    li.guiz-awards-header-time Примечание
+                ul.guiz-awards-row.guiz-awards-row-even(v-for='list in lists')
+                    a(:href="'checklist/' + list.id")
+                        li.guiz-awards-title
+                            | Чек-лист № {{list.id}}
+                            .guiz-awards-subtitle
+                        li.guiz-awards-track {{ list.name }}
+                        li.guiz-awards-time {{ list.description }}
 </template>
 
 <script>
@@ -41,97 +38,109 @@
 </script>
 
 
-<style lang="sass">
-  @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700)
+<style>
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 
-  body
-    font-family: 'Open Sans', sans-serif
-    font-weight: 300
-    line-height: 1.42em
-    color: #A7A1AE
-    background-color: #1F2739
+  * {box-sizing: border-box;}
+  *:hover, *:focus {outline:0}
 
-  h1
-    font-size: 3em
-    font-weight: 300
-    line-height: 1em
-    text-align: center
-    color: #4DC3FA
+  html {height: 100%;}
 
-  h2
-    font-size: 1.5em
-    font-weight: 300
-    text-align: center
-    display: block
-    line-height: 1em
-    padding-bottom: 0.4em
-    color: #000000
-    a
-      font-weight: 700
-      text-transform: uppercase
-      color: #FB667A
-      text-decoration: none
+  body {
+      height: 100%;
+      background: rgba(0, 0, 0, 0.04);
+      font-family: 'Roboto', sans-serif;
+      font-weight: 300;
+      font-size: 17px;
+      color:#777;
+  }
+  button, select, input {
+      font-family: 'Roboto', sans-serif;
+      font-size: 17px;
+  }
+  .quiz-window {
+      margin: auto;
+      max-width: 600px;
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 1px 1px 4px -1px black;
+  }
+  .quiz-window-header {
+      padding: 20px 15px;
+      text-align:center;
+      position: relative;
+  }
+  .quiz-window-title {
+      font-size: 26px;
+  }
+  .quiz-window-body {
+      background-color: #f9f9f9;
+  }
+  .guiz-awards-row {
+      margin:0;
+      padding: 10px 40px;
+      list-style: none;
+  }
+  .guiz-awards-row:after {
+      content: '';
+      display: table;
+      clear:both;
+  }
+  .guiz-awards-row-even {
+      background-color: #fff;
+      border-bottom: 1px solid #d4d4d4;
+  }
+  .guiz-awards-row li {
+      display:inline-block;
+      vertical-align: top;
+      float: left;
+  }
+  .guiz-awards-header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #d4d4d4;
+  }
+  .guiz-awards-title {
+      width: 40%;
+      min-width: 160px;
+      font-size: 18px;
+      font-weight: normal;
+      padding-top: 3px;
+  }
+  .guiz-awards-title a:hover {
+      color: black;
+      transition: color 0.5s;
+  }
+  .guiz-awards-header-title {
+      width: 40%;
+      min-width: 160px;
+  }
+  .guiz-awards-subtitle {
+      color: #858585;
+      font-size: 14px;
+      font-weight: 300;
+  }
+  .guiz-awards-track, .guiz-awards-time {
+      width: 22%;
+      min-width: 80px;
+      font-size: 18px;
+      line-height: 45px
+  }
+  .guiz-awards-header-track, .guiz-awards-header-time {
+      width: 22%;
+      min-width: 100px;
+  }
+  .guiz-awards-track .null, .guiz-awards-time .null {
+      color:#bababa;
+  }
 
-  .table__container
-    th h1
-      font-weight: bold
-      font-size: 1em
-      text-align: center
-      color: #185875
-    tr td a
-      font-weight: bold
-      font-size: 1em
-      text-align: center
-      color: #185875
-      &:hover
-        text-decoration: underline
-    td
-      font-weight: normal
-      font-size: 1em
-      -webkit-box-shadow: 0 2px 2px -2px #0E1119
-      -moz-box-shadow: 0 2px 2px -2px #0E1119
-      box-shadow: 0 2px 2px -2px #0E1119
-      padding-bottom: 2%
-      padding-top: 2%
-      padding-left: 2%
-    text-align: left
-    overflow: hidden
-    width: 80%
-    margin: 0 auto
-    display: table
-    padding: 0 0 8em 0
-    th
-      padding-bottom: 2%
-      padding-top: 2%
-      padding-left: 2%
-    tr
-      &:nth-child(odd)
-        background-color: #323C50
-      &:nth-child(even)
-        background-color: #2C3446
-    th
-      background-color: #1F2739
-    td:first-child
-      color: #FB667A
-    tr:hover
-      background-color: #464A52
-      -webkit-box-shadow: 0 6px 6px -6px #0E1119
-      -moz-box-shadow: 0 6px 6px -6px #0E1119
-      box-shadow: 0 6px 6px -6px #0E1119
+  .guiz-awards-but-back i {
+      font-size: 26px;
+      line-height: 17px;
+      margin-right: 20px;
+      position: relative;
+      top: 2px;
+  }
 
-  /* Background-color of the odd rows
-
-  /* Background-color of the even rows
-
-  @media (max-width: 800px)
-    .table__container
-      td:nth-child(4), th:nth-child(4)
-        display: none
-
-  .checklists__block
-
-  .table__title
-    text-align: center
-
-  h3.table__title__text
 </style>

@@ -1,27 +1,20 @@
 <template lang="pug">
-    .checklists__block
-        .table__title
-            h3.table__title__text Отчеты
-        table.table__container
-            thead
-                tr
-                    th
-                        h1 № п/п
-                    th
-                        h1 Название
-                    th(colspan='2')
-                        h1 Дата
-                    th
-                        h1 Количество листов
-            tbody
-                tr(v-for='report in reports')
-                    td
-                        a(:href="'checklist/' + report.id") Отчет № {{report.id}}
-                    td {{ report.name }}
-                    td {{ report.date_from }}
-                    td {{ report.date_to }}
-                    td {{ report.checklists }}
-        | {{reports}}
+    .quiz-window
+        .quiz-window-header
+            .quiz-window-title Отчеты
+        .quiz-window-body
+            .gui-window-awards
+                ul.guiz-awards-row.guiz-awards-header
+                    li.guiz-awards-header-title № п/п
+                    li.guiz-awards-header-track Название
+                    li.guiz-awards-header-time Дата
+                ul.guiz-awards-row.guiz-awards-row-even(v-for='report in reports')
+                    a(:href="'report/' + report.id")
+                        li.guiz-awards-title
+                            | Отчет № {{report.id}}
+                            .guiz-awards-subtitle
+                        li.guiz-awards-track {{ report.name }}
+                        li.guiz-awards-time {{ report.date_from }}
 </template>
 
 <script>
