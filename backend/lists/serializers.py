@@ -96,15 +96,21 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
     responses = serializers.SerializerMethodField()
     checklists = serializers.SerializerMethodField()
 
-    def get_responses(self, obj):
-        responses = models.Response.objects.filter(created=obj.date_from)
-        return ReportResponseSerializer(responses, many=True).data
-
     def get_checklists(self, obj):
         lists = []
         for i in obj.checklists.all():
             lists += models.Survey.objects.filter(id=i.id)
         return ReportSurveySerializer(lists, many=True).data
+
+    def get_responses(self, obj):
+        resps = []
+        for i in obj.checklists.all():
+            resps += models.Response.objects.filter(survey=i.id)
+
+        resps = list(filter(lambda x: x.created >= obj.date_from, resps))
+        resps = list(filter(lambda x: x.created <= obj.date_to, resps))
+
+        return ReportResponseSerializer(resps, many=True).data
 
     class Meta:
         model = models.Report
