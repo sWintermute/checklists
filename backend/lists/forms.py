@@ -5,8 +5,8 @@ from django.core.files.base import ContentFile
 from django.forms import models
 from django.urls import reverse
 
-from apps.lists.models import Answer, Question, Response
-from apps.lists.signals import survey_completed
+from .models import Answer, Question, Response
+from .signals import survey_completed
 # from apps.lists.widgets import ImageSelectWidget
 # from bootstrap4.widgets import RadioSelectButtonGroup
 # from django.core.files.storage import default_storage

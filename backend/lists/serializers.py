@@ -2,6 +2,7 @@ from rest_framework import serializers
 from . import models
 from user_profile import models as umodels
 
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
@@ -93,11 +94,17 @@ class ReportResponseSerializer(serializers.ModelSerializer):
 
 class ReportGetEntitySerializer(serializers.ModelSerializer):
     responses = serializers.SerializerMethodField()
-    checklists = ReportSurveySerializer(many=True)
+    checklists = serializers.SerializerMethodField()
 
     def get_responses(self, obj):
-        responses = models.Response.objects.all()
+        responses = models.Response.objects.filter(created=obj.date_from)
         return ReportResponseSerializer(responses, many=True).data
+
+    def get_checklists(self, obj):
+        lists = []
+        for i in obj.checklists.all():
+            lists += models.Survey.objects.filter(id=i.id)
+        return ReportSurveySerializer(lists, many=True).data
 
     class Meta:
         model = models.Report
