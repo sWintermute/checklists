@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import store from "@vue/cli-service/generator/vuex/template/src/store";
+import router from "./router";
 
 Vue.use(Vuex);
 
@@ -13,15 +13,12 @@ export default new Vuex.Store({
 		user: {},
 		list: {},
 		lists: [],
+		filledLists: [],
 		answers: [],
-		reports: []
+		reports: [],
+		report: {}
 	},
     getters : {
-        GET_LISTS: state => state.lists,
-		GET_LIST: state => state.list,
-        GET_LIST_BY_ID: (state) => id => {
-            return state.lists.find(user => user.id === id);
-        },
         isLoggedIn: state => !!state.token,
         authStatus: state => state.status,
     },
@@ -30,7 +27,6 @@ export default new Vuex.Store({
 			state.user = payload
 		},
 		SET_ANSWERS(state, payload) {
-			console.log(state);
 			state.answers = payload
 		},
 		SET_LIST(state, payload) {
@@ -42,8 +38,14 @@ export default new Vuex.Store({
 		SET_LISTS(state, payload) {
 			state.lists = payload
 		},
+		SET_FILLED_LISTS(state, payload) {
+			state.lists = payload
+		},
 		SET_REPORTS(state, payload) {
 			state.reports = payload
+		},
+		SET_REPORT(state, payload) {
+			state.report = payload
 		},
 		SET_AUTH_REQUEST(state) {
 			state.status = 'loading'
@@ -71,7 +73,7 @@ export default new Vuex.Store({
 					},
 					method: 'GET'
 				}).then(response => {
-					const user = response.data[0];
+					const user = response.data;
 					localStorage.setItem('user', user);
 					commit('SET_USER', user);
 					resolve(response)
@@ -90,12 +92,9 @@ export default new Vuex.Store({
 				state.list.user = 1;
                 state.list.answers = [];
                 var test = state.answers;
-				console.log(test);
 				for (let [key, value] of Object.entries(test)) {
 					state.list.answers.push({question: key, body: value});
 				}
-                console.log(state.list.answers);
-
                 axios({
                     url: '/api/v1/response/',
                     headers: {
@@ -107,7 +106,8 @@ export default new Vuex.Store({
                     const list = response.data;
                     localStorage.setItem('list', list);
                     commit('SET_LIST', list);
-                    resolve(response)
+                    resolve(response);
+                    router.push('/')
                 }).catch(error => {
                     console.log(error);
                     reject(error)
@@ -164,6 +164,25 @@ export default new Vuex.Store({
 					const reports = response.data;
 					localStorage.setItem('lists', reports);
 					commit('SET_REPORTS', reports);
+					resolve(response)
+				}).catch(error => {
+					console.log(error);
+					reject(error)
+				})
+			})
+		},
+		report({commit, state},  report_id) {
+			return new Promise((resolve, reject) => {
+				axios({
+					url: '/api/v1/report/' + report_id + '/',
+					headers: {
+						Authorization: 'Token ' + state.token,
+					},
+					method: 'GET'
+				}).then(response => {
+					const report = response.data;
+					localStorage.setItem('report', report);
+					commit('SET_REPORT', report);
 					resolve(response)
 				}).catch(error => {
 					console.log(error);

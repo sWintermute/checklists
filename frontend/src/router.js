@@ -4,6 +4,7 @@ import store from './store.js'
 import Login from './components/Login.vue'
 import Checklists from './components/Checklists.vue'
 import Checklist from './views/Checklist.vue'
+import Report from './views/Report.vue'
 import Reports from './components/Reports.vue'
 import Profile from './components/Profile.vue'
 
@@ -12,6 +13,10 @@ Vue.use(Router);
 let router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '*',
+      redirect: '/'
+    },
     {
       path: '/login',
       name: 'login',
@@ -37,6 +42,14 @@ let router = new Router({
       path: '/checklist/:id',
       name: 'checklist',
       component: Checklist,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/report/:id',
+      name: 'report',
+      component: Report,
       meta: {
         requiresAuth: true
       }

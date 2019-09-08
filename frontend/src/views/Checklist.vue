@@ -49,7 +49,7 @@
                             )
                     div(v-else)
                         img(
-                            :src="image"
+                            :src="answers[question.id]"
                             )
                         button(
                             @click="removeImage(question.id)"
@@ -64,11 +64,6 @@
                         placeholder='Введите текст ...'
                         )
             button Отправить
-            | {{list}}
-            br
-            | {{answers}}
-            br
-            | {{test}}
 </template>
 
 <script>
@@ -96,8 +91,6 @@
                 this.$store.dispatch('create_list', this.$route.params.id);
             },
             onFileChange(e, id) {
-                console.log(e);
-                console.log(id);
                 let files = e.target.files || e.dataTransfer.files;
                 if (!files.length) return;
                 this.createImage(files[0], id);
@@ -105,20 +98,44 @@
             createImage(file, id) {
                 let reader = new FileReader();
                 reader.onload = e => {
-                    this.image = e.target.result;
                     this.answers[id] = e.target.result;
                 };
                 reader.readAsDataURL(file);
             },
             removeImage(id) {
                 this.answers[id] = "";
-                this.image = "";
             }
         }
     }
 </script>
 
 <style lang="sass" scoped>
+    body
+        font-family: 'Open Sans', sans-serif
+        font-weight: 300
+        line-height: 1.42em
+        color: #A7A1AE
+        background-color: #1F2739
+        h1
+            font-size: 3em
+            font-weight: 300
+            line-height: 1em
+            text-align: center
+            color: #4DC3FA
+        h2
+            font-size: 1.5em
+            font-weight: 300
+            text-align: center
+            display: block
+            line-height: 1em
+            padding-bottom: 0.4em
+            color: #000000
+            a
+                font-weight: 700
+                text-transform: uppercase
+                color: #FB667A
+                text-decoration: none
+
     img
         width: 100%
 

@@ -4,15 +4,15 @@
       .nav-fostrap
         ul
           li(v-if='isLoggedIn')
-            router-link(to='/') &CHcy;&iecy;&kcy;-&lcy;&icy;&scy;&tcy;&ycy;
+            router-link(to='/') Чек-листы
           li(v-if='isLoggedIn')
-            router-link(to='/reports') &Ocy;&tcy;&chcy;&iecy;&tcy;&ycy;
+            router-link(to='/reports') Отчеты
           li(v-if='isLoggedIn')
-            router-link(to='/profile') &Pcy;&rcy;&ocy;&fcy;&icy;&lcy;&softcy;
+            router-link(to='/profile') Профиль
           li(v-if='isLoggedIn')
-            a(@click='logout') &Vcy;&ycy;&khcy;&ocy;&dcy;
+            a(@click='logout') Выйти
           li(v-else='')
-            router-link(to='/login') &Vcy;&khcy;&ocy;&dcy;
+            router-link(to='/login') Войти
     .container
       router-view
 
@@ -44,19 +44,15 @@
 </script>
 
 <style lang="sass">
-  *
-    box-sizing: border-box
-    &::before, &::after
-      box-sizing: border-box
-
-  html
-    height: 100%
 
   body
-    height: 100%
     margin: 0
 
   a
+    font-family: 'Roboto', sans-serif
+    font-weight: 300
+    font-size: 20px
+    color: #777
     text-decoration: none
 
   .container
