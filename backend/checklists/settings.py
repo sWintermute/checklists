@@ -27,8 +27,6 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'djoser',
-    'simple_history',
-    'import_export',
 ]
 
 LOCAL_APPS = [
@@ -47,7 +45,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'checklists.urls'
@@ -139,7 +136,5 @@ SWAGGER_SETTINGS = {
 }
 
 CHOICES_SEPARATOR = ';'
-
-IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 APPEND_SLASH = True

@@ -68,6 +68,4 @@ class Answer(models.Model):
                     raise ValidationError(msg)
 
     def __str__(self):
-        return "{} to '{}' : '{}'".format(
-            self.__class__.__name__, self.question, self.body
-        )
+        return f"{self.__class__.__name__} to '{self.question}'"

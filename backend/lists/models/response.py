@@ -3,7 +3,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from .fixed_model import FixedModel
 from .survey import Survey
 
 try:
@@ -17,7 +16,7 @@ except (ImportError, AttributeError):
     user_model = User
 
 
-class Response(FixedModel):
+class Response(models.Model):
     """
         A Response object is a collection of questions and answers with a
         unique interview uuid.

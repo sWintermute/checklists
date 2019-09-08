@@ -162,15 +162,6 @@ class ResponseForm(models.ModelForm):
                 q_id = int(field_name.split("_")[1])
                 question = Question.objects.get(pk=q_id)
                 answer = Answer(question=question)
-                # if question.type == 'select_image':
-                #     if field_value is None:
-                #         filename = '---'
-                #     else:
-                #         filename = f"{uuid.uuid4().__str__()[0:8]}_{field_value.__str__()}"
-                #         default_storage.save(filename, ContentFile(field_value.file.read()))
-                #     answer.body = filename
-                # else:
-                #     answer.body = field_value
                 answer.body = field_value
                 data["responses"].append((answer.question.id, answer.body))
 

@@ -11,8 +11,6 @@ packaging = "==19.1"
 djoser = "==2.0.1"
 psycopg2-binary = "==2.8.3"
 django-environ = "==0.4.5"
-django-simple-history = "==2.7.3"
-django-import-export = "==1.2.0"
 
 [dev-packages]
 

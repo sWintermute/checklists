@@ -3,10 +3,8 @@
 from django.db import models
 from django.urls import reverse
 
-from .fixed_model import FixedModel
 
-
-class Survey(FixedModel):
+class Survey(models.Model):
     name = models.CharField("Имя", max_length=400)
     description = models.TextField("Описание", blank=True, null=True)
     is_published = models.BooleanField("Users can see it and answer it", default=True, editable=False)
