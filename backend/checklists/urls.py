@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic import RedirectView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -8,9 +9,11 @@ admin.site.site_header = "Адмнистрирование чеклистов"
 admin.site.site_title = "Адмнистрирование чеклистов"
 admin.site.index_title = "Чеклисты"
 
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^favicon\.ico$', favicon_view),
 ]
 
 # API
@@ -19,7 +22,6 @@ urlpatterns += [
     path('auth/', include('djoser.urls.authtoken')),
     path('api/', include('lists.urls')),
 ]
-
 
 # Swagger
 schema_view = get_schema_view(
