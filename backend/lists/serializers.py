@@ -97,7 +97,7 @@ class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
 # Update ?
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
-    photo = AttachmentSerializer(many=True)
+    photo = AttachmentSerializer(many=True, required=False)
 
     class Meta:
         model = models.Response
@@ -135,7 +135,7 @@ class ReportSurveySerializer(serializers.ModelSerializer):
 
 class ReportResponseSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
-    photo = AttachmentSerializer(many=True)
+    photo = AttachmentSerializer(many=True, required=False)
 
     def get_answers(self, obj):
         answers = models.Answer.objects.all()
