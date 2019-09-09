@@ -5,7 +5,7 @@ set -o pipefail
 cmd="$@"
 
 function postgres_ready(){
-python << END
+python3 << END
 import sys
 import psycopg2
 import environ
@@ -31,16 +31,16 @@ done
 >&2 echo "Postgres is up - continuing..."
 
 >&2 echo "Migrating..."
-python manage.py migrate
+python3 manage.py migrate
 
 >&2 echo "Collect static..."
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 
 if [[ ${DEBUG} == 'TRUE' ]] || [[ ${DEBUG} == 'True' ]] || [[ ${DEBUG} == '1' ]]
 then
   >&2 echo "Starting debug server..."
-  exec python manage.py runserver 0.0.0.0:8000
+  exec python3 manage.py runserver 0.0.0.0:8000
 else
     >&2 echo "Starting Gunicorn..."
     exec gunicorn checklists.wsgi:application \
