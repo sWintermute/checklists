@@ -38,7 +38,7 @@ class Question(models.Model):
     SHORT_TEXT = "text"
     RADIO = "radio"
     SELECT = "select"
-    SELECT_IMAGE = "select-image"
+    # SELECT_IMAGE = "select-image"
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
 
@@ -48,7 +48,7 @@ class Question(models.Model):
         (RADIO, "Выбор одного варианта"),
         (SELECT, "Выпадающий список вариантов"),
         (SELECT_MULTIPLE, "Выбор нескольких вариантов"),
-        (SELECT_IMAGE, "Изображение"),
+        # (SELECT_IMAGE, "Изображение"),
         (INTEGER, "Целое"),
     )
 

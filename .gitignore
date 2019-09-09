@@ -117,11 +117,13 @@ venv.bak/
 **/static/admin/
 **/static/drf-yasg/
 **/static/rest_framework/
-**/static/import_export/
+
+# Backend media files
+**/backend/media/
 
 **/node_modules/
 **/package-lock.json
 
-
 # PyCharm
 .idea/
+
