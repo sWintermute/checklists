@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 
 import Axios from 'axios'
-import VueFormGenerator from 'vue-form-generator';
+import CheckboxRadio from 'vue-checkbox-radio';
+
 
 
 Vue.prototype.$http = Axios;
@@ -15,7 +16,7 @@ if (token) {
 
 Vue.config.productionTip = false;
 
-Vue.use(VueFormGenerator);
+Vue.use(CheckboxRadio);
 
 new Vue({
   router,

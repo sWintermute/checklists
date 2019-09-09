@@ -91,8 +91,7 @@ export default new Vuex.Store({
 				state.list.survey = list_id;
 				state.list.user = 1;
                 state.list.answers = [];
-                var test = state.answers;
-				for (let [key, value] of Object.entries(test)) {
+				for (let [key, value] of Object.entries(state.answers)) {
 					state.list.answers.push({question: key, body: value});
 				}
                 axios({

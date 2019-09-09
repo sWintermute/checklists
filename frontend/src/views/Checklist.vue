@@ -21,10 +21,9 @@
                     div(v-for="choice in question.choices.split(';')")
                         input#radio1(
                             type='radio'
-                            name='radios'
                             :value='choice'
                             v-model='answers[question.id]'
-                            )
+                        )
                         label(for='radio1') {{choice}}
                         br
                 div(v-else-if="question.type === 'select-multiple'")
@@ -34,10 +33,9 @@
                             type='checkbox'
                             :id="'check'+ id"
                             :value="choice"
-                            name='checkboxes'
                             v-model='test'
                             @change="answers[question.id] = test.join(';')"
-                            )
+                        )
                         label(:for="'check'+ id") {{choice}}
                         br
                 div(v-else-if="question.type === 'select-image'")
@@ -75,8 +73,9 @@
             return {
                 test: [],
                 image: "",
-                answers: {
-                },
+                answers: {},
+                choices: {},
+                toggleChecked: false,
             }
         },
         created: function () {
@@ -86,6 +85,14 @@
             ...mapState(["list"])
         },
         methods: {
+            foo(question_id) {
+                this.answers[question_id] = [];
+                return this.answers[question_id];
+            },
+            onToggle() {
+                this.toggleChecked = !this.toggleChecked;
+                return this.toggleChecked;
+            },
             sendChecklist() {
                 this.$store.commit('SET_ANSWERS', this.answers);
                 this.$store.dispatch('create_list', this.$route.params.id);
@@ -110,6 +117,15 @@
 </script>
 
 <style lang="sass" scoped>
+    .checkbox-component > input + label > .input-box,
+    .radio-component > input + label > .input-box
+        border-color: #4d82ff
+        background: #4d82ff
+    .checkbox-component > input + label > .input-box > .input-box-tick > path
+        stroke: #fff
+    .radio-component > input + label > .input-box > .input-box-circle
+        background: #fff
+
     body
         font-family: 'Open Sans', sans-serif
         font-weight: 300
