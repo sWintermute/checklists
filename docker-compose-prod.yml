@@ -59,6 +59,9 @@ services:
       - postgres_db
     volumes:
       - /tmp/backups/:/backups/
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.9
 
 networks:
   private_network:

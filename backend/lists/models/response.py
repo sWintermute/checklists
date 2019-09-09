@@ -2,7 +2,9 @@
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.contenttypes import fields
 
+from .attachment import Attachment
 from .survey import Survey
 
 try:
@@ -38,10 +40,11 @@ class Response(models.Model):
         blank=True,
     )
     interview_uuid = models.CharField("Interview unique identifier", max_length=36)
+    photo = fields.GenericRelation(Attachment)
 
     class Meta(object):
         verbose_name = "Ответ на чеклист"
-        verbose_name_plural = "Ответы начеклисты"
+        verbose_name_plural = "Ответы на чеклисты"
 
     def __str__(self):
         msg = "Response to {} by {}".format(self.survey, self.user)
