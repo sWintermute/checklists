@@ -18,23 +18,25 @@
                         )
                 div(v-else-if="question.type === 'radio'")
                     legend {{question.text}}
-                    div(v-for="(choice, i) in question.choices.split(';')")
-                        radio(:value="choice" v-model="answers[question.id]")
-                        | {{choice}}
+                    div(v-for="choice in question.choices.split(';')")
+                        input#radio1(
+                            type='radio'
+                            :value='choice'
+                            v-model='answers[question.id]'
+                        )
+                        label(for='radio1') {{choice}}
                         br
                 div(v-else-if="question.type === 'select-multiple'")
                     legend {{question.text}}
-
                     div(v-for="(choice, id) in question.choices.split(';')")
-                        checkbox(
-                            :name="'food'+id"
+                        input(
+                            type='checkbox'
                             :id="'check'+ id"
                             :value="choice"
-                            v-bind="answers[question.id]=[]"
-                            v-model="test"
+                            v-model='test'
                             @change="answers[question.id] = test.join(';')"
-                            )
-                        | {{choice}}
+                        )
+                        label(:for="'check'+ id") {{choice}}
                         br
                 div(v-else-if="question.type === 'select-image'")
                     div(v-if="!answers[question.id]")
@@ -60,8 +62,6 @@
                         placeholder='Введите текст ...'
                         )
             button Отправить
-            | {{list}}
-            | {{answers}}
 </template>
 
 <script>
@@ -85,6 +85,10 @@
             ...mapState(["list"])
         },
         methods: {
+            foo(question_id) {
+                this.answers[question_id] = [];
+                return this.answers[question_id];
+            },
             onToggle() {
                 this.toggleChecked = !this.toggleChecked;
                 return this.toggleChecked;
