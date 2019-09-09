@@ -1,23 +1,18 @@
 from django.contrib import admin
 
-from .models import Response, Survey, Question, Category, Answer, Report
+from .models import Response, Survey, Question, Answer, Report
 
 
 class QuestionInline(admin.TabularInline):
     model = Question
-    ordering = ("order", "category")
+    ordering = ("order", )
     extra = 1
 
-
-class CategoryInline(admin.TabularInline):
-    model = Category
-    extra = 0
 
 
 @admin.register(Survey)
 class SurveyAdmin(admin.ModelAdmin):
-    list_display = ("name", "is_published", "need_logged_user", "template")
-    list_filter = ("is_published", "need_logged_user")
+    list_display = ("name", )
     inlines = [QuestionInline]
 
 

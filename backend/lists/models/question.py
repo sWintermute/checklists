@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
-from .category import Category
 from .survey import Survey
 
 try:  # pragma: no cover
@@ -62,15 +61,7 @@ class Question(models.Model):
     order = models.IntegerField("Номер")
     required = models.BooleanField("Обязателен?")
     is_key = models.BooleanField("Ключевой?")
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        verbose_name="Category",
-        editable=False,
-        blank=True,
-        null=True,
-        related_name="questions",
-    )
+
     survey = models.ForeignKey(
         Survey,
         on_delete=models.CASCADE,
@@ -251,57 +242,6 @@ class Question(models.Model):
                                 cardinality, settings.USER_DID_NOT_ANSWER, value
                             )
         return cardinality
-
-    def sorted_answers_cardinality(
-            self,
-            min_cardinality=None,
-            group_together=None,
-            group_by_letter_case=None,
-            group_by_slugify=None,
-            filter=None,
-            sort_answer=None,
-            other_question=None,
-    ):
-        """ Mostly to have reliable tests, but marginally nicer too...
-
-        The ordering is reversed for same cardinality value so we have aa
-        before zz. """
-        cardinality = self.answers_cardinality(
-            min_cardinality,
-            group_together,
-            group_by_letter_case,
-            group_by_slugify,
-            filter,
-            other_question,
-        )
-        # We handle SortAnswer without enum because using "type" as a variable
-        # name break the enum module and we want to use type in
-        # answer_cardinality for simplicity
-        possibles_values = [SortAnswer.ALPHANUMERIC, SortAnswer.CARDINAL, None]
-        undefined = sort_answer is None
-        user_defined = isinstance(sort_answer, dict)
-        valid = user_defined or sort_answer in possibles_values
-
-        if undefined or not valid:
-            sort_answer = SortAnswer.CARDINAL
-        sorted_cardinality = None
-        if user_defined:
-            sorted_cardinality = sorted(
-                list(cardinality.items()), key=lambda x: sort_answer.get(x[0], 0)
-            )
-        elif sort_answer == SortAnswer.ALPHANUMERIC:
-            sorted_cardinality = sorted(cardinality.items())
-        elif sort_answer == SortAnswer.CARDINAL:
-            if other_question is None:
-                sorted_cardinality = sorted(
-                    list(cardinality.items()), key=lambda x: (-x[1], x[0])
-                )
-            else:
-                # There is a dict instead of an int
-                sorted_cardinality = sorted(
-                    list(cardinality.items()), key=lambda x: (-sum(x[1].values()), x[0])
-                )
-        return OrderedDict(sorted_cardinality)
 
     def _cardinality_plus_answer(self, cardinality, value, other_question_value):
         """ The user answered 'value' to our question and
