@@ -33,8 +33,7 @@
                             type='checkbox'
                             :id="'check'+ id"
                             :value="choice"
-                            v-model='test'
-                            @change="answers[question.id] = test.join(';')"
+                            @change="foo($event.target.value, question.id)"
                         )
                         label(:for="'check'+ id") {{choice}}
                         br
@@ -62,6 +61,9 @@
                         placeholder='Введите текст ...'
                         )
             button Отправить
+            | {{list}}
+            | {{answers}}
+            | {{test}}
 </template>
 
 <script>
@@ -85,9 +87,15 @@
             ...mapState(["list"])
         },
         methods: {
-            foo(question_id) {
-                this.answers[question_id] = [];
-                return this.answers[question_id];
+            foo(value, id) {
+                if (!!this.answers[id]) {
+                    ~this.answers[id].indexOf(value) ?
+                        this.answers[id].splice(this.answers[id].indexOf(value), 1):
+                        this.answers[id].push(value);
+                } else {
+                    this.answers[id] = [];
+                    this.answers[id].push(value);
+                }
             },
             onToggle() {
                 this.toggleChecked = !this.toggleChecked;
@@ -117,15 +125,6 @@
 </script>
 
 <style lang="sass" scoped>
-    .checkbox-component > input + label > .input-box,
-    .radio-component > input + label > .input-box
-        border-color: #4d82ff
-        background: #4d82ff
-    .checkbox-component > input + label > .input-box > .input-box-tick > path
-        stroke: #fff
-    .radio-component > input + label > .input-box > .input-box-circle
-        background: #fff
-
     body
         font-family: 'Open Sans', sans-serif
         font-weight: 300
@@ -221,7 +220,7 @@
                 display: block
                 content: ''
                 height: 8px
-                width: 10px
+                width: 12px
                 border-bottom: 3px solid #fff
                 border-left: 3px solid #fff
                 transform: translate(5px, 6px) rotate(-45deg) scale(1)
