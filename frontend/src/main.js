@@ -4,9 +4,10 @@ import router from './router'
 import store from './store'
 
 import Axios from 'axios'
-import CheckboxRadio from 'vue-checkbox-radio';
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
 
-
+Vue.use(VueMaterial);
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('user-token');
@@ -15,8 +16,6 @@ if (token) {
 }
 
 Vue.config.productionTip = false;
-
-Vue.use(CheckboxRadio);
 
 new Vue({
   router,
