@@ -38,19 +38,12 @@
                         label(:for="'check'+ id") {{choice}}
                         br
                 div(v-else-if="question.type === 'select-image'")
-                    div(v-if="!answers[question.id]")
-                        h2 Select an image
-                        input(
-                            type="file"
-                            @change="onFileChange($event, question.id)"
-                            )
-                    div(v-else)
-                        img(
-                            :src="answers[question.id]"
-                            )
-                        button(
-                            @click="removeImage(question.id)"
-                            ) Remove image
+                    template
+                        uploader(
+                            v-model="fileList"
+                            title="Загрузите фото"
+                            :autoUpload="false"
+                        )
                     br
                 div(v-else='')
                     label(for='firstName') {{question.text}}
@@ -64,17 +57,22 @@
             | {{list}}
             | {{answers}}
             | {{test}}
+            | {{fileList}}
 </template>
 
 <script>
     import { mapState } from 'vuex';
+    import Uploader from "../components/checklist/Uploader.vue";
 
     export default {
         name: "checklist",
+        components: {
+            Uploader
+        },
         data() {
             return {
                 test: [],
-                image: "",
+                fileList: [],
                 answers: {},
                 choices: {},
                 toggleChecked: false,
@@ -96,29 +94,11 @@
                     this.answers[id] = [];
                     this.answers[id].push(value);
                 }
-            },
-            onToggle() {
-                this.toggleChecked = !this.toggleChecked;
-                return this.toggleChecked;
+                // Array.isArray(this.answers[id]) ? this.answers[id].split(";"): this.answers[id].join(";");
             },
             sendChecklist() {
                 this.$store.commit('SET_ANSWERS', this.answers);
-                this.$store.dispatch('create_list', this.$route.params.id);
-            },
-            onFileChange(e, id) {
-                let files = e.target.files || e.dataTransfer.files;
-                if (!files.length) return;
-                this.createImage(files[0], id);
-            },
-            createImage(file, id) {
-                let reader = new FileReader();
-                reader.onload = e => {
-                    this.answers[id] = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            },
-            removeImage(id) {
-                this.answers[id] = "";
+                    this.$store.dispatch('create_list', this.fileList);
             }
         }
     }
