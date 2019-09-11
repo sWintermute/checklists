@@ -90,7 +90,7 @@ export default new Vuex.Store({
 				state.list.updated = "";
 				state.list.survey = "1";
 				state.list.user = 1;
-				state.list.attachment = blobList.map((key) => key.base64Image);
+				state.list.photo = blobList;
                 state.list.answers = [];
 				for (let [key, value] of Object.entries(state.answers)) {
 					state.list.answers.push({question: key, body: value});
