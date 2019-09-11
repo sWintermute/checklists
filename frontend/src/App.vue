@@ -48,13 +48,16 @@
   body
     margin: 0
 
+  ul, ol
+    list-style: none
+    margin: 0
+
   a
     font-family: 'Roboto', sans-serif
     font-weight: 300
     font-size: 20px
     color: #777
     text-decoration: none
-
   .container
     display: flex
     flex-direction: column

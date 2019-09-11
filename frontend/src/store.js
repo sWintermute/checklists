@@ -83,13 +83,14 @@ export default new Vuex.Store({
 				})
 			})
 		},
-		create_list({commit, state}, list_id){
+		create_list({commit, state}, blobList){
             return new Promise((resolve, reject) => {
 				state.list.id = 1;
 				state.list.created = "";
 				state.list.updated = "";
-				state.list.survey = list_id;
+				state.list.survey = "1";
 				state.list.user = 1;
+				state.list.attachment = blobList.map((key) => key.base64Image);
                 state.list.answers = [];
 				for (let [key, value] of Object.entries(state.answers)) {
 					state.list.answers.push({question: key, body: value});

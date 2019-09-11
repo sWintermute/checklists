@@ -43,7 +43,6 @@
                             v-model="fileList"
                             title="Загрузите фото"
                             :autoUpload="false"
-                            :params="{token: '13579', linkid: '2323', modelname: 'modelname'}"
                         )
                     br
                 div(v-else='')
@@ -63,7 +62,7 @@
 
 <script>
     import { mapState } from 'vuex';
-    import Uploader from "vux-uploader-component";
+    import Uploader from "../components/checklist/Uploader.vue";
 
     export default {
         name: "checklist",
@@ -99,7 +98,7 @@
             },
             sendChecklist() {
                 this.$store.commit('SET_ANSWERS', this.answers);
-                this.$store.dispatch('create_list', this.$route.params.id);
+                    this.$store.dispatch('create_list', this.fileList);
             }
         }
     }

@@ -14,16 +14,23 @@
                         td.left {{question.id}}
                         td {{question.text}}
                         td(v-for="choice in question.choices.split(';')" v-if="question.choices")
-                            | {{choice}}
+                            template(v-if="choice === question.key_choices")
+                                span(style="color: green")
+                                    | {{choice}}
+                            template(v-else)
+                                span(style="color: red")
+                                    | {{choice}}
                         template(v-else)
                             td
                             td
-                        td
-                            select(class='ro-select' name="opts" placeholder="Select an option")
-                                option(value='1') First item
-                                option(value='2') Second item
-                                option(value='3') Third item
-                                option(value='4') Last item
+                        td()
+                            ul(
+                                v-if="question.notes"
+                                v-for='note in question.notes'
+                                )
+                                li {{note}}
+
+        | {{report}}
 </template>
 
 <script>

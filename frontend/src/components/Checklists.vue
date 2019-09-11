@@ -6,15 +6,13 @@
             .gui-window-awards
                 ul.guiz-awards-row.guiz-awards-header
                     li.guiz-awards-header-title № п/п
-                    li.guiz-awards-header-track Параметры
-                    li.guiz-awards-header-time Примечание
+                    li.guiz-awards-header-track Примечание
                 ul.guiz-awards-row.guiz-awards-row-even(v-for='list in lists')
-                    a(:href="'checklist/' + list.id")
-                        li.guiz-awards-title
+                    li.guiz-awards-title
+                        a(:href="'checklist/' + list.id")
                             | Чек-лист № {{list.id}}
-                            .guiz-awards-subtitle
-                        li.guiz-awards-track {{ list.name }}
-                        li.guiz-awards-time {{ list.description }}
+                        .guiz-awards-subtitle
+                    li.guiz-awards-track {{ list.name }}
 </template>
 
 <script>
@@ -78,6 +76,11 @@
       background-color: #f9f9f9;
   }
   .guiz-awards-row {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: center;
       margin:0;
       padding: 10px 40px;
       list-style: none;
@@ -122,7 +125,7 @@
       font-weight: 300;
   }
   .guiz-awards-track, .guiz-awards-time {
-      width: 22%;
+      width: 30%;
       min-width: 80px;
       font-size: 18px;
       line-height: 45px

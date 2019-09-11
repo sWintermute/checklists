@@ -2,6 +2,11 @@ from rest_framework import serializers
 
 from . import models
 from user_profile import models as umodels
+from django.core.files.base import ContentFile
+import base64
+import six
+import uuid
+import imghdr
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -41,12 +46,6 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = models.Answer
         fields = ('id', 'question', 'body')
 
-
-from django.core.files.base import ContentFile
-import base64
-import six
-import uuid
-import imghdr
 
 class Base64ImageField(serializers.ImageField):
 
@@ -94,7 +93,6 @@ class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('object_id', 'file', 'name', 'description')
 
 
-# Update ?
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
     photo = AttachmentSerializer(many=True, required=False)
@@ -120,43 +118,58 @@ class UserSerializer(serializers.ModelSerializer):
 
 # Begin report generation
 class ReportQuestionSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        self.responses = kwargs.pop('responses', None)
+        super(ReportQuestionSerializer, self).__init__(*args, **kwargs)
+
+    notes = serializers.SerializerMethodField()
+
+    def get_notes(self, obj):
+        notes = []
+
+        for z in self.responses:
+            str = ''
+            for i in models.Question.objects.filter(is_key=True, survey=z.survey):
+                for j in models.Answer.objects.filter(question=i, response=z):
+                    str = ";".join([j.body, str])
+
+            for qa in models.Answer.objects.filter(question=obj.id, response=z):
+                if qa.body in obj.key_choices.split(";"):
+                    notes.append(str)
+
+        return notes
+
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'is_key', 'key_choices')
+        fields = ('id', 'text', 'order', 'choices', 'key_choices', 'notes')
 
 
 class ReportSurveySerializer(serializers.ModelSerializer):
-    questions = ReportQuestionSerializer(many=True)
+    def __init__(self, *args, **kwargs):
+        self.responses = kwargs.pop('responses', None)
+        super(ReportSurveySerializer, self).__init__(*args, **kwargs)
+
+    questions = serializers.SerializerMethodField()
+
+    def get_questions(self, obj):
+        quests = models.Question.objects.filter(survey=obj.id, is_key=False)
+        resps = list(filter(lambda x: x.survey.id == obj.id, self.responses))
+
+        return ReportQuestionSerializer(quests, responses=resps, many=True).data
 
     class Meta:
         model = models.Survey
-        fields = ('id', 'name', 'description', 'questions')
-
-
-class ReportResponseSerializer(serializers.ModelSerializer):
-    answers = serializers.SerializerMethodField()
-    photo = AttachmentSerializer(many=True, required=False)
-
-    def get_answers(self, obj):
-        answers = models.Answer.objects.all()
-        return AnswerSerializer(answers, many=True).data
-
-    class Meta:
-        model = models.Response
-        fields = ('id', 'created', 'updated', "answers", 'photo')
+        fields = ('id', 'name', 'questions')
 
 
 class ReportGetEntitySerializer(serializers.ModelSerializer):
-    responses = serializers.SerializerMethodField()
     checklists = serializers.SerializerMethodField()
 
     def get_checklists(self, obj):
         lists = []
         for i in obj.checklists.all():
             lists += models.Survey.objects.filter(id=i.id)
-        return ReportSurveySerializer(lists, many=True).data
 
-    def get_responses(self, obj):
         resps = []
         for i in obj.checklists.all():
             resps += models.Response.objects.filter(survey=i.id)
@@ -164,10 +177,11 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
         resps = list(filter(lambda x: x.created >= obj.date_from, resps))
         resps = list(filter(lambda x: x.created <= obj.date_to, resps))
 
-        return ReportResponseSerializer(resps, many=True).data
+        return ReportSurveySerializer(lists, responses=resps, many=True).data
 
     class Meta:
         model = models.Report
-        fields = ('id', 'name', 'date_from', 'date_to', 'checklists', 'responses')
+        fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
+        # fields = ('id', 'name', 'date_from', 'date_to', 'checklists', 'responses')
 
 # End report generation

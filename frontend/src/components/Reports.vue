@@ -9,16 +9,18 @@
                     li.guiz-awards-header-track Название
                     li.guiz-awards-header-time Дата
                 ul.guiz-awards-row.guiz-awards-row-even(v-for='report in reports')
-                    a(:href="'report/' + report.id")
-                        li.guiz-awards-title
+                    li.guiz-awards-title
+                        a(:href="'report/' + report.id")
                             | Отчет № {{report.id}}
-                            .guiz-awards-subtitle
-                        li.guiz-awards-track {{ report.name }}
-                        li.guiz-awards-time {{ report.date_from }}
+                        .guiz-awards-subtitle
+                    li.guiz-awards-track {{ report.name }}
+                    li.guiz-awards-time {{ report.date_from | date }} - {{ report.date_to | date }}
 </template>
 
 <script>
     import { mapState } from 'vuex';
+    import Vue from 'vue';
+    import moment from 'moment';
 
     export default {
         name: 'reports',
@@ -29,20 +31,18 @@
         created: function () {
             this.$store.dispatch('reports');
         },
+        filters: {
+            date: function(str) {
+                if (!str) { return '(n/a)'; }
+                str = new Date(str);
+                return str.getFullYear() + '-' + ((str.getMonth() < 9) ? '0' : '') + (str.getMonth() + 1) + '-' +
+                    ((str.getDate() < 10) ? '0' : '') + str.getDate();
+            }
+        },
         computed: {
             ...mapState(["reports"])
         },
         methods: {
-            formatDate(report_date) {
-                let date = new Date(report_date);
-                let dd = date.getDate();
-                if (dd < 10) dd = '0' + dd;
-                let mm = date.getMonth() + 1;
-                if (mm < 10) mm = '0' + mm;
-                let yy = date.getFullYear() % 100;
-                if (yy < 10) yy = '0' + yy;
-                return dd + '.' + mm + '.' + yy;
-            }
         }
     }
 </script>
