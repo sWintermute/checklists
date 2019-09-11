@@ -166,10 +166,10 @@
                                 const fileItem = {
                                     url: blobURL,
                                     blob,
-                                    base64Image
+                                    file: base64Image
                                 };
                                 reader.addEventListener('loadend', function() {
-                                    fileItem.base64Image = reader.result;
+                                    fileItem.file = reader.result;
                                 });
                                 for (let key in file) {
                                     if (["slice", "webkitRelativePath"].indexOf(key) === -1) {
