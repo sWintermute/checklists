@@ -96,6 +96,7 @@
                     this.answers[id] = [];
                     this.answers[id].push(value);
                 }
+                Array.isArray(this.answers[id]) ? this.answers[id].split(";"): this.answers[id].join(";");
             },
             onToggle() {
                 this.toggleChecked = !this.toggleChecked;
