@@ -1,12 +1,14 @@
+import base64
+import imghdr
+import uuid
+import six
+
+from django.contrib.contenttypes.models import ContentType
+from django.core.files.base import ContentFile
 from rest_framework import serializers
+from user_profile import models as umodels
 
 from . import models
-from user_profile import models as umodels
-from django.core.files.base import ContentFile
-import base64
-import six
-import uuid
-import imghdr
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -50,23 +52,16 @@ class AnswerSerializer(serializers.ModelSerializer):
 class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
-
-        # Check if this is a base64 string
         if isinstance(data, six.string_types):
-            # Check if the base64 string is in the "data:" format
             if 'data:' in data and ';base64,' in data:
-                # Break out the header from the base64 content
                 header, data = data.split(';base64,')
 
-            # Try to decode the file. Return validation error if it fails.
             try:
                 decoded_file = base64.b64decode(data)
             except TypeError:
                 self.fail('invalid_image')
 
-            # Generate file name:
-            file_name = str(uuid.uuid4())[:12]  # 12 characters are more than enough.
-            # Get the file name extension:
+            file_name = str(uuid.uuid4())[:12]
             file_extension = self.get_file_extension(file_name, decoded_file)
 
             complete_file_name = "%s.%s" % (file_name, file_extension,)
@@ -76,7 +71,6 @@ class Base64ImageField(serializers.ImageField):
         return super(Base64ImageField, self).to_internal_value(data)
 
     def get_file_extension(self, file_name, decoded_file):
-
         extension = imghdr.what(file_name, decoded_file)
         extension = "jpg" if extension == "jpeg" else extension
 
@@ -84,13 +78,11 @@ class Base64ImageField(serializers.ImageField):
 
 
 class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    file = Base64ImageField(
-        max_length=None, use_url=True,
-    )
+    file = Base64ImageField(max_length=None, use_url=True)
 
     class Meta:
         model = models.Attachment
-        fields = ('object_id', 'file', 'name', 'description')
+        fields = ('file', 'name')
 
 
 class ResponseSerializer(serializers.ModelSerializer):
@@ -102,11 +94,17 @@ class ResponseSerializer(serializers.ModelSerializer):
         fields = ('id', 'created', 'updated', 'survey', "answers", 'photo')
 
     def create(self, validated_data):
-        profile_data = validated_data.pop('answers')
+        answers = validated_data.pop('answers')
+        photos = validated_data.pop('photo')
         response = models.Response.objects.create(**validated_data)
 
-        for i in profile_data:
-            models.Answer.objects.create(response=response, **i)
+        for answer in answers:
+            models.Answer.objects.create(response=response, **answer)
+
+        content_type = ContentType.objects.get(model='response')
+        for photo in photos:
+            models.Attachment.objects.create(object_id=response.id, content_type=content_type, **photo)
+
         return response
 
 
@@ -127,15 +125,15 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
     def get_notes(self, obj):
         notes = []
 
-        for z in self.responses:
-            str = ''
-            for i in models.Question.objects.filter(is_key=True, survey=z.survey):
-                for j in models.Answer.objects.filter(question=i, response=z):
-                    str = ";".join([j.body, str])
+        for response in self.responses:
+            keys = ''
+            for question in models.Question.objects.filter(is_key=True, survey=response.survey):
+                for answer in models.Answer.objects.filter(question=question, response=response):
+                    keys = ";".join([answer.body, keys])
 
-            for qa in models.Answer.objects.filter(question=obj.id, response=z):
-                if qa.body in obj.key_choices.split(";"):
-                    notes.append(str)
+            for answer in models.Answer.objects.filter(question=obj.id, response=response):
+                if answer.body in obj.key_choices.split(";"):
+                    notes.append(keys)
 
         return notes
 
@@ -167,12 +165,12 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
 
     def get_checklists(self, obj):
         lists = []
-        for i in obj.checklists.all():
-            lists += models.Survey.objects.filter(id=i.id)
+        for survey in obj.checklists.all():
+            lists += models.Survey.objects.filter(id=survey.id)
 
         resps = []
-        for i in obj.checklists.all():
-            resps += models.Response.objects.filter(survey=i.id)
+        for survey in obj.checklists.all():
+            resps += models.Response.objects.filter(survey=survey.id)
 
         resps = list(filter(lambda x: x.created >= obj.date_from, resps))
         resps = list(filter(lambda x: x.created <= obj.date_to, resps))
@@ -182,6 +180,5 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Report
         fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
-        # fields = ('id', 'name', 'date_from', 'date_to', 'checklists', 'responses')
 
 # End report generation

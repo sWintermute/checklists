@@ -46,4 +46,4 @@ class ReportAdmin(admin.ModelAdmin):
 
 @admin.register(Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", 'description', 'timestamp', 'file')
