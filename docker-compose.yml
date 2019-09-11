@@ -26,7 +26,7 @@ services:
     restart: on-failure
     command: -p ${POSTGRES_PORT}
     volumes:
-      - postgres_db_volume:/var/lib/postgresql/data
+      - checklists_db_data_dev:/var/lib/postgresql/data
     networks:
       private_network:
         ipv4_address: 10.5.0.6
@@ -70,4 +70,4 @@ networks:
 
 
 volumes:
-  postgres_db_volume:
+  checklists_db_data_dev:
