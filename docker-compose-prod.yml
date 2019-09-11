@@ -48,20 +48,20 @@ services:
         ipv4_address: 10.5.0.7
       default:
 
-  postgres_backups:
-    container_name: checklists_postgres_backups
-    env_file: .env
-    image: prodrigestivill/postgres-backup-local:11-alpine
-    restart: always
-    links:
-      - postgres_db
-    depends_on:
-      - postgres_db
-    volumes:
-      - /tmp/backups/:/backups/
-    networks:
-      private_network:
-        ipv4_address: 10.5.0.9
+#  postgres_backups:
+#    container_name: checklists_postgres_backups
+#    env_file: .env
+#    image: prodrigestivill/postgres-backup-local:11-alpine
+#    restart: always
+#    links:
+#      - postgres_db
+#    depends_on:
+#      - postgres_db
+#    volumes:
+#      - /tmp/backups/:/backups/
+#    networks:
+#      private_network:
+#        ipv4_address: 10.5.0.9
 
 networks:
   private_network:
