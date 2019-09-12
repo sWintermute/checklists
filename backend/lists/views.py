@@ -1,6 +1,7 @@
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, \
     DestroyModelMixin
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, DjangoModelPermissionsOrAnonReadOnly, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -74,4 +75,5 @@ class ReportListViewset(GenericViewSet, ListModelMixin, CreateModelMixin, Destro
 class ReportViewset(GenericViewSet, RetrieveModelMixin):
     queryset = models.Report.objects.all()
     serializer_class = serializers.ReportGetEntitySerializer
-    permission_classes = (IsAdminUser,)
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (AllowAny,)
