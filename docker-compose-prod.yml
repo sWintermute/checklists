@@ -16,7 +16,7 @@ services:
       - postgres_db
     networks:
       private_network:
-        ipv4_address: 10.5.0.5
+        ipv4_address: 172.25.0.5
 
   postgres_db:
     container_name: checklists_postgres_db
@@ -28,7 +28,7 @@ services:
       - checklists_db_data:/var/lib/postgresql/data
     networks:
       private_network:
-        ipv4_address: 10.5.0.6
+        ipv4_address: 172.25.0.6
 
   nginx:
     container_name: checklists_nginx
@@ -46,7 +46,7 @@ services:
       - backend
     networks:
       private_network:
-        ipv4_address: 10.5.0.7
+        ipv4_address: 172.25.0.7
       default:
 
 #  postgres_backups:
@@ -62,14 +62,14 @@ services:
 #      - /tmp/backups/:/backups/
 #    networks:
 #      private_network:
-#        ipv4_address: 10.5.0.9
+#        ipv4_address: 172.25.0.9
 
 networks:
   private_network:
     ipam:
       driver: default
       config:
-        - subnet: 10.5.0.0/16
+        - subnet: 172.25.0.0/16
 
 
 volumes:
