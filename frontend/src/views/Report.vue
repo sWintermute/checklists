@@ -29,8 +29,6 @@
                                 v-for='note in question.notes'
                                 )
                                 li {{note}}
-
-        | {{report}}
 </template>
 
 <script>
