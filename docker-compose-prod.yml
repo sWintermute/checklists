@@ -11,6 +11,7 @@ services:
     restart: on-failure
     volumes:
       - ./backend:/app
+      - checklists_media:/app/media
     depends_on:
       - postgres_db
     networks:
@@ -24,7 +25,7 @@ services:
     restart: on-failure
     command: -p ${POSTGRES_PORT}
     volumes:
-      - postgres_db_volume:/var/lib/postgresql/data
+      - checklists_db_data:/var/lib/postgresql/data
     networks:
       private_network:
         ipv4_address: 10.5.0.6
@@ -40,7 +41,7 @@ services:
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
       - ./backend/static:/app/static
-      - ./backend/media:/app/media
+      - checklists_media:/app/media
     depends_on:
       - backend
     networks:
@@ -72,4 +73,9 @@ networks:
 
 
 volumes:
-  postgres_db_volume:
+  checklists_db_data:
+    external:
+      name: checklists_db_data
+  checklists_media:
+    external:
+      name: checklists_media
