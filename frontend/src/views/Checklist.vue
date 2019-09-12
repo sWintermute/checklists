@@ -54,10 +54,6 @@
                         placeholder='Введите текст ...'
                         )
             button Отправить
-            | {{list}}
-            | {{answers}}
-            | {{test}}
-            | {{fileList}}
 </template>
 
 <script>
