@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+
+  backend:
+    container_name: checklists_backend_dev
+    env_file: .env
+    environment:
+      - DEBUG=True
+    build:
+      context: ./backend
+    restart: on-failure
+    command: -p ${POSTGRES_PORT}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres_db
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.5
+
+  postgres_db:
+    container_name: checklists_postgres_db_dev
+    env_file: .env
+    image: postgres:11-alpine
+    restart: on-failure
+    command: -p ${POSTGRES_PORT}
+    volumes:
+      - checklists_db_data_dev:/var/lib/postgresql/data
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.6
+
+  nginx:
+    container_name: checklists_nginx_dev
+    image: nginx:1.17.3-alpine
+    restart: on-failure
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
+      - ./backend/static:/app/static
+      - ./backend/media:/app/media
+    depends_on:
+      - backend
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.7
+      default:
+
+  frontend:
+    container_name: checklists_frontend_dev
+    image: node:12.9-alpine
+    command: npm run serve
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./frontend:/app
+    working_dir: /app
+    restart: on-failure
+    networks:
+      private_network:
+        ipv4_address: 10.5.0.8
+
+networks:
+  private_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.5.0.0/16
+
+
+volumes:
+  checklists_db_data_dev:

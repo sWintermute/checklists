@@ -80,7 +80,7 @@ target/
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
 #   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
-Pipfile.lock
+# Pipfile.lock
 
 # celery beat schedule file
 celerybeat-schedule
@@ -113,6 +113,17 @@ venv.bak/
 # VS Code 
 .vscode/
 
-staticfiles/
+# Generic static files
+**/static/admin/
+**/static/drf-yasg/
+**/static/rest_framework/
 
+# Backend media files
+**/backend/media/
+
+**/node_modules/
+**/package-lock.json
+
+# PyCharm
 .idea/
+
