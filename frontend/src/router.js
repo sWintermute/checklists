@@ -50,9 +50,6 @@ let router = new Router({
       path: '/report/:id',
       name: 'report',
       component: Report,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/profile',

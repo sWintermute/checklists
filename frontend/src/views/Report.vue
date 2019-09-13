@@ -14,7 +14,7 @@
                         td.left {{question.id}}
                         td {{question.text}}
                         td(v-for="choice in question.choices.split(';')" v-if="question.choices")
-                            template(v-if="choice === question.key_choices")
+                            template(v-if="!(choice === question.key_choices)")
                                 span(style="color: green")
                                     | {{choice}}
                             template(v-else)
@@ -28,7 +28,9 @@
                                 v-if="question.notes"
                                 v-for='note in question.notes'
                                 )
-                                li {{note}}
+                                li(
+                                    style="background-color: #f6f8fa"
+                                ) {{note}}
 </template>
 
 <script>
