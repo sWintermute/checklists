@@ -131,6 +131,8 @@
     .card{
         background: $true-white;
         padding: 10px 20px;
+        margin: 10px 0;
+        width: 100%;
         border-radius: .25rem;
         box-shadow: $material-shadow;
     }
