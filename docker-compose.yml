@@ -5,6 +5,7 @@ services:
   backend:
     container_name: checklists_backend_dev
     env_file: .env
+    user: ${CURRENT_UID}
     environment:
       - DEBUG=True
     build:
