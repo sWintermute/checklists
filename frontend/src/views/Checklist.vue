@@ -13,6 +13,7 @@
                     label(for='textarea') {{question.text}}
                     textarea#textarea(
                         :type='question.type'
+                        v-model='answers[question.id]'
                         name='textarea'
                         placeholder='Введите текст ...'
                         )
@@ -52,8 +53,9 @@
                         :type='question.type'
                         name='name'
                         placeholder='Введите текст ...'
+                        required
                         )
-            button Отправить
+            button(type="submit") Отправить
 </template>
 
 <script>
@@ -94,7 +96,10 @@
             },
             sendChecklist() {
                 this.$store.commit('SET_ANSWERS', this.answers);
-                    this.$store.dispatch('create_list', this.fileList);
+                this.$store.dispatch('create_list', {
+                    fileList: this.fileList,
+                    listId: this.$route.params.id
+                });
             }
         }
     }

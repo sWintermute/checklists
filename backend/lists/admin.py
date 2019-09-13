@@ -41,7 +41,7 @@ class ResponseAdmin(admin.ModelAdmin):
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
     list_display = ("name", "date_from", "date_to")
-    list_filter = ("checklists",)
+    filter_horizontal = ("checklists",)
 
 
 @admin.register(Attachment)
