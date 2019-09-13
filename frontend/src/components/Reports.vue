@@ -19,8 +19,6 @@
 
 <script>
     import { mapState } from 'vuex';
-    import Vue from 'vue';
-    import moment from 'moment';
 
     export default {
         name: 'reports',
