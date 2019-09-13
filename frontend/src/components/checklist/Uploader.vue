@@ -269,7 +269,7 @@
         }
     };
 </script>
-<style lang="less">
+<style lang="scss">
     @font-face {
         font-weight: normal;
         font-style: normal;
@@ -408,4 +408,5 @@
             }
         }
     }
+
 </style>
