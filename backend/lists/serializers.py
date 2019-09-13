@@ -133,7 +133,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 
             for answer in models.Answer.objects.filter(question=obj.id, response=response):
                 if answer.body in obj.key_choices.split(";"):
-                    notes.append(keys)
+                    notes.append({"created": response.created, "notes": keys})
 
         return notes
 
