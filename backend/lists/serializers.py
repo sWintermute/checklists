@@ -126,10 +126,11 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
         notes = []
 
         for response in self.responses:
-            keys = ''
+            keys = {}
             for question in models.Question.objects.filter(is_key=True, survey=response.survey):
                 for answer in models.Answer.objects.filter(question=question, response=response):
-                    keys = ";".join([answer.body, keys])
+                    keys[question.text] = answer.body
+                    # keys = ";".join([answer.body, keys])
 
             for answer in models.Answer.objects.filter(question=obj.id, response=response):
                 if answer.body in obj.key_choices.split(";"):
