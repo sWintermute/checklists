@@ -10,8 +10,8 @@
                         td(colspan=3).row-header Параметры
                         td.row-header Примечание
                 tbody
-                    tr(v-for='question in checklist.questions')
-                        td.left {{question.id}}
+                    tr(v-for='(question, i) in checklist.questions')
+                        td.left {{i}}
                         td {{question.text}}
                         td(v-for="choice in question.choices.split(';')" v-if="question.choices")
                             template(v-if="!(choice === question.key_choices)")
@@ -24,13 +24,14 @@
                             td
                             td
                         td()
-                            ul(
-                                v-if="question.notes"
-                                v-for='note in question.notes'
-                                )
-                                li(
-                                    style="background-color: #f6f8fa"
-                                ) {{note}}
+                            ul(v-if="question.notes")
+                                li(v-for='(note, i) in question.notes')
+                                    span(v-for="key in note.keys") {{note.created | date}}
+                                        br
+                                        | {{key.name}}
+                                        br
+                                        | {{key.answer}}
+                                        br
 </template>
 
 <script>
@@ -49,6 +50,14 @@
         },
         computed: {
             ...mapState(["report"])
+        },
+        filters: {
+            date: function(str) {
+                if (!str) { return '(n/a)'; }
+                str = new Date(str);
+                return str.getFullYear() + '-' + ((str.getMonth() < 9) ? '0' : '') + (str.getMonth() + 1) + '-' +
+                    ((str.getDate() < 10) ? '0' : '') + str.getDate();
+            }
         },
         methods: {
             sendChecklist() {
@@ -143,8 +152,16 @@
 
         td{
             text-align: right;
-            padding: 1.4rem 1rem;
+            padding: 1.4rem 0;
+        }
 
+        td ul {
+            padding: 0;
+            min-width: 360px;
+        }
+        td ul li span {
+            display: block;
+            margin: 0 0 10px 0;
         }
 
         .left{

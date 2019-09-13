@@ -162,11 +162,10 @@
                                 const blobURL = URL.createObjectURL(blob);
                                 var reader = new FileReader();
                                 reader.readAsDataURL(blob);
-                                var base64Image = "";
                                 const fileItem = {
                                     url: blobURL,
                                     blob,
-                                    file: base64Image
+                                    file: ""
                                 };
                                 reader.addEventListener('loadend', function() {
                                     fileItem.file = reader.result;

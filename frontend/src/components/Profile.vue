@@ -23,12 +23,12 @@
                         g
                         g
             div.profile__name__block
-                    span.first__name.profile__name {{ user.first_name }}
-                    span.last__name.profile__name {{ user.last_name }}
+                    span.first__name.profile__name(v-if="user.first_name") {{ user.first_name }}
+                    span.last__name.profile__name(v-if="user.last_name") {{ user.last_name }}
             div.profile__empposition
-                span.empposition__text {{ user.position }}
+                span.empposition__text(v-if="user.position") {{ user.position }}
             div.profile__email
-                span.email__text {{ user.email }}
+                span.email__text(v-if="user.email ") {{ user.email }}
 </template>
 
 <script>

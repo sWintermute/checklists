@@ -13,6 +13,7 @@
                     label(for='textarea') {{question.text}}
                     textarea#textarea(
                         :type='question.type'
+                        v-model='answers[question.id]'
                         name='textarea'
                         placeholder='Введите текст ...'
                         )
