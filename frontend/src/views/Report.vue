@@ -1,5 +1,6 @@
 <template lang="pug">
     .container
+        vue-loading(v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }")
         .card(v-for='checklist in report.checklists')
             .card__header
                 h2 {{checklist.name}}
@@ -35,31 +36,34 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapMutations } from 'vuex';
+    import moment from 'moment';
 
     export default {
         name: "report",
         data() {
             return {
-                answers: {
-                },
+                answers: {},
             }
         },
         created: function () {
             this.$store.dispatch('report', this.$route.params.id);
         },
         computed: {
-            ...mapState(["report"])
+            ...mapState(["report"]),
+            isLoading : function(){ return this.$store.getters.isLoading},
         },
         filters: {
             date: function(str) {
                 if (!str) { return '(n/a)'; }
                 str = new Date(str);
+                // return this.$moment().format('DD.MM.YYYY');
                 return str.getFullYear() + '-' + ((str.getMonth() < 9) ? '0' : '') + (str.getMonth() + 1) + '-' +
                     ((str.getDate() < 10) ? '0' : '') + str.getDate();
             }
         },
         methods: {
+            ...mapMutations(["SET_LOADING_STATUS"]),
             sendChecklist() {
                 this.$store.dispatch('create_list', this.$route.params.id);
             },
