@@ -9,6 +9,7 @@ export default new Vuex.Store({
 	strict: true,
 	state: {
 		status: '',
+		loading: false,
 		token: localStorage.getItem('token') || '',
 		user: {},
 		list: {},
@@ -20,10 +21,14 @@ export default new Vuex.Store({
 	},
     getters : {
         isLoggedIn: state => !!state.token,
-        authStatus: state => state.status,
+		isLoading: state => state.loading,
+        authStatus: state => state.status
     },
 	mutations: {
-		SET_USER(state,payload) {
+		SET_LOADING_STATUS(state, payload) {
+			state.loading = payload
+		},
+		SET_USER(state, payload) {
 			state.user = payload
 		},
 		SET_ANSWERS(state, payload) {
@@ -172,6 +177,7 @@ export default new Vuex.Store({
 			})
 		},
 		report({commit, state},  report_id) {
+			commit('SET_LOADING_STATUS', true);
 			return new Promise((resolve, reject) => {
 				axios({
 					url: '/api/v1/report/' + report_id + '/',
@@ -180,6 +186,7 @@ export default new Vuex.Store({
 					},
 					method: 'GET'
 				}).then(response => {
+					commit('SET_LOADING_STATUS', false);
 					const report = response.data;
 					localStorage.setItem('report', report);
 					commit('SET_REPORT', report);
