@@ -177,10 +177,10 @@ export default new Vuex.Store({
 			})
 		},
 		report({commit, state},  report_id) {
-			commit('SET_LOADING_STATUS', true);
 			return new Promise((resolve, reject) => {
+				commit('SET_LOADING_STATUS', true);
 				axios({
-					url: '/api/v1/report/' + report_id + '/',
+					url: '/api/v1/report/' + report_id,
 					headers: {
 						Authorization: 'Token ' + state.token,
 					},
