@@ -22,26 +22,36 @@
                         <div class="flex-grow-1"></div>
                     </v-toolbar>
                     <v-card-text class="px-6 pt-6 pb-0">
-                        <v-form>
-                            <v-text-field
-                                label="Почта"
-                                name="login"
-                                prepend-icon="person"
-                                type="text"
-                            ></v-text-field>
-
-                            <v-text-field
-                                id="password"
-                                label="Пароль"
-                                name="password"
-                                prepend-icon="lock"
-                                type="password"
-                            ></v-text-field>
-                        </v-form>
+                        <ValidationObserver v-slot="{ passes }">
+                            <form>
+                                <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
+                                    <v-text-field
+                                        :error-messages="errors"
+                                        v-model="email"
+                                        label="Почта"
+                                        prepend-icon="person"
+                                    ></v-text-field>
+                                </ValidationProvider>
+                                <ValidationProvider name="password" rules="required|min:8" v-slot="{ errors }">
+                                    <v-text-field
+                                        :error-messages="errors"
+                                        v-model="password"
+                                        id="password"
+                                        label="Пароль"
+                                        name="password"
+                                        prepend-icon="lock"
+                                        type="password"
+                                    ></v-text-field>
+                                </ValidationProvider>
+                            </form>
+                            <div v-if="errors" class="subtitle1 text-center red--text">
+                                <p v-for="(errorMessage, i) in errors" :key="i">{{ errorMessage[0] }}</p>
+                            </div>
+                        </ValidationObserver>
                     </v-card-text>
                     <v-card-actions class="justify-end px-6">
-                        <v-btn class="ma-2" tile outlined color="primary">Очистить</v-btn>
-                        <v-btn tile color="primary" >Войти</v-btn>
+                        <v-btn class="ma-2" tile outlined color="primary" @click="clear">Очистить</v-btn>
+                        <v-btn tile color="primary" @click="login">Войти</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -50,27 +60,39 @@
 </template>
 
 <script>
+    import { ValidationObserver, ValidationProvider } from "vee-validate";
+    import { mapGetters } from 'vuex'
+
     export default {
+        name: "Login",
+        components: {
+            ValidationObserver,
+            ValidationProvider
+        },
         props: {
             source: String,
         },
         data: () => ({
-            drawer: null,
-            email: '',
-            password: '',
-            serverError: '',
-            successMessage: this.dataSuccessMessage,
-            loading: false,
+            email: "",
+            password: ""
         }),
         methods: {
-            login: function () {
+            login() {
                 let email = this.email;
                 let password = this.password;
                 this.$store.dispatch('login', { email, password })
                     .then(() => this.$router.push('/profile'))
                     .catch(err => console.log(err))
+            },
+            clear() {
+                this.email = '';
+                this.password = '';
+                this.$validator.reset()
             }
-        }
+        },
+        computed: {
+            ...mapGetters(['errors'])
+        },
     };
 </script>
 

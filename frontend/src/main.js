@@ -8,6 +8,7 @@ import Axios from 'axios'
 import VueLoading from 'vue-loading-template'
 import moment from 'moment';
 import vuetify from './plugins/vuetify';
+import "./plugins/vee-validate";
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
