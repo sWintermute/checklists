@@ -1,29 +1,89 @@
-<template lang="pug">
-    .quiz-window
-        .quiz-window-header
-            .quiz-window-title Чеклисты
-        .quiz-window-body
-            .gui-window-awards
-                ul.guiz-awards-row.guiz-awards-header
-                    li.guiz-awards-header-title № п/п
-                    li.guiz-awards-header-track Примечание
-                ul.guiz-awards-row.guiz-awards-row-even(v-for='list in lists')
-                    li.guiz-awards-title
-                        a(:href="'checklist/' + list.id")
-                            | Чек-лист № {{list.id}}
-                        .guiz-awards-subtitle
-                    li.guiz-awards-track {{ list.name }}
+<template>
+    <v-container>
+        <v-data-table
+            :headers="headers"
+            :items="lists"
+            :items-per-page="5"
+            item-key="id"
+            class="elevation-1"
+            :footer-props="{
+            showFirstLastPage: true,
+            firstIcon: 'mdi-arrow-collapse-left',
+            lastIcon: 'mdi-arrow-collapse-right',
+            prevIcon: 'mdi-minus',
+            nextIcon: 'mdi-plus'
+        }"
+        >
+            <template slot="item" slot-scope="props">
+                <router-link tag="tr" :to="'checklist/' + props.item.id">
+                    <td>{{ props.item.id }}</td>
+                    <td class="text-xs-right">{{ props.item.name }}</td>
+                </router-link>
+            </template>
+        </v-data-table>
+    </v-container>
 </template>
 
 <script>
   import { mapState } from 'vuex';
 
-  export default {
+export default {
     name: 'checklists',
-    data() {
-      return {
-      }
-    },
+    data: () => ({
+        headers: [
+            {
+                text: 'ID',
+                align: 'left',
+                value: 'id',
+            },
+            {
+                text: 'Name',
+                value: 'name'
+            },
+        ],
+        desserts: [
+            {
+                name: 'Frozen Yogurt',
+                category: 'Ice cream',
+            },
+            {
+                name: 'Ice cream sandwich',
+                category: 'Ice cream',
+            },
+            {
+                name: 'Eclair',
+                category: 'Cookie',
+            },
+            {
+                name: 'Cupcake',
+                category: 'Pastry',
+            },
+            {
+                name: 'Gingerbread',
+                category: 'Cookie',
+            },
+            {
+                name: 'Jelly bean',
+                category: 'Candy',
+            },
+            {
+                name: 'Lollipop',
+                category: 'Candy',
+            },
+            {
+                name: 'Honeycomb',
+                category: 'Toffee',
+            },
+            {
+                name: 'Donut',
+                category: 'Pastry',
+            },
+            {
+                name: 'KitKat',
+                category: 'Candy',
+            },
+        ],
+    }),
     created: function () {
       this.$store.dispatch('lists');
     },
@@ -32,7 +92,7 @@
     },
     methods: {
     }
-  }
+}
 </script>
 
 

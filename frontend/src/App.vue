@@ -7,7 +7,7 @@
                         <template v-for="(menu, i) in menus">
                             <v-list-item :key="i">
                                 <v-list-item-content>
-                                    {{menu.title}}
+                                    <v-btn text :to="menu.path">{{menu.title}}</v-btn>
                                 </v-list-item-content>
                             </v-list-item>
                             <v-divider :key="`divider-${i}`"></v-divider>
@@ -22,7 +22,7 @@
                     <v-spacer class="hidden-sm-and-down"></v-spacer>
                     <v-toolbar-items>
                         <template v-for="(menu, i) in menus">
-                            <v-btn text class="hidden-sm-and-down">
+                            <v-btn text class="hidden-sm-and-down" :to="menu.path">
                                     {{menu.title}}
                              </v-btn>
                         </template>
@@ -46,7 +46,8 @@
             menus: [
                 {
                     title: 'Чек-листы',
-                    path: '/'
+                    path: '/',
+                    icon: ""
                 },
                 {
                     title: 'Отчеты',

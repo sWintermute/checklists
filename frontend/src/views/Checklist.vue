@@ -1,71 +1,67 @@
-<template lang="pug">
-    form(@submit.prevent='sendChecklist')
-        .checklist__info__wrap
-            .checklist__info
-                .info__id
-                    span.info__id__text &CHcy;&iecy;&kcy;&lcy;&icy;&scy;&tcy; &numero; {{list.id}}
-                .info__name
-                    h2.info__name__text {{list.name}}
-                .info__description
-                    p.info__description__text {{list.description}}
-            fieldset(v-for='question in list.questions')
-                div(v-if="question.type === 'textarea'")
-                    label(for='textarea') {{question.text}}
-                    textarea#textarea(
-                        :type='question.type'
-                        v-model='answers[question.id]'
-                        name='textarea'
-                        placeholder='Введите текст ...'
-                        )
-                div(v-else-if="question.type === 'radio'")
-                    legend {{question.text}}
-                    div(v-for="choice in question.choices.split(';')")
-                        input#radio1(
-                            type='radio'
-                            :value='choice'
-                            v-model='answers[question.id]'
-                        )
-                        label(for='radio1') {{choice}}
-                        br
-                div(v-else-if="question.type === 'select-multiple'")
-                    legend {{question.text}}
-                    div(v-for="(choice, id) in question.choices.split(';')")
-                        input(
-                            type='checkbox'
-                            :id="'check'+ id"
-                            :value="choice"
-                            @change="foo($event.target.value, question.id)"
-                        )
-                        label(:for="'check'+ id") {{choice}}
-                        br
-                div(v-else-if="question.type === 'select-image'")
-                    template
-                        uploader(
-                            v-model="fileList"
-                            title="Загрузите фото"
-                            :autoUpload="false"
-                        )
-                    br
-                div(v-else='')
-                    label(for='firstName') {{question.text}}
-                    input#firstName(
-                        v-model='answers[question.id]'
-                        :type='question.type'
-                        name='name'
-                        placeholder='Введите текст ...'
-                        required
-                        )
-            button(type="submit") Отправить
+<template>
+    <v-container
+            class="fill-height"
+            fluid
+    >
+        <v-row
+                align="center"
+                justify="center"
+        >
+            <v-col
+                    cols="12"
+                    sm="8"
+                    md="4"
+            >
+                <v-card class="elevation-2 rounded-card" tile>
+                    <v-toolbar
+                            color="primary"
+                            dark
+                            flat
+                    >
+                        <v-toolbar-title class="">Чеклист №{{ list.id }}</v-toolbar-title>
+                        <div class="flex-grow-1"></div>
+                    </v-toolbar>
+                    <v-card-text class="px-6 pt-6 pb-0">
+                        <ValidationObserver v-slot="{ passes }">
+                            <form>
+                                <ValidationProvider name="email" rules="required|email" v-slot="{ errors }" v-for='question in list.questions'>
+                                    <template v-if="question.type === 'textarea'"></template>
+                                    <template v-else-if="question.type === 'radio'"></template>
+                                    <template v-else-if="question.type === 'select-multiple'"></template>
+                                    <template v-else-if="question.type === 'select-image'"></template>
+                                    <template v-else>
+                                        <v-text-field
+                                                label="Regular"
+                                        ></v-text-field>
+                                    </template>
+                                </ValidationProvider>
+                            </form>
+                            <div v-if="errors" class="subtitle1 text-center red--text">
+                                <p v-for="(errorMessage, i) in errors" :key="i">{{ errorMessage[0] }}</p>
+                            </div>
+                        </ValidationObserver>
+                    </v-card-text>
+                    <v-card-actions class="justify-center px-6">
+                        <v-btn class="ma-2" tile outlined color="primary">Очистить</v-btn>
+                        <v-btn tile color="primary" @click="sendChecklist">Отправить</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { ValidationObserver, ValidationProvider } from "vee-validate";
+    import { mapState, mapGetters } from 'vuex';
     import Uploader from "../components/checklist/Uploader.vue";
 
     export default {
         name: "checklist",
         components: {
-            Uploader
+            Uploader,
+            ValidationObserver,
+            ValidationProvider
         },
         data() {
             return {
@@ -80,7 +76,8 @@
             this.$store.dispatch('list', this.$route.params.id);
         },
         computed: {
-            ...mapState(["list"])
+            ...mapState(["list"]),
+            ...mapGetters(['errors'])
         },
         methods: {
             foo(value, id) {
@@ -105,5 +102,5 @@
     }
 </script>
 
-<style lang="sass" scoped>
+<style scoped>
 </style>

@@ -87,7 +87,6 @@
             clear() {
                 this.email = '';
                 this.password = '';
-                this.$validator.reset()
             }
         },
         computed: {
