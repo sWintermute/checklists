@@ -1,20 +1,28 @@
-<template lang="pug">
-    .quiz-window
-        .quiz-window-header
-            .quiz-window-title Отчеты
-        .quiz-window-body
-            .gui-window-awards
-                ul.guiz-awards-row.guiz-awards-header
-                    li.guiz-awards-header-title № п/п
-                    li.guiz-awards-header-track Название
-                    li.guiz-awards-header-time Дата
-                ul.guiz-awards-row.guiz-awards-row-even(v-for='report in reports')
-                    li.guiz-awards-title
-                        a(:href="'report/' + report.id")
-                            | Отчет № {{report.id}}
-                        .guiz-awards-subtitle
-                    li.guiz-awards-track {{ report.name }}
-                    li.guiz-awards-time {{ report.date_from | date }} - {{ report.date_to | date }}
+<template>
+    <v-container>
+        <v-data-table
+            :headers="headers"
+            :items="reports"
+            :items-per-page="5"
+            item-key="id"
+            class="elevation-1"
+            :footer-props="{
+                showFirstLastPage: true,
+                firstIcon: 'mdi-arrow-collapse-left',
+                lastIcon: 'mdi-arrow-collapse-right',
+                prevIcon: 'mdi-minus',
+                nextIcon: 'mdi-plus'
+            }"
+        >
+            <template slot="item" slot-scope="props">
+                <router-link tag="tr" :to="'report/' + props.item.id">
+                    <td>{{ props.item.id }}</td>
+                    <td class="text-xs-right">{{ props.item.name }}</td>
+                    <td class="text-xs-right">{{ props.item.date_from | date }} - {{ props.item.date_to | date }}</td>
+                </router-link>
+            </template>
+        </v-data-table>
+    </v-container>
 </template>
 
 <script>
@@ -22,10 +30,23 @@
 
     export default {
         name: 'reports',
-        data() {
-            return {
-            }
-        },
+        data: () => ({
+            headers: [
+                {
+                    text: '№ п/п',
+                    align: 'left',
+                    value: 'id',
+                },
+                {
+                    text: 'Название',
+                    value: 'name'
+                },
+                {
+                    text: 'Дата',
+                    value: 'date_to'
+                },
+            ]
+        }),
         created: function () {
             this.$store.dispatch('reports');
         },
