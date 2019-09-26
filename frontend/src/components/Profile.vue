@@ -47,52 +47,6 @@
         computed: {
             ...mapGetters(["user"])
         },
-        methods: {
-            openAvatarPicker () {
-                this.showAvatarPicker = true
-            },
-            selectAvatar (avatar) {
-                this.form.avatar = avatar
-            }
-        }
+        methods: {}
     }
 </script>
-
-<style lang="sass" scoped>
-    .profile__block
-        max-width: 360px
-        min-width: 280px
-        padding: 20px 10px
-        background: white
-        box-shadow: 1px 1px 4px -1px black
-    .profile
-        color: black
-        .profile__image__container
-            margin: 0 0 20px 0
-            .profile__image
-                display: flex
-                flex-direction: column
-                flex-wrap: nowrap
-                justify-content: center
-                align-items: center
-        .profile__name__block
-            display: flex
-            flex-direction: row
-            flex-wrap: wrap
-            justify-content: center
-            align-items: center
-            margin: 0 0 20px 0
-            .profile__name
-
-            .first__name
-                margin: 0 10px 0 0
-            .last__name
-        .profile__empposition
-            text-align: center
-            .empposition__text
-                font-size: small
-                color: gray
-        .profile__email
-            margin: 20px 0 0 0
-            text-align: center
-</style>

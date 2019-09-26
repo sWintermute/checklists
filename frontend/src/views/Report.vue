@@ -2,20 +2,20 @@
     <v-container>
         <template v-for="checklist in report.checklists">
             <v-data-table
-                :items="checklist.questions"
-                :items-per-page="100"
-                item-key="id"
-                hide-default-header
-                hide-default-footer
-                class="elevation-1"
+                    :items="checklist.questions"
+                    :items-per-page="100"
+                    item-key="id"
+                    hide-default-header
+                    hide-default-footer
+                    class="elevation-1"
             >
                 <template v-slot:header>
                     <thead>
-                        <tr>
-                            <th>№ п/п</th>
-                            <th colspan="3">Параметры</th>
-                            <th>Примечание</th>
-                        </tr>
+                    <tr>
+                        <th>№ п/п</th>
+                        <th colspan="3">Параметры</th>
+                        <th>Примечание</th>
+                    </tr>
                     </thead>
                 </template>
                 <template v-slot:body="{ items }">
@@ -33,13 +33,13 @@
                         </template>
                         <td v-if="item.notes">
                             <v-card
-                                class="mx-auto elevation-0"
-                                style="background: rgba(0, 0, 0, 0);"
-                                tile
+                                    class="mx-auto elevation-0"
+                                    style="background: rgba(0, 0, 0, 0);"
+                                    tile
                             >
                                 <v-list-item class="flex-column" two-line >
                                     <v-list-item-content v-for="note in item.notes">
-                                        <v-list-item-title>{{note.created | moment}}</v-list-item-title>
+                                        <v-list-item-title>{{note.created }}</v-list-item-title>
                                         <v-list-item-subtitle >
                                             <template v-for="key in note.keys">
                                                 {{ key.answer }}
@@ -59,7 +59,6 @@
 
 <script>
     import { mapState, mapGetters, mapMutations } from 'vuex';
-    import moment from 'moment';
 
 
     export default {
@@ -89,9 +88,6 @@
             isLoading : function(){ return this.$store.getters.isLoading},
         },
         filters: {
-            moment: function (date) {
-                return moment(date).format('DD.MM.YYYY, h:mm');
-            }
         },
         methods: {
             ...mapMutations(["SET_LOADING_STATUS"]),
@@ -101,6 +97,3 @@
         }
     }
 </script>
-
-<style scoped>
-</style>

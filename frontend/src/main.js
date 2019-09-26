@@ -7,10 +7,7 @@ import Axios from 'axios'
 
 import VueLoading from 'vue-loading-template'
 import vuetify from './plugins/vuetify'
-import "./plugins/vee-validate"
-
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import './stylus/main.styl'
+import "./plugins/vee-validate";
 
 Vue.prototype.$http = Axios;
 const token = localStorage.getItem('user-token');
