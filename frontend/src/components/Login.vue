@@ -29,7 +29,7 @@
                                             :error-messages="errors"
                                             v-model="email"
                                             label="Почта"
-                                            prepend-icon="person"
+                                            prepend-icon="mdi-account-circle"
                                     ></v-text-field>
                                 </ValidationProvider>
                                 <ValidationProvider name="password" rules="required|min:8" v-slot="{ errors }">
@@ -39,7 +39,7 @@
                                             id="password"
                                             label="Пароль"
                                             name="password"
-                                            prepend-icon="lock"
+                                            prepend-icon="mdi-lock"
                                             type="password"
                                     ></v-text-field>
                                 </ValidationProvider>
