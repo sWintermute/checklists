@@ -4,6 +4,7 @@ import router from "../router";
 export default {
     profile({commit, state}) {
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             axios({
                 url: '/api/v1/me/',
                 headers: {
@@ -11,6 +12,7 @@ export default {
                 },
                 method: 'GET'
             }).then(response => {
+                commit('SET_LOADING_STATUS', false);
                 const user = response.data;
                 localStorage.setItem('user', user);
                 commit('SET_USER', user);
@@ -23,6 +25,7 @@ export default {
     },
     create_list({commit, state}, {fileList, listId}){
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             state.list.id = parseInt(listId);
             state.list.created = new Date;
             state.list.updated = new Date;
@@ -33,6 +36,7 @@ export default {
             for (let [key, value] of Object.entries(state.answers)) {
                 state.list.answers.push({question: key, body: value});
             }
+            commit('SET_LOADING_STATUS', false);
             axios({
                 url: '/api/v1/response/',
                 headers: {
@@ -54,6 +58,7 @@ export default {
     },
     list({commit, state}, list_id) {
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             axios({
                 url: '/api/v1/lists/' + list_id + '/',
                 headers: {
@@ -61,6 +66,7 @@ export default {
                 },
                 method: 'GET'
             }).then(response => {
+                commit('SET_LOADING_STATUS', false);
                 const list = response.data;
                 localStorage.setItem('list', list);
                 commit('SET_LIST', list);
@@ -73,6 +79,7 @@ export default {
     },
     lists({commit, state}) {
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             axios({
                 url: '/api/v1/lists/',
                 headers: {
@@ -80,6 +87,7 @@ export default {
                 },
                 method: 'GET'
             }).then(response => {
+                commit('SET_LOADING_STATUS', false);
                 const lists = response.data;
                 localStorage.setItem('lists', lists);
                 commit('SET_LISTS', lists);
@@ -92,6 +100,7 @@ export default {
     },
     reports({commit, state}) {
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             axios({
                 url: '/api/v1/reports/',
                 headers: {
@@ -99,6 +108,7 @@ export default {
                 },
                 method: 'GET'
             }).then(response => {
+                commit('SET_LOADING_STATUS', false);
                 const reports = response.data;
                 localStorage.setItem('lists', reports);
                 commit('SET_REPORTS', reports);
@@ -113,7 +123,7 @@ export default {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             axios({
-                url: '/api/v1/report/' + report_id,
+                url: '/api/v1/report/' + report_id + '/',
                 headers: {
                     Authorization: 'Token ' + state.token,
                 },
@@ -132,9 +142,11 @@ export default {
     },
     login({commit}, user){
         return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
             commit('SET_AUTH_REQUEST');
             axios({url: '/auth/token/login', data: user, method: 'POST' })
                 .then(resp => {
+                    commit('SET_LOADING_STATUS', false);
                     const token = resp.data.auth_token;
                     const user = resp.data.user;
                     localStorage.setItem('token', token);
@@ -154,7 +166,6 @@ export default {
     logout({commit}){
         return new Promise((resolve, reject) => {
             commit('SET_LOGOUT');
-            // POST REQUEST
             localStorage.removeItem('token');
             delete axios.defaults.headers.common['Authorization'];
             resolve()

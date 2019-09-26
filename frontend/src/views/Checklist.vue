@@ -3,7 +3,9 @@
             class="fill-height"
             fluid
     >
+        <vue-loading v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }"></vue-loading>
         <v-row
+                v-else
                 align="center"
                 justify="center"
         >
@@ -100,7 +102,7 @@
         },
         computed: {
             ...mapState(["list"]),
-            ...mapGetters(['errors'])
+            ...mapGetters(['errors', 'isLoading'])
         },
         methods: {
             foo(value, id) {

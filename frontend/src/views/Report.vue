@@ -1,9 +1,13 @@
 <template>
-    <v-container>
+    <v-container
+            class="fill-height"
+            fluid>
         <template v-for="checklist in report.checklists">
+            <vue-loading v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }"></vue-loading>
             <v-data-table
+                    v-else
                     :items="checklist.questions"
-                    :items-per-page="100"
+                    :items-per-page="10"
                     item-key="id"
                     hide-default-header
                     hide-default-footer
@@ -32,22 +36,16 @@
                             <td></td>
                         </template>
                         <td v-if="item.notes">
-                            <v-card
-                                    class="mx-auto elevation-0"
-                                    style="background: rgba(0, 0, 0, 0);"
-                                    tile
-                            >
-                                <v-list-item class="flex-column" two-line >
-                                    <v-list-item-content v-for="note in item.notes">
-                                        <v-list-item-title>{{note.created }}</v-list-item-title>
-                                        <v-list-item-subtitle >
-                                            <template v-for="key in note.keys">
-                                                {{ key.answer }}
-                                            </template>
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-card>
+                            <v-list-item class="flex-column pa-0" two-line>
+                                <v-list-item-content v-for="note in item.notes" style="align-self: start !important;">
+                                    <v-list-item-title>{{note.created | date}}</v-list-item-title>
+                                    <v-list-item-subtitle >
+                                        <template v-for="key in note.keys">
+                                            {{ key.answer }}
+                                        </template>
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
                         </td>
                     </tr>
                     </tbody>
@@ -58,6 +56,7 @@
 </template>
 
 <script>
+    import { format, compareAsc } from 'date-fns'
     import { mapState, mapGetters, mapMutations } from 'vuex';
 
 
@@ -84,13 +83,15 @@
             this.$store.dispatch('report', this.$route.params.id);
         },
         computed: {
-            ...mapState(["report"]),
+            ...mapGetters(["report"]),
             isLoading : function(){ return this.$store.getters.isLoading},
         },
         filters: {
+            date(value) {
+                return format(new Date(value), 'MM.dd.yyyy hh:mm')
+            }
         },
         methods: {
-            ...mapMutations(["SET_LOADING_STATUS"]),
             sendChecklist() {
                 this.$store.dispatch('create_list', this.$route.params.id);
             },
