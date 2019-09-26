@@ -5,14 +5,8 @@
                 :items="reports"
                 :items-per-page="5"
                 item-key="id"
+                hide-default-footer
                 class="elevation-1"
-                :footer-props="{
-                showFirstLastPage: true,
-                firstIcon: 'mdi-arrow-collapse-left',
-                lastIcon: 'mdi-arrow-collapse-right',
-                prevIcon: 'mdi-minus',
-                nextIcon: 'mdi-plus'
-            }"
         >
             <template slot="item" slot-scope="props">
                 <router-link tag="tr" :to="'report/' + props.item.id">
