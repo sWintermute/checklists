@@ -1,12 +1,12 @@
 <template>
     <v-container>
         <v-data-table
-            :headers="headers"
-            :items="reports"
-            :items-per-page="5"
-            item-key="id"
-            class="elevation-1"
-            :footer-props="{
+                :headers="headers"
+                :items="reports"
+                :items-per-page="5"
+                item-key="id"
+                class="elevation-1"
+                :footer-props="{
                 showFirstLastPage: true,
                 firstIcon: 'mdi-arrow-collapse-left',
                 lastIcon: 'mdi-arrow-collapse-right',

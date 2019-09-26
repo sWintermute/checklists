@@ -1,22 +1,22 @@
 <template>
     <v-container
-        class="fill-height"
-        fluid
+            class="fill-height"
+            fluid
     >
         <v-row
-            align="center"
-            justify="center"
+                align="center"
+                justify="center"
         >
             <v-col
-                cols="12"
-                sm="8"
-                md="4"
+                    cols="12"
+                    sm="8"
+                    md="4"
             >
                 <v-card class="elevation-2 rounded-card" tile>
                     <v-toolbar
-                        color="primary"
-                        dark
-                        flat
+                            color="primary"
+                            dark
+                            flat
                     >
                         <v-toolbar-title class="">Введите свои данные</v-toolbar-title>
                         <div class="flex-grow-1"></div>
@@ -26,21 +26,21 @@
                             <form>
                                 <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
                                     <v-text-field
-                                        :error-messages="errors"
-                                        v-model="email"
-                                        label="Почта"
-                                        prepend-icon="person"
+                                            :error-messages="errors"
+                                            v-model="email"
+                                            label="Почта"
+                                            prepend-icon="mdi-account-circle"
                                     ></v-text-field>
                                 </ValidationProvider>
                                 <ValidationProvider name="password" rules="required|min:8" v-slot="{ errors }">
                                     <v-text-field
-                                        :error-messages="errors"
-                                        v-model="password"
-                                        id="password"
-                                        label="Пароль"
-                                        name="password"
-                                        prepend-icon="lock"
-                                        type="password"
+                                            :error-messages="errors"
+                                            v-model="password"
+                                            id="password"
+                                            label="Пароль"
+                                            name="password"
+                                            prepend-icon="mdi-lock"
+                                            type="password"
                                     ></v-text-field>
                                 </ValidationProvider>
                             </form>
@@ -94,6 +94,3 @@
         },
     };
 </script>
-
-<style>
-</style>
