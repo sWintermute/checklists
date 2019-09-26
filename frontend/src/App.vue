@@ -23,7 +23,7 @@
                 </router-link>
                 <v-spacer class="hidden-sm-and-down"></v-spacer>
                 <v-toolbar-items>
-                    <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/">Чек-листы</v-btn>
+                    <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/">Чеклисты</v-btn>
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/reports">Отчеты</v-btn>
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/profile">Профиль</v-btn>
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" @click='logout'>Выйти</v-btn>
@@ -49,7 +49,7 @@
             clipped: false,
             menus: [
                 {
-                    title: 'Чек-листы',
+                    title: 'Чеклисты',
                     path: '/',
                     icon: ""
                 },

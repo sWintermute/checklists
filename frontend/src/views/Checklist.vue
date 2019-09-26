@@ -1,22 +1,22 @@
 <template>
     <v-container
-        class="fill-height"
-        fluid
+            class="fill-height"
+            fluid
     >
         <v-row
-            align="center"
-            justify="center"
+                align="center"
+                justify="center"
         >
             <v-col
-                cols="12"
-                sm="8"
-                md="4"
+                    cols="12"
+                    sm="8"
+                    md="4"
             >
                 <v-card class="elevation-2 rounded-card" tile>
                     <v-toolbar
-                        color="primary"
-                        dark
-                        flat
+                            color="primary"
+                            dark
+                            flat
                     >
                         <v-toolbar-title>{{ list.name }}</v-toolbar-title>
                     </v-toolbar>
@@ -27,20 +27,20 @@
                                     <template v-if="question.type === 'textarea'">
                                         <header>{{ question.text }}</header>
                                         <v-textarea
-                                            solo
-                                            label="Оставьте замечания..."
-                                            class="mt-3"
-                                            v-model="answers[question.id]"
+                                                solo
+                                                label="Оставьте замечания..."
+                                                class="mt-3"
+                                                v-model="answers[question.id]"
                                         ></v-textarea>
                                     </template>
                                     <template v-else-if="question.type === 'radio'">
                                         <header>{{ question.text }}</header>
                                         <v-radio-group v-model="answers[question.id]">
                                             <v-radio
-                                                v-for="n in question.choices.split(';')"
-                                                :key="n"
-                                                :label="n"
-                                                :value="n"
+                                                    v-for="n in question.choices.split(';')"
+                                                    :key="n"
+                                                    :label="n"
+                                                    :value="n"
                                             ></v-radio>
                                         </v-radio-group>
                                     </template>
@@ -52,16 +52,16 @@
                                     </template>
                                     <template v-else-if="question.type === 'select-image'">
                                         <uploader
-                                            v-model="fileList"
-                                            title="Загрузите фото"
-                                            :autoUpload="false"
+                                                v-model="fileList"
+                                                title="Загрузите фото"
+                                                :autoUpload="false"
                                         ></uploader>
                                     </template>
                                     <template v-else>
                                         <header>{{ question.text }}</header>
                                         <v-text-field
-                                            v-model="answers[question.id]"
-                                            label="Введите текст..."
+                                                v-model="answers[question.id]"
+                                                label="Введите текст..."
                                         ></v-text-field>
                                     </template>
                                 </ValidationProvider>
@@ -93,15 +93,13 @@
             ValidationObserver,
             ValidationProvider
         },
-        data() {
-            return {
-                test: [],
-                fileList: [],
-                answers: {},
-                choices: {},
-                toggleChecked: false,
-            }
-        },
+        data: () => ({
+            test: [],
+            fileList: [],
+            answers: {},
+            choices: {},
+            toggleChecked: false
+        }),
         created: function () {
             this.$store.dispatch('list', this.$route.params.id);
         },
@@ -131,6 +129,3 @@
         }
     }
 </script>
-
-<style scoped>
-</style>
