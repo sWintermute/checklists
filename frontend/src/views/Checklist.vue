@@ -21,9 +21,8 @@
                         <v-toolbar-title>{{ list.name }}</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text class="px-6 pt-6 pb-0">
-                        <ValidationObserver v-slot="{ passes }">
                             <form>
-                                <ValidationProvider name="email" rules="required|email" v-slot="{ errors }" v-for='question in list.questions'>
+                                <div v-for="question in list.questions">
                                     <template v-if="question.type === 'textarea'">
                                         <header>{{ question.text }}</header>
                                         <v-textarea
@@ -64,12 +63,8 @@
                                                 label="Введите текст..."
                                         ></v-text-field>
                                     </template>
-                                </ValidationProvider>
+                                </div>
                             </form>
-                            <div v-if="errors" class="subtitle1 text-center red--text">
-                                <p v-for="(errorMessage, i) in errors" :key="i">{{ errorMessage[0] }}</p>
-                            </div>
-                        </ValidationObserver>
                     </v-card-text>
                     <v-card-actions class="justify-center px-6">
                         <v-btn class="ma-2" tile outlined color="primary">Очистить</v-btn>
