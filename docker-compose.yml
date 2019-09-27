@@ -14,6 +14,8 @@ services:
     command: -p ${POSTGRES_PORT}
     volumes:
       - ./backend:/app
+      - ./static:/app/static
+      - ./media:/app/media
     depends_on:
       - postgres_db
     networks:
@@ -40,10 +42,11 @@ services:
       - 80:80
     volumes:
       - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/static:/app/static
-      - ./backend/media:/app/media
+      - ./static:/app/static
+      - ./media:/app/media
     depends_on:
       - backend
+      - frontend
     networks:
       private_network:
         ipv4_address: 172.25.0.7
