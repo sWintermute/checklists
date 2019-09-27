@@ -6,6 +6,8 @@ RUN apk add --no-cache python3 postgresql-libs jpeg
 RUN mkdir -p /app
 WORKDIR /app
 
+RUN ln -s python3 python
+
 COPY Pipfile Pipfile.lock /app/
 RUN apk add --no-cache --virtual .build-deps python3-dev gcc musl-dev postgresql-dev jpeg-dev zlib-dev && \
  pip3 install --disable-pip-version-check --no-cache-dir pipenv gunicorn meinheld && \
