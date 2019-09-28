@@ -11,7 +11,7 @@ RUN ln -s python3 python
 COPY Pipfile Pipfile.lock /app/
 RUN apk add --no-cache --virtual .build-deps python3-dev gcc musl-dev postgresql-dev jpeg-dev zlib-dev && \
  pip3 install --disable-pip-version-check --no-cache-dir pipenv gunicorn meinheld && \
- pipenv install --system --deploy --ignore-pipfile && \
+ pipenv install --dev --system --deploy --ignore-pipfile && \
  apk --purge del .build-deps
 
 EXPOSE 8000
