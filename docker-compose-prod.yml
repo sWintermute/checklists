@@ -4,10 +4,10 @@ services:
   backend:
     container_name: checklists_backend
     env_file: .env
-    environment:
-      - DEBUG=False
     build:
       context: ./backend
+      args:
+        - DEBUG="${DEBUG}"
     restart: on-failure
     volumes:
       - ./backend:/app
