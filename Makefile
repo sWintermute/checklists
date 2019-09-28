@@ -28,18 +28,18 @@ sh:
 prod-sh:
 	docker exec -it /checklists_backend /bin/sh
 migrations:
-	docker exec -it /checklists_backend_dev python manage.py makemigrations
+	docker exec -it /checklists_backend_dev python3 manage.py makemigrations
 su:
-	docker exec -it /checklists_backend_dev python manage.py createsuperuser
+	docker exec -it /checklists_backend_dev python3 manage.py createsuperuser
 prod-su:
-	docker exec -it /checklists_backend python manage.py createsuperuser
+	docker exec -it /checklists_backend python3 manage.py createsuperuser
 dump:
-	docker exec -it /checklists_backend_dev python manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
+	docker exec -it /checklists_backend_dev python3 manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
 prod-dumpd:
-	docker exec -it /checklists_backend python manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
+	docker exec -it /checklists_backend python3 manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
 load:
-	docker exec -it /checklists_backend_dev python manage.py loaddata $(filter-out $@,$(MAKECMDGOALS))
+	docker exec -it /checklists_backend_dev python3 manage.py loaddata $(filter-out $@,$(MAKECMDGOALS))
 prod-load:
-	docker exec -it /checklists_backend python manage.py loaddata $(filter-out $@,$(MAKECMDGOALS))
+	docker exec -it /checklists_backend python3 manage.py loaddata $(filter-out $@,$(MAKECMDGOALS))
 %:
 	@:
