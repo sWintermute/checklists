@@ -58,7 +58,6 @@ services:
     image: node:12.9-alpine
     command: npm run serve
     volumes:
-      - ./.env:/app/.env:ro
       - ./frontend:/app
     working_dir: /app
     restart: on-failure
