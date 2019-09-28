@@ -12,6 +12,7 @@ services:
     volumes:
       - ./backend:/app
       - checklists_media:/app/media
+      - ./static:/app/static
     depends_on:
       - postgres_db
     networks:
@@ -40,7 +41,7 @@ services:
       - 80:80
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/static:/app/static
+      - ./static:/app/static
       - checklists_media:/app/media
     depends_on:
       - backend
