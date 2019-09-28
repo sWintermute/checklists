@@ -113,14 +113,10 @@ venv.bak/
 # VS Code 
 .vscode/
 
-# Generic static files
-**/static/admin/
-**/static/drf-yasg/
-**/static/rest_framework/
-**/static/silk/
 
-# Backend media files
-**/backend/media/
+# Backend files
+**/backend/media/*
+**/backend/static/*
 
 **/node_modules/
 **/package-lock.json
@@ -128,5 +124,8 @@ venv.bak/
 # PyCharm
 .idea/
 
-media/
-profiles/
+media/*
+profiles/*
+static/*
+
+!.gitkeep
