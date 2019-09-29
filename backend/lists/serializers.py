@@ -1,7 +1,7 @@
 import base64
 import imghdr
 import uuid
-import six
+# import six
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
@@ -52,7 +52,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
-        if isinstance(data, six.string_types):
+        if isinstance(data, str):
             if 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
 
