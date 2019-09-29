@@ -18,10 +18,9 @@ RUN apk add --no-cache python3 postgresql-libs jpeg && \
   echo "Install only PROD packages"; \
   pipenv install --system --deploy --ignore-pipfile; \
  fi && \
- pip3 uninstall pipenv virtualenv virtualenv-clone certifi pip setuptools -y && \
+ pip3 uninstall pipenv virtualenv virtualenv-clone certifi pip -y && \
  apk --purge del .build-deps && \
- rm -rf /root/.cache && \
- rm -rf /root/.local
+ rm -rf /root/.cache /root/.local /usr/share/terminfo
 
 EXPOSE 8000
 
