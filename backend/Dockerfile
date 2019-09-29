@@ -14,13 +14,16 @@ RUN apk add --no-cache --virtual .build-deps python3-dev gcc musl-dev postgresql
  pip3 install --disable-pip-version-check --no-cache-dir pipenv gunicorn meinheld && \
  if [[ "$DEBUG" == "TRUE" ]] || [[ "$DEBUG" == "True" ]] || [[ "$DEBUG" == "1" ]]; then \
   echo "Install with DEV packages"; \
-  pipenv install --dev --system --deploy --ignore-pipfile --verbose; \
+  pipenv install --dev --system --deploy --ignore-pipfile; \
  else \
   echo "Install only PROD packages"; \
-  pipenv install --system --deploy --ignore-pipfile --verbose; \
+  pipenv install --system --deploy --ignore-pipfile; \
  fi && \
+ pip3 uninstall pipenv virtualenv virtualenv-clone certifi -y && \
  apk --purge del .build-deps && \
- rm -rf /root/.cache/pipenv
+ rm -rf /root/.cache && \
+ rm -rf /root/.local
+
 
 EXPOSE 8000
 
