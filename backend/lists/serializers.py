@@ -1,7 +1,6 @@
 import base64
 import imghdr
 import uuid
-# import six
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
@@ -129,9 +128,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
             keys = []
             for question in models.Question.objects.filter(is_key=True, survey=response.survey):
                 for answer in models.Answer.objects.filter(question=question, response=response):
-                    node = {"name": question.text, "answer": answer.body}
-                    keys.append(node)
-                    # keys = ";".join([answer.body, keys])
+                    keys.append({"name": question.text, "answer": answer.body})
 
             for answer in models.Answer.objects.filter(question=obj.id, response=response):
                 if answer.body in obj.key_choices.split(";"):
@@ -153,9 +150,7 @@ class ReportSurveySerializer(serializers.ModelSerializer):
 
     def get_questions(self, obj):
         quests = models.Question.objects.filter(survey=obj.id, is_key=False)
-        resps = list(filter(lambda x: x.survey.id == obj.id, self.responses))
-
-        return ReportQuestionSerializer(quests, responses=resps, many=True).data
+        return ReportQuestionSerializer(quests, responses=self.responses, many=True).data
 
     class Meta:
         model = models.Survey
@@ -166,16 +161,11 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
     checklists = serializers.SerializerMethodField()
 
     def get_checklists(self, obj):
-        lists = []
-        for survey in obj.checklists.all():
-            lists += models.Survey.objects.filter(id=survey.id)
+        all_lists = obj.checklists.all()
+        lists = [x for y in all_lists for x in models.Survey.objects.filter(id=y.id)]
+        resps = [x for y in all_lists for x in models.Response.objects.filter(survey=y.id)]
 
-        resps = []
-        for survey in obj.checklists.all():
-            resps += models.Response.objects.filter(survey=survey.id)
-
-        resps = list(filter(lambda x: x.created >= obj.date_from, resps))
-        resps = list(filter(lambda x: x.created <= obj.date_to, resps))
+        resps = list(filter(lambda x: obj.date_from <= x.created <= obj.date_to, resps))
 
         return ReportSurveySerializer(lists, responses=resps, many=True).data
 
