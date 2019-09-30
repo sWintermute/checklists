@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.10 as build
 ARG DEBUG
 
 ENV PYTHONUNBUFFERED 1
@@ -22,6 +22,9 @@ RUN apk add --no-cache python3 postgresql-libs jpeg && \
  apk --purge del .build-deps && \
  rm -rf /root/.cache /root/.local /usr/share/terminfo
 
-EXPOSE 8000
+FROM scratch as deploy
 
+COPY --from=build / /
+WORKDIR /app
+EXPOSE 8000
 ENTRYPOINT ["./docker-entrypoint.sh"]
