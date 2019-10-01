@@ -39,7 +39,7 @@ RUN find /usr/lib/python*/site-packages/rest_framework/ ! -name ru ! -name en* -
 
 FROM scratch AS deploy
 ARG DEBUG
-ENV PYTHONUNBUFFERED 1,
+ENV PYTHONUNBUFFERED 1
 ENV DEBUG ${DEBUG}
 EXPOSE 8000
 COPY --from=build / /
