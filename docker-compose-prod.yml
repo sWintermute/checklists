@@ -7,7 +7,7 @@ services:
     build:
       context: ./backend
       args:
-        - DEBUG="${DEBUG}"
+        - DEBUG=False
       target: deploy
     restart: on-failure
     volumes:

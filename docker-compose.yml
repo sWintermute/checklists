@@ -9,7 +9,7 @@ services:
     build:
       context: ./backend
       args:
-        - DEBUG=${DEBUG}
+        - DEBUG=True
       target: deploy
     restart: on-failure
     command: -p ${POSTGRES_PORT}
