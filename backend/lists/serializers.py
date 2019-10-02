@@ -13,7 +13,7 @@ from . import models
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'required', 'type', 'choices')
+        fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'key_choices')
 
 
 class SurveySerializer(serializers.ModelSerializer):
