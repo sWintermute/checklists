@@ -14,7 +14,7 @@ prod-up:
 upb:
 	docker-compose up -d --force-recreate --build
 prod-upb:
-	docker-compose -f docker-compose-prod.yml up -d --force-recreate --build
+	docker-compose -f docker-compose-prod.yml up -d --force-recreate --build --remove-orphans
 down:
 	docker-compose down
 prod-down:
@@ -35,7 +35,7 @@ prod-su:
 	docker exec -it /checklists_backend python3 manage.py createsuperuser
 dump:
 	docker exec -it /checklists_backend_dev python3 manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
-prod-dumpd:
+prod-dump:
 	docker exec -it /checklists_backend python3 manage.py dumpdata -o $(filter-out $@,$(MAKECMDGOALS))
 load:
 	docker exec -it /checklists_backend_dev python3 manage.py loaddata $(filter-out $@,$(MAKECMDGOALS))

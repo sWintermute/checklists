@@ -7,11 +7,11 @@
             <v-data-table
                     v-else
                     :items="checklist.questions"
-                    :items-per-page="10"
+		    :items-per-page="-1"
                     item-key="id"
                     hide-default-header
-                    hide-default-footer
-                    class="elevation-1"
+		    hide-default-footer
+                    class="elevation-1 mx-auto"
             >
                 <template v-slot:header>
                     <thead>

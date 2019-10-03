@@ -1,17 +1,19 @@
-version: '3'
+version: '3.4'
 
 services:
   backend:
     container_name: checklists_backend
     env_file: .env
-    environment:
-      - DEBUG=False
     build:
       context: ./backend
+      args:
+        - DEBUG=False
+      target: deploy
     restart: always
     volumes:
       - ./backend:/app
       - checklists_media:/app/media
+      - ./static:/app/static
     depends_on:
       - postgres_db
     networks:
@@ -41,7 +43,7 @@ services:
       - 80:80
     volumes:
       - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/static:/app/static
+      - ./static:/app/static
       - checklists_media:/app/media
     depends_on:
       - backend
