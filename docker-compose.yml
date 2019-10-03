@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 services:
 
@@ -6,14 +6,18 @@ services:
     container_name: checklists_backend_dev
     env_file: .env
     user: ${CURRENT_UID}
-    environment:
-      - DEBUG=True
     build:
       context: ./backend
+      args:
+        - DEBUG=True
+      target: deploy
     restart: on-failure
     command: -p ${POSTGRES_PORT}
     volumes:
       - ./backend:/app
+      - ./static:/app/static
+      - ./media:/app/media
+      - ./profiles:/app/profiles
     depends_on:
       - postgres_db
     networks:
@@ -34,16 +38,17 @@ services:
 
   nginx:
     container_name: checklists_nginx_dev
-    image: nginx:1.17.3-alpine
+    image: nginx:1.17-alpine
     restart: on-failure
     ports:
       - 80:80
     volumes:
       - ./nginx/dev.conf:/etc/nginx/nginx.conf:ro
-      - ./backend/static:/app/static
-      - ./backend/media:/app/media
+      - ./static:/app/static
+      - ./media:/app/media
     depends_on:
       - backend
+      - frontend
     networks:
       private_network:
         ipv4_address: 172.25.0.7
@@ -51,13 +56,15 @@ services:
 
   frontend:
     container_name: checklists_frontend_dev
-    image: node:12.9-alpine
+    user: ${CURRENT_UID}
+    image: node:12.10-alpine
     command: npm run serve
     volumes:
-      - ./.env:/app/.env:ro
       - ./frontend:/app
     working_dir: /app
     restart: on-failure
+    depends_on:
+      - backend
     networks:
       private_network:
         ipv4_address: 172.25.0.8
