@@ -3,7 +3,7 @@
         <v-data-table
                 :headers="headers"
                 :items="reports"
-                :items-per-page="5"
+                :items-per-page="-1"
                 item-key="id"
                 hide-default-footer
                 class="elevation-1"
