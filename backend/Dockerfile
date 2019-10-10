@@ -24,8 +24,7 @@ RUN if [[ "$DEBUG" == "TRUE" ]] || [[ "$DEBUG" == "True" ]] || [[ "$DEBUG" == "1
  /etc/apk/ /usr/share/apk/ /lib/apk/ /sbin/apk \
  /media /usr/lib/terminfo /usr/share/terminfo \
  /usr/lib/python*/ensurepip \
- /usr/lib/python*/turtledemo /usr/lib/python*/turtle.py /usr/lib/python*/__pycache__/turtle.* \
- /usr/bin/2to3* /usr/lib/python*/lib2to3 && \
+ /usr/lib/python*/turtledemo /usr/lib/python*/turtle.py /usr/lib/python*/__pycache__/turtle.* && \
  if [[ "$DEBUG" != "TRUE" ]] && [[ "$DEBUG" != "True" ]] && [[ "$DEBUG" != "1" ]]; then \
   find /usr/lib/python*/* | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf; \
   python3 -m compileall -b /usr/lib/python*; \
