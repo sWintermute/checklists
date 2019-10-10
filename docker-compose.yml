@@ -69,6 +69,18 @@ services:
       private_network:
         ipv4_address: 172.25.0.8
 
+  redis_cache:
+    container_name: checklists_redis_cache_dev
+    user: ${CURRENT_UID}
+    image: redis:5.0.6-alpine3.10
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      private_network:
+        ipv4_address: 172.25.0.10
+
+
 networks:
   private_network:
     ipam:

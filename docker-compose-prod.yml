@@ -52,20 +52,34 @@ services:
         ipv4_address: 172.25.0.7
       default:
 
-#  postgres_backups:
-#    container_name: checklists_postgres_backups
-#    env_file: .env
-#    image: prodrigestivill/postgres-backup-local:11-alpine
-#    restart: always
-#    links:
-#      - postgres_db
-#    depends_on:
-#      - postgres_db
-#    volumes:
-#      - /tmp/backups/:/backups/
-#    networks:
-#      private_network:
-#        ipv4_address: 172.25.0.9
+  #  postgres_backups:
+  #    container_name: checklists_postgres_backups
+  #    env_file: .env
+  #    image: prodrigestivill/postgres-backup-local:11-alpine
+  #    restart: always
+  #    links:
+  #      - postgres_db
+  #    depends_on:
+  #      - postgres_db
+  #    volumes:
+  #      - /tmp/backups/:/backups/
+  #    networks:
+  #      private_network:
+  #        ipv4_address: 172.25.0.9
+
+
+  redis_cache:
+    container_name: checklists_redis_cache
+    user: ${CURRENT_UID}
+    image: redis:5.0.6-alpine3.10
+    depends_on:
+      - backend
+    volumes:
+      - checklists_redis_data:/data
+    networks:
+      private_network:
+        ipv4_address: 172.25.0.10
+
 
 networks:
   private_network:
@@ -80,8 +94,11 @@ volumes:
     external:
       name: checklists_db_data
   checklists_db_backups:
-    external:   
+    external:
       name: checklists_db_backups
   checklists_media:
     external:
       name: checklists_media
+  checklists_redis_data:
+    external:
+      name: checklists_redis_data
