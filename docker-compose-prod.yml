@@ -70,7 +70,6 @@ services:
 
   redis_cache:
     container_name: checklists_redis_cache
-    user: ${CURRENT_UID}
     image: redis:5.0.6-alpine3.10
     depends_on:
       - backend
