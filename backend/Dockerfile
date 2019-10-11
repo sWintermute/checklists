@@ -43,7 +43,6 @@ RUN if [[ "$DEBUG" == "TRUE" ]] || [[ "$DEBUG" == "True" ]] || [[ "$DEBUG" == "1
  find /usr/lib/python*/site-packages/django/contrib/redirects/locale ! -name ru ! -name en* -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 rm -rf  && \
  find /usr/lib/python*/site-packages/django/contrib/sessions/locale ! -name ru ! -name en* -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 rm -rf  && \
  find /usr/lib/python*/site-packages/django/contrib/sites/locale ! -name ru ! -name en* -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 rm -rf && \
- find /usr/lib/python*/site-packages/rest_framework/ ! -name ru ! -name en* -mindepth 2 -maxdepth 2 -type d -print0 | xargs -0 rm -rf && \
  rm -rf /app/Pipfile* && \
  rm -rf /usr/lib/python*/site-packages/*.dist-info
 
