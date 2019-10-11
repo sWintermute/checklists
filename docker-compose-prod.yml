@@ -47,6 +47,7 @@ services:
       - checklists_media:/app/media
     depends_on:
       - backend
+      - redis_cache
     networks:
       private_network:
         ipv4_address: 172.25.0.7
