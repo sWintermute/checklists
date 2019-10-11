@@ -25,7 +25,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_cache',
     'djoser',
 ]
 
@@ -55,6 +54,7 @@ if DEBUG:
 
 LOCAL_APPS = [
     'user_profile.apps.UserProfileConfig',
+    'rest_framework_cache',
     'lists'
 ]
 
@@ -162,5 +162,3 @@ REST_FRAMEWORK = {
 }
 
 CHOICES_SEPARATOR = ';'
-
-APPEND_SLASH = True
