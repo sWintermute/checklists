@@ -25,6 +25,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_cache',
     'djoser',
 ]
 
@@ -61,13 +62,9 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 if DEBUG:
@@ -131,6 +128,10 @@ CACHES = {
     }
 }
 
+REST_FRAMEWORK_CACHE = {
+    'DEFAULT_CACHE_BACKEND': 'default',
+    'DEFAULT_CACHE_TIMEOUT': 86400,
+}
 
 LANGUAGE_CODE = 'ru-ru'
 

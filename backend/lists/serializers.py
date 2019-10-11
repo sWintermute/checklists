@@ -6,7 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 from user_profile import models as umodels
-
+from rest_framework_cache.serializers import CachedSerializerMixin
+from rest_framework_cache.registry import cache_registry
 from . import models
 
 
@@ -16,7 +17,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'key_choices')
 
 
-class SurveySerializer(serializers.ModelSerializer):
+class SurveySerializer(CachedSerializerMixin):
     questions = QuestionSerializer(many=True)
 
     class Meta:
@@ -157,7 +158,7 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'questions')
 
 
-class ReportGetEntitySerializer(serializers.ModelSerializer):
+class ReportGetEntitySerializer(CachedSerializerMixin):
     checklists = serializers.SerializerMethodField()
 
     def get_checklists(self, obj):
@@ -174,3 +175,6 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
 
 # End report generation
+
+cache_registry.register(SurveySerializer)
+cache_registry.register(ReportGetEntitySerializer)

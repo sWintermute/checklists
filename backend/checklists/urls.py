@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 from rest_framework import permissions
+from rest_framework_cache.registry import cache_registry
 
 from . import settings
 
@@ -10,6 +11,8 @@ admin.site.site_title = "Адмнистрирование чеклистов"
 admin.site.index_title = "Чеклисты"
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
+
+cache_registry.autodiscover()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
