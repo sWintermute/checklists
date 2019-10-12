@@ -1,16 +1,15 @@
 from rest_framework import serializers
 
-from .cache import cache
+from .cache import get_cache
+from .registry import CacheRegistry
 from .settings import api_settings
-from .utils import get_cache_key
 
 
 class CachedSerializerMixin(serializers.ModelSerializer):
+    _cache_timeout = api_settings.DEFAULT_CACHE_TIMEOUT
 
     def _get_cache_key(self, instance):
-        request = self.context.get('request')
-        protocol = request.scheme if request else 'http'
-        return get_cache_key(instance, self.__class__, protocol)
+        return CacheRegistry.get_cache_key(instance, self.__class__)
 
     def to_representation(self, instance):
         """
@@ -18,10 +17,11 @@ class CachedSerializerMixin(serializers.ModelSerializer):
         if is not.
         """
         key = self._get_cache_key(instance)
+        cache = get_cache()
         cached = cache.get(key)
-        if cached:
+        if cached is not None:
             return cached
 
         result = super(CachedSerializerMixin, self).to_representation(instance)
-        cache.set(key, result, api_settings.DEFAULT_CACHE_TIMEOUT)
+        cache.set(key, result, self._cache_timeout)
         return result

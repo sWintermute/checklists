@@ -16,7 +16,6 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.test.signals import setting_changed
 
-
 DEFAULTS = {
     'DEFAULT_CACHE_BACKEND': 'default',
     'DEFAULT_CACHE_TIMEOUT': 86400,
@@ -27,7 +26,6 @@ DEFAULTS = {
 
 
 class APISettings(object):
-
     """
     A settings object, that allows API settings to be accessed as properties.
     For example:
@@ -39,30 +37,23 @@ class APISettings(object):
 
     def __init__(self, defaults=None):
         self.defaults = defaults
-        self.settings = getattr(settings, 'REST_FRAMEWORK_CACHE', {})
+        self._settings = {}
+        self.reload()
+
+    def reload(self):
+        self._settings = self.defaults.copy()
+        self._settings.update(getattr(settings, 'REST_FRAMEWORK_CACHE', {}))
 
     def __getattr__(self, attr):
-        if attr not in self.defaults:
-            raise AttributeError("Invalid API setting: '%s'" % attr)
-
-        try:
-            # Check if present in user settings
-            val = self.settings[attr]
-        except KeyError:
-            # Fall back to defaults
-            val = self.defaults[attr]
-
-        return val
+        return self._settings[attr]
 
 
 api_settings = APISettings(DEFAULTS)
 
 
-def reload_api_settings(*args, **kwargs):
-    global api_settings
-    setting, value = kwargs['setting'], kwargs['value']
+def reload_api_settings(setting, *args, **kwargs):
     if setting == 'REST_FRAMEWORK_CACHE':
-        api_settings = APISettings(DEFAULTS)
+        api_settings.reload()
 
 
 setting_changed.connect(reload_api_settings)

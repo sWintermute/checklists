@@ -17,7 +17,8 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'key_choices')
 
 
-class SurveySerializer(CachedSerializerMixin):
+@cache_registry.register
+class SurveySerializer(CachedSerializerMixin, serializers.ModelSerializer):
     questions = QuestionSerializer(many=True)
 
     class Meta:
@@ -158,7 +159,8 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'questions')
 
 
-class ReportGetEntitySerializer(CachedSerializerMixin):
+@cache_registry.register
+class ReportGetEntitySerializer(CachedSerializerMixin, serializers.ModelSerializer):
     checklists = serializers.SerializerMethodField()
 
     def get_checklists(self, obj):
@@ -175,6 +177,3 @@ class ReportGetEntitySerializer(CachedSerializerMixin):
         fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
 
 # End report generation
-
-cache_registry.register(SurveySerializer)
-cache_registry.register(ReportGetEntitySerializer)
