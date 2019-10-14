@@ -117,6 +117,7 @@ venv.bak/
 # Backend files
 **/backend/media/*
 **/backend/static/*
+**/backend/profiles/*
 
 **/node_modules/
 **/package-lock.json
