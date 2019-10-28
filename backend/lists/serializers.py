@@ -13,7 +13,8 @@ from . import models
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'required', 'type', 'choices', 'key_choices')
+        fields = ('id', 'text', 'order', 'required',
+                  'type', 'choices', 'key_choices')
 
 
 class SurveySerializer(serializers.ModelSerializer):
@@ -102,7 +103,8 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         content_type = ContentType.objects.get(model='response')
         for photo in photos:
-            models.Attachment.objects.create(object_id=response.id, content_type=content_type, **photo)
+            models.Attachment.objects.create(
+                object_id=response.id, content_type=content_type, **photo)
 
         return response
 
@@ -117,6 +119,8 @@ class UserSerializer(serializers.ModelSerializer):
 class ReportQuestionSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.responses = kwargs.pop('responses', None)
+        self.answers = kwargs.pop('answers', None)
+        self.questions = kwargs.pop('questions', None)
         super(ReportQuestionSerializer, self).__init__(*args, **kwargs)
 
     notes = serializers.SerializerMethodField()
@@ -126,11 +130,13 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 
         for response in self.responses:
             keys = []
-            for question in models.Question.objects.filter(is_key=True, survey=response.survey):
-                for answer in models.Answer.objects.filter(question=question, response=response):
+            for question in list(filter(lambda x: x.survey ==
+                                        response.survey, self.questions)):
+                for answer in list(filter(lambda x: (x.response.id is response.id) and (x.question.id is question.id), list(self.answers))):
                     keys.append({"name": question.text, "answer": answer.body})
 
-            for answer in models.Answer.objects.filter(question=obj.id, response=response):
+            for answer in list(filter(lambda x: (x.response.id is response.id) and (x.question.id is obj.id), list(self.answers))):
+
                 if answer.body in obj.key_choices.split(";"):
                     notes.append({"created": response.created, "keys": keys})
 
@@ -144,13 +150,19 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 class ReportSurveySerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.responses = kwargs.pop('responses', None)
+        self.answers = kwargs.pop('answers', None)
         super(ReportSurveySerializer, self).__init__(*args, **kwargs)
 
     questions = serializers.SerializerMethodField()
 
     def get_questions(self, obj):
         quests = models.Question.objects.filter(survey=obj.id, is_key=False)
-        return ReportQuestionSerializer(quests, responses=self.responses, many=True).data
+        questss = models.Question.objects.filter(survey=obj.id, is_key=True)
+        return ReportQuestionSerializer(quests,
+                                        responses=self.responses,
+                                        answers=self.answers,
+                                        questions=questss,
+                                        many=True).data
 
     class Meta:
         model = models.Survey
@@ -162,12 +174,22 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
 
     def get_checklists(self, obj):
         all_lists = obj.checklists.all()
-        lists = [x for y in all_lists for x in models.Survey.objects.filter(id=y.id)]
-        resps = [x for y in all_lists for x in models.Response.objects.filter(survey=y.id)]
 
-        resps = list(filter(lambda x: obj.date_from <= x.created <= obj.date_to, resps))
+        resps = [x for x in models.Response.objects
+                 .filter(survey__in=all_lists,
+                         created__range=[obj.date_from, obj.date_to])
+                 .select_related('survey')]
 
-        return ReportSurveySerializer(lists, responses=resps, many=True).data
+        lists = [x for x in models.Survey.objects.filter(id__in=all_lists)]
+
+        all_answers = [x for x in models.Answer.objects
+                       .filter(response__in=resps)
+                       .select_related('question', 'response')]
+
+        return ReportSurveySerializer(lists,
+                                      responses=resps,
+                                      answers=all_answers,
+                                      many=True).data
 
     class Meta:
         model = models.Report
