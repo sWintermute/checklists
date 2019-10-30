@@ -1,7 +1,6 @@
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, \
-    DestroyModelMixin
-from rest_framework.permissions import IsAdminUser, DjangoModelPermissionsOrAnonReadOnly, AllowAny
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, \
+    CreateModelMixin, UpdateModelMixin,     DestroyModelMixin
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -32,7 +31,8 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
     serializer_class = serializers.SurveySerializer
 
 
-class ResponseViewset(GenericViewSet, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+class ResponseViewset(GenericViewSet, CreateModelMixin,
+                      RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     answers = models.Answer.objects.all()
     queryset = models.Response.objects.all()
     serializer_class = serializers.ResponseSerializer
@@ -66,7 +66,8 @@ class UserViewset(GenericViewSet, ListModelMixin):
 
 
 # Report viewsets
-class ReportListViewset(GenericViewSet, ListModelMixin, CreateModelMixin, DestroyModelMixin):
+class ReportListViewset(GenericViewSet, ListModelMixin,
+                        CreateModelMixin, DestroyModelMixin):
     queryset = models.Report.objects.all()
     serializer_class = serializers.ReportSerializer
     permission_classes = (IsAdminUser,)
@@ -75,5 +76,5 @@ class ReportListViewset(GenericViewSet, ListModelMixin, CreateModelMixin, Destro
 class ReportViewset(GenericViewSet, RetrieveModelMixin):
     queryset = models.Report.objects.all()
     serializer_class = serializers.ReportGetEntitySerializer
-    authentication_classes = (SessionAuthentication,)
+    authentication_classes = ()
     permission_classes = (AllowAny,)
