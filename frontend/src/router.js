@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store'
-import Login from './components/Login.vue'
-import Checklists from './components/Checklists.vue'
+import store from './store/store'
+import Login from './views/Login.vue'
+import Checklists from './views/Checklists.vue'
 import Checklist from './views/Checklist.vue'
 import Report from './views/Report.vue'
-import Reports from './components/Reports.vue'
-import Profile from './components/Profile.vue'
+import Reports from './views/Reports.vue'
+import Profile from './views/Profile.vue'
 
 Vue.use(Router);
 

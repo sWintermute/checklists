@@ -1,26 +1,22 @@
-<template>
-    <v-container>
-        <v-data-table
-                :headers="headers"
-                :items="reports"
-                :items-per-page="-1"
-                item-key="id"
-                hide-default-footer
-                class="elevation-1"
-        >
-            <template slot="item" slot-scope="props">
-                <router-link tag="tr" :to="'report/' + props.item.id">
-                    <td>{{ props.item.id }}</td>
-                    <td class="text-xs-right">{{ props.item.name }}</td>
-                    <td class="text-xs-right">{{ props.item.date_from | date }} - {{ props.item.date_to | date }}</td>
-                </router-link>
-            </template>
-        </v-data-table>
-    </v-container>
+<template lang="pug">
+    v-container
+        v-data-table(
+            :headers="headers"
+            :items="reports"
+            :items-per-page="-1"
+            item-key="id"
+            hide-default-footer
+            class="elevation-1"
+        )
+            template(slot="item" slot-scope="props")
+                router-link(tag="tr" :to="'report/' + props.item.id")
+                    td {{ props.item.id }}
+                    td(class="text-xs-right") {{ props.item.name }}
+                    td(class="text-xs-right") {{ props.item.date_from | date }} - {{ props.item.date_to | date }}
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapGetters, mapActions} from 'vuex';
 
     export default {
         name: 'reports',
@@ -42,7 +38,7 @@
             ]
         }),
         created: function () {
-            this.$store.dispatch('reports');
+            this.FETCH_REPORTS()
         },
         filters: {
             date: function(str) {
@@ -53,9 +49,10 @@
             }
         },
         computed: {
-            ...mapState(["reports"])
+            ...mapGetters(["reports"])
         },
         methods: {
+            ...mapActions(["FETCH_REPORTS"]),
         }
     }
 </script>

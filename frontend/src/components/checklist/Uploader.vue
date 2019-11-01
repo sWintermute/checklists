@@ -47,7 +47,7 @@
     </div>
 </template>
 <script>
-    import { handleFile, transformCoordinate, dataURItoBlob } from "../utils";
+    import { handleFile, transformCoordinate, dataURItoBlob } from "@/utils/uploader.js";
     // compatibility for window.URL
     const URL =
         window.URL && window.URL.createObjectURL
