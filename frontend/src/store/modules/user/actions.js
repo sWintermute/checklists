@@ -22,21 +22,17 @@ export default {
             commit('SET_LOADING_STATUS', true);
             commit('SET_AUTH_REQUEST');
             axios({url: '/auth/token/login', data: user, method: 'POST' })
-                .then(response => {
+                .then(({data}) => {
                     commit('SET_LOADING_STATUS', false);
-                    const token = response.data.auth_token;
-                    const user = response.data.user;
-                    localStorage.setItem('token', token);
-                    axios.defaults.headers.common['Authorization'] = token;
-                    commit('SET_AUTH_SUCCESS', token, user);
-                    console.log(user);
-                    resolve(response)
+                    localStorage.setItem('token', data.auth_token);
+                    commit('SET_AUTH_SUCCESS', data.auth_token, data.user);
+                    resolve(data)
                 })
-                .catch(err => {
+                .catch(error => {
                     commit('SET_AUTH_ERROR');
-                    commit('SET_ERROR', err.response.data);
+                    commit('SET_ERROR', error);
                     localStorage.removeItem('token');
-                    reject(err)
+                    reject(error)
                 })
         })
     },

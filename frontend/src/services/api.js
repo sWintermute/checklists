@@ -16,6 +16,9 @@ const ApiService = {
     get(resource, id="") {
         return Vue.axios.get(`${resource}/${id}`);
     },
+    post(resource, params) {
+        return Vue.axios.post(`${resource}/`, params);
+    },
 };
 
 export default ApiService;

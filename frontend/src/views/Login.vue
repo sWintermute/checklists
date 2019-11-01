@@ -23,7 +23,7 @@
                     </v-toolbar>
                     <v-card-text class="px-6 pt-6 pb-0">
                         <ValidationObserver v-slot="{ passes }">
-                            <form>
+                            <form @keyup.enter="login">
                                 <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
                                     <v-text-field
                                             :error-messages="errors"
