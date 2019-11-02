@@ -9,7 +9,7 @@ services:
       args:
         - DEBUG=False
       target: deploy
-    restart: on-failure
+    restart: always
     volumes:
       - ./backend:/app
       - checklists_media:/app/media
@@ -24,10 +24,11 @@ services:
     container_name: checklists_postgres_db
     env_file: .env
     image: postgres:11-alpine
-    restart: on-failure
+    restart: always
     command: -p ${POSTGRES_PORT}
     volumes:
       - checklists_db_data:/var/lib/postgresql/data
+      - checklists_db_backups:/var/backups
     networks:
       private_network:
         ipv4_address: 172.25.0.6
@@ -37,7 +38,7 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-    restart: on-failure
+    restart: always
     ports:
       - 80:80
     volumes:
@@ -78,6 +79,9 @@ volumes:
   checklists_db_data:
     external:
       name: checklists_db_data
+  checklists_db_backups:
+    external:   
+      name: checklists_db_backups
   checklists_media:
     external:
       name: checklists_media
