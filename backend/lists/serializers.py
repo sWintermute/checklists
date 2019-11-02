@@ -1,10 +1,12 @@
 import base64
 import imghdr
 import uuid
+from collections import defaultdict
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
 from rest_framework import serializers
+
 from user_profile import models as umodels
 
 from . import models
@@ -128,9 +130,12 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
     def get_notes(self, obj):
         notes = []
 
+        dict_response_answers = defaultdict(list)
+        for x in self.answers:
+            dict_response_answers[x.response_id].append(x)
+
         for response in self.responses:
-            response_answers = [
-                x for x in self.answers if x.response_id is response.id]
+            response_answers = dict_response_answers[response.id]
 
             keys = [{"name": question.text, "answer": answer.body}
                     for question in self.questions
@@ -163,10 +168,9 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         que = [x for x in self.questions
                if x.survey_id is obj.id]
 
-        quests = [x for x in que
-                  if x.is_key is False]
-        quests_key = [x for x in que
-                      if x.is_key is True]
+        quests = [x for x in que if not x.is_key]
+
+        quests_key = [x for x in que if x.is_key]
 
         answers = [x for x in self.answers
                    for qu in que
