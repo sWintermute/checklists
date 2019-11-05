@@ -1,7 +1,7 @@
 import axios from "axios";
 import router from '@/router'
 import ApiService from "@/services/api.js";
-import types from "@/store/types/user"
+import types from "@/store/types/user.js"
 
 export default {
     [types.PROFILE]({commit}) {
@@ -40,7 +40,7 @@ export default {
         })
     },
     [types.LOGOUT]({commit}){
-        return new Promise((resolve, reject) => {
+        return new Promise(() => {
             ApiService.post("auth/token/logout");
             ApiService.removeHeader();
             commit('SET_LOGOUT');

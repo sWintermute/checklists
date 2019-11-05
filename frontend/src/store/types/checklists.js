@@ -1,1 +1,4 @@
-export default {}
+export default {
+    FETCH_CHECKLIST: "FETCH_CHECKLIST",
+    FETCH_CHECKLISTS: "FETCH_CHECKLISTS",
+}

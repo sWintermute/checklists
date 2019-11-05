@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
+    import { mapGetters, mapActions} from 'vuex';
 
     export default {
         name: 'Checklists',
@@ -40,7 +40,7 @@
             this.$store.dispatch('lists');
         },
         computed: {
-            ...mapState(["lists"])
+            ...mapGetters(["lists"])
         },
         methods: {
         }

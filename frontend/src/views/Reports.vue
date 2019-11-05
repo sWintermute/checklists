@@ -17,6 +17,7 @@
 
 <script>
     import { mapGetters, mapActions} from 'vuex';
+    import types from "@/store/types/reports"
 
     export default {
         name: 'Reports',
@@ -37,7 +38,7 @@
                 },
             ]
         }),
-        created: function () {
+        created() {
             this.FETCH_REPORTS()
         },
         filters: {
@@ -52,7 +53,7 @@
             ...mapGetters(["reports"])
         },
         methods: {
-            ...mapActions(["FETCH_REPORTS"]),
+            ...mapActions([types.FETCH_REPORTS]),
         }
     }
 </script>

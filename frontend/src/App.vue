@@ -18,7 +18,7 @@
                 <v-app-bar-nav-icon class="hidden-md-and-up" @click="drawer = !drawer"></v-app-bar-nav-icon>
                 <v-spacer class="hidden-md-and-up"></v-spacer>
                 <v-img src="/static/blue-tick2.png" max-width="22px" max-height="22px"></v-img>
-                <router-link to="/" tag="div">
+                <router-link to="/" tag="a" style="text-decoration: none;">
                     <v-toolbar-title class="mx-2 headline primary--text">Checklists</v-toolbar-title>
                 </router-link>
                 <v-spacer class="hidden-sm-and-down"></v-spacer>
