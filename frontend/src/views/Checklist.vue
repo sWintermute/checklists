@@ -84,7 +84,7 @@
     import Uploader from "../components/checklist/Uploader.vue";
 
     export default {
-        name: "checklist",
+        name: "Checklist",
         components: {
             Uploader,
             ValidationObserver,

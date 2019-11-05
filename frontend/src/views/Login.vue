@@ -23,7 +23,7 @@
                     </v-toolbar>
                     <v-card-text class="px-6 pt-6 pb-0">
                         <ValidationObserver v-slot="{ passes }">
-                            <form @keyup.enter="login">
+                            <form @keyup.enter="onSubmit">
                                 <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
                                     <v-text-field
                                             :error-messages="errors"
@@ -51,7 +51,7 @@
                     </v-card-text>
                     <v-card-actions class="justify-end px-6">
                         <v-btn class="ma-2" tile outlined color="primary" @click="clear">Очистить</v-btn>
-                        <v-btn tile color="primary" @click="login">Войти</v-btn>
+                        <v-btn tile color="primary" @click="onSubmit">Войти</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -61,7 +61,8 @@
 
 <script>
     import { ValidationObserver, ValidationProvider } from "vee-validate";
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from "vuex"
+    import types from "@/store/types/user"
 
     export default {
         name: "Login",
@@ -77,12 +78,14 @@
             password: ""
         }),
         methods: {
-            login() {
-                let email = this.email;
-                let password = this.password;
-                this.$store.dispatch('login', { email, password })
+            ...mapActions([types.LOGIN]),
+            onSubmit() {
+                this[types.LOGIN]( {
+                    email: this.email,
+                    password: this.password
+                })
                     .then(() => this.$router.push('/profile'))
-                    .catch(err => console.log(err))
+                    .catch(error => console.log(error))
             },
             clear() {
                 this.email = '';

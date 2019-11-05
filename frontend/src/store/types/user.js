@@ -1,5 +1,5 @@
 export default {
     PROFILE: "PROFILE",
-    LIGIN: "LOGIN",
+    LOGIN: "LOGIN",
     LOGOUT: "LOGOUT"
 }

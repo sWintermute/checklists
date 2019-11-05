@@ -22,7 +22,7 @@
     import { mapState } from 'vuex';
 
     export default {
-        name: 'checklists',
+        name: 'Checklists',
         data: () => ({
             headers: [
                 {

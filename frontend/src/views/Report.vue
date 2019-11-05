@@ -1,17 +1,15 @@
 <template>
-    <v-container
-            class="fill-height"
-            fluid>
+    <v-container fluid>
         <template v-for="checklist in report.checklists">
             <vue-loading v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }"></vue-loading>
             <v-data-table
-                    v-else
-                    :items="checklist.questions"
-		    :items-per-page="-1"
-                    item-key="id"
-                    hide-default-header
-		    hide-default-footer
-                    class="elevation-1 mx-auto"
+                v-else
+                :items="checklist.questions"
+                :items-per-page="-1"
+                item-key="id"
+                hide-default-header
+                hide-default-footer
+                class="elevation-1 mx-auto"
             >
                 <template v-slot:header>
                     <thead>
@@ -61,7 +59,7 @@
 
 
     export default {
-        name: "report",
+        name: "Report",
         data: () => ({
             headers: [
                 {

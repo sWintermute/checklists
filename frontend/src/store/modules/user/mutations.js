@@ -1,20 +1,18 @@
 export default {
     SET_USER(state, payload) {
-        state.user = payload
+        state.userProfile = payload
     },
     SET_AUTH_REQUEST(state) {
         state.status = 'loading'
     },
-    SET_AUTH_SUCCESS(state, token, user) {
+    SET_AUTH_SUCCESS(state, userProfile) {
         state.status = 'success';
-        state.token = token;
-        state.user = user
+        state.userProfile = userProfile
     },
     SET_AUTH_ERROR(state) {
         state.status = 'error'
     },
     SET_LOGOUT(state) {
         state.status = '';
-        state.token = ''
     },
 }

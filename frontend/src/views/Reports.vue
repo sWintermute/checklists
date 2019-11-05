@@ -19,7 +19,7 @@
     import { mapGetters, mapActions} from 'vuex';
 
     export default {
-        name: 'reports',
+        name: 'Reports',
         data: () => ({
             headers: [
                 {

@@ -18,22 +18,22 @@
                             v-avatar(color="primary")
                                 v-icon(x-large dark) mdi-account-circle
                         v-text-field(
-                            v-model="user.first_name"
+                            :value="userProfile.first_name"
                             label="Имя"
                             disabled
                         )
                         v-text-field(
-                            v-model="user.last_name"
+                            :value="userProfile.last_name"
                             label="Фамилия"
                             disabled
                         )
                         v-text-field(
-                            v-model="user.position"
+                            :value="userProfile.position"
                             label="Должность"
                             disabled
                         )
                         v-text-field(
-                            v-model="user.email"
+                            :value="userProfile.email"
                             label="Почта"
                             disabled
                         )
@@ -44,13 +44,13 @@
     import types from "@/store/types/user"
 
     export default {
-        name: 'profile',
+        name: 'Profile',
         data: () => ({}),
         created: function () {
-            this.PROFILE()
+            this.PROFILE();
         },
         computed: {
-            ...mapGetters(['user']),
+            ...mapGetters(['userProfile']),
         },
         methods: {
             ...mapActions([types.PROFILE]),

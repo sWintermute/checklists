@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from '@/router'
 import ApiService from "@/services/api.js";
 import types from "@/store/types/user"
 
@@ -18,16 +19,17 @@ export default {
                 })
         })
     },
-    login({commit}, user){
+    [types.LOGIN]({commit}, user){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
-            commit('SET_AUTH_REQUEST');
-            axios({url: '/auth/token/login', data: user, method: 'POST' })
+            commit('SET_AUTH_SUCCESS');
+            ApiService.post("auth/token/login", user)
                 .then(({data}) => {
                     commit('SET_LOADING_STATUS', false);
                     localStorage.setItem('token', data.auth_token);
                     commit('SET_AUTH_SUCCESS', data.auth_token, data.user);
                     resolve(data)
+                    router.push("/profile");
                 })
                 .catch(error => {
                     commit('SET_AUTH_ERROR');
@@ -37,12 +39,13 @@ export default {
                 })
         })
     },
-    logout({commit}){
+    [types.LOGOUT]({commit}){
         return new Promise((resolve, reject) => {
+            ApiService.post("auth/token/logout");
+            ApiService.removeHeader();
             commit('SET_LOGOUT');
             localStorage.removeItem('token');
-            delete axios.defaults.headers.common['Authorization'];
-            resolve()
+            router.push("/login");
         })
     }
 }

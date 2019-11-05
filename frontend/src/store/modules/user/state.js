@@ -1,4 +1,9 @@
 export default {
     token: localStorage.getItem('token') || '',
-    user: {},
+    userProfile: {
+        "id": "",
+        "email": "",
+        "first_name": "",
+        "last_name": ""
+    },
 };

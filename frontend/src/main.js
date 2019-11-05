@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/store.js'
-import Axios from 'axios'
 import VueLoading from 'vue-loading-template'
 import vuetify from './plugins/vuetify'
 import "./plugins/vee-validate";

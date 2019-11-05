@@ -1,1 +1,4 @@
-export default {}
+export default {
+    FETCH_REPORT: "FETCH_REPORT",
+    FETCH_REPORTS: "FETCH_REPORTS",
+}

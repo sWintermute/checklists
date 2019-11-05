@@ -6,7 +6,7 @@
                     <template v-for="(menu, i) in menus">
                         <v-list-item :key="i">
                             <v-list-item-content>
-                                <v-btn v-if="menu.title === 'Выйти'" @click='logout' text :to="menu.path">{{menu.title}}</v-btn>
+                                <v-btn v-if="menu.title === 'Выйти'" @click='LOGOUT' text :to="menu.path">{{menu.title}}</v-btn>
                                 <v-btn v-else-if="menu.title === 'Войти'" text class="hidden-sm-and-down" to="/login">Войти</v-btn>
                                 <v-btn v-else text :to="menu.path">{{menu.title}}</v-btn>
                             </v-list-item-content>
@@ -26,7 +26,7 @@
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/">Чеклисты</v-btn>
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/reports">Отчеты</v-btn>
                     <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" to="/profile">Профиль</v-btn>
-                    <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" @click='logout'>Выйти</v-btn>
+                    <v-btn v-if="isLoggedIn" text class="hidden-sm-and-down" @click='LOGOUT'>Выйти</v-btn>
                     <v-btn v-else text class="hidden-sm-and-down" to="/login">Войти</v-btn>
                     <!--<v-btn color="primary white&#45;&#45;text" class="hidden-sm-and-down">Sign Up</v-btn>-->
                 </v-toolbar-items>
@@ -39,7 +39,8 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from "vuex"
+    import types from "@/store/types/user"
 
 
     export default {
@@ -75,12 +76,7 @@
             ...mapGetters(['isLoggedIn'])
         },
         methods: {
-            logout() {
-                this.$store.dispatch('logout')
-                    .then(() => {
-                        this.$router.push('/login')
-                    })
-            }
+            ...mapActions([types.LOGOUT])
         },
     };
 </script>
