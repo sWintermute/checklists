@@ -10,10 +10,10 @@ const ApiService = {
         Vue.axios.defaults.baseURL = BASE_URL;
     },
     setHeader() {
-        Vue.axios.defaults.headers.common.Authorization = `Token ${TokenService.getToken()}`;
+        Vue.axios.defaults.headers.common["Authorization"] = `Token ${TokenService.getToken()}`;
     },
     removeHeader() {
-        Vue.axios.defaults.headers.common.Authorization = null;
+        Vue.axios.defaults.headers.common["Authorization"] = null;
     },
     get(resource, id="") {
         return Vue.axios.get(`${resource}/${id}`);

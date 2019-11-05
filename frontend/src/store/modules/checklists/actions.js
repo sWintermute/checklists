@@ -37,46 +37,36 @@ export default {
             })
         })
     },
-    list({commit, state}, list_id) {
+    [types.FETCH_CHECKLIST]({commit}, list_id) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
-            axios({
-                url: '/api/v1/lists/' + list_id + '/',
-                headers: {
-                    Authorization: 'Token ' + state.token,
-                },
-                method: 'GET'
-            }).then(response => {
-                commit('SET_LOADING_STATUS', false);
-                const list = response.data;
-                localStorage.setItem('list', list);
-                commit('SET_LIST', list);
-                resolve(response)
-            }).catch(error => {
-                console.log(error);
-                reject(error)
-            })
+            ApiService.setHeader();
+            ApiService.get('api/v1/lists', list_id)
+                .then(response => {
+                    commit('SET_LOADING_STATUS', false);
+                    const list = response.data[0];
+                    commit('SET_LIST', list);
+                    resolve(response)
+                }).catch(error => {
+                    console.log(error);
+                    reject(error)
+                })
         })
     },
-    lists({commit, state}) {
+    [types.FETCH_CHECKLISTS]({commit}) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
-            axios({
-                url: '/api/v1/lists/',
-                headers: {
-                    Authorization: 'Token ' + state.token,
-                },
-                method: 'GET'
-            }).then(response => {
-                commit('SET_LOADING_STATUS', false);
-                const lists = response.data;
-                localStorage.setItem('lists', lists);
-                commit('SET_LISTS', lists);
-                resolve(response)
-            }).catch(error => {
-                console.log(error);
-                reject(error)
-            })
+            ApiService.setHeader();
+            ApiService.get('api/v1/lists',)
+                .then(response => {
+                    commit('SET_LOADING_STATUS', false);
+                    const lists = response.data;
+                    commit('SET_LISTS', lists);
+                    resolve(response)
+                }).catch(error => {
+                    console.log(error);
+                    reject(error)
+                })
         })
     }
 }

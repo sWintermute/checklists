@@ -1,9 +1,7 @@
 <template>
     <v-container fluid>
         <div v-for="(checklist, i) in report.checklists" :key="i">
-            <vue-loading v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }"></vue-loading>
             <v-data-table
-                v-else
                 :items="checklist.questions"
                 :items-per-page="-1"
                 item-key="id"

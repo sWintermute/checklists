@@ -72,8 +72,8 @@
                 },
             ]
         }),
-        computed : {
-            ...mapGetters(['isLoggedIn'])
+        computed: {
+            ...mapGetters(["isLoggedIn"])
         },
         methods: {
             ...mapActions([types.LOGOUT])

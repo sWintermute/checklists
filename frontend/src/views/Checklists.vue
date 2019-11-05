@@ -19,7 +19,8 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions} from 'vuex';
+    import { mapGetters, mapActions} from "vuex";
+    import types from "@/store/types/checklists.js"
 
     export default {
         name: 'Checklists',
@@ -36,13 +37,14 @@
                 },
             ]
         }),
-        created: function () {
-            this.$store.dispatch('lists');
+        created() {
+            this.FETCH_CHECKLISTS();
         },
         computed: {
             ...mapGetters(["lists"])
         },
         methods: {
+            ...mapActions([types.FETCH_CHECKLISTS])
         }
     }
 </script>

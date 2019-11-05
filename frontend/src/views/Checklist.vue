@@ -3,9 +3,7 @@
             class="fill-height"
             fluid
     >
-        <vue-loading v-if="isLoading" type="spin" color="#28d" :size="{ width: '50px', height: '50px' }"></vue-loading>
         <v-row
-                v-else
                 align="center"
                 justify="center"
         >
@@ -24,7 +22,7 @@
                     </v-toolbar>
                     <v-card-text class="px-6 pt-6 pb-0">
                             <form>
-                                <div v-for="question in list.questions">
+                                <div v-for="(question, i) in list.questions" :key="i">
                                     <template v-if="question.type === 'textarea'">
                                         <header>{{ question.text }}</header>
                                         <v-textarea
@@ -80,8 +78,9 @@
 
 <script>
     import { ValidationObserver, ValidationProvider } from "vee-validate";
-    import { mapState, mapGetters } from 'vuex';
+    import { mapGetters, mapActions } from "vuex";
     import Uploader from "../components/checklist/Uploader.vue";
+    import types from "@/store/types/checklists.js"
 
     export default {
         name: "Checklist",
@@ -97,14 +96,14 @@
             choices: {},
             toggleChecked: false
         }),
-        created: function () {
-            this.$store.dispatch('list', this.$route.params.id);
+        created() {
+            this.FETCH_CHECKLIST();
         },
         computed: {
-            ...mapState(["list"]),
-            ...mapGetters(['errors', 'isLoading'])
+            ...mapGetters(["list", "errors", "isLoading"])
         },
         methods: {
+            ...mapActions([types.FETCH_CHECKLIST]),
             foo(value, id) {
                 if (!!this.answers[id]) {
                     ~this.answers[id].indexOf(value) ?

@@ -1,10 +1,9 @@
-import axios from "axios";
 import router from '@/router'
 import ApiService from "@/services/api.js";
 import types from "@/store/types/user.js"
 
 export default {
-    [types.PROFILE]({commit}) {
+    [types.PROFILE]({commit}){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
