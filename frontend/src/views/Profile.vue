@@ -41,18 +41,19 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
+    import types from "@/store/types/user"
 
     export default {
         name: 'profile',
         data: () => ({}),
         created: function () {
-            this.profile()
+            this.PROFILE()
         },
         computed: {
             ...mapGetters(['user']),
         },
         methods: {
-            ...mapActions(["profile"]),
+            ...mapActions([types.PROFILE]),
         }
     }
 </script>

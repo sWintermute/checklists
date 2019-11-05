@@ -1,8 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 import ApiService from "@/services/api.js";
+import types from "@/store/types/user"
 
 export default {
-    profile({commit}) {
+    [types.PROFILE]({commit}) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
