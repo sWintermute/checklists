@@ -194,23 +194,22 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
     checklists = serializers.SerializerMethodField()
 
     def get_checklists(self, obj):
-        lists = [x for x in models.Survey.objects.filter(
-            id__in=obj.checklists.all()).only('id', 'name')]
+        lists = [x for x in obj.checklists.all().only('name')]
 
         resps = [x for x in models.Response.objects
                  .filter(survey__in=lists,
                          created__range=[obj.date_from, obj.date_to])
-                 .only('id', 'created', 'survey_id')
+                 .only('created', 'survey_id')
                  ]
 
         answers = [x for x in models.Answer.objects
                    .filter(response__in=resps)
-                   .only('id', 'body', 'question_id', 'response_id')
+                   .only('body', 'question_id', 'response_id')
                    ]
 
         questions = [x for x in models.Question.objects
                      .filter(survey__in=lists)
-                     .select_related('survey')]
+                     ]
 
         return ReportSurveySerializer(lists,
                                       responses=resps,
