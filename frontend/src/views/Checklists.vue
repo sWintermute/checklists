@@ -1,21 +1,23 @@
-<template>
-    <v-container>
-        <v-data-table
-                :headers="headers"
-                :items="lists"
-                :items-per-page="-1"
-                item-key="id"
-                hide-default-footer
-                class="elevation-1"
-        >
-            <template slot="item" slot-scope="props">
-                <router-link tag="tr" :to="'checklist/' + props.item.id">
-                    <td>{{ props.item.id }}</td>
-                    <td class="text-xs-right">{{ props.item.name }}</td>
-                </router-link>
-            </template>
-        </v-data-table>
-    </v-container>
+<template lang="pug">
+    v-container
+        v-data-table(
+            :headers="headers"
+            :items="lists"
+            :items-per-page="-1"
+            item-key="id"
+            hide-default-footer
+            class="elevation-1"  
+        )       
+            template(v-slot:body="{ items }")
+                tbody
+                    router-link(
+                        v-for="item in items"
+                        :key="item.name"
+                        tag="tr"
+                        :to="'checklist/' + item.id"
+                    )
+                        td {{ item.id }}
+                        td(class="text-xs-right") {{ item.name }}
 </template>
 
 <script>

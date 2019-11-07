@@ -4,7 +4,7 @@ import ApiService from "@/services/api.js";
 import types from "@/store/types/checklists.js"
 
 export default {
-    create_list({commit, state}, {fileList, listId}){
+    [types.SEND_CHECKLIST]({commit, state}, {fileList, listId}){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             state.list.id = parseInt(listId);
@@ -44,7 +44,7 @@ export default {
             ApiService.get('api/v1/lists', list_id)
                 .then(response => {
                     commit('SET_LOADING_STATUS', false);
-                    const list = response.data[0];
+                    const list = response.data;
                     commit('SET_LIST', list);
                     resolve(response)
                 }).catch(error => {

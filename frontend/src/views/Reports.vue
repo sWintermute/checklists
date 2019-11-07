@@ -13,6 +13,28 @@
                     td {{ props.item.id }}
                     td(class="text-xs-right") {{ props.item.name }}
                     td(class="text-xs-right") {{ props.item.date_from | date }} - {{ props.item.date_to | date }}
+                    td
+                        v-row(
+                            align="center"
+                            justify="center"
+                        )
+                            v-icon(@click="editReport(item)")
+                                | mdi-pencil
+                            div(class="mx-2")
+                            v-icon(@click="deleteReport(item)")
+                                | mdi-delete
+
+                            div(class="mx-2")
+                            v-btn(
+                                class="text-capitalize"
+                                color="primary"
+                                :to="'checklist/'"
+                                depressed
+                            )
+                                v-icon(@click="createReport(item)")
+                                    | mdi-plus-box
+                                div(class="mx-2")
+                                | Создать Отчет
 </template>
 
 <script>
@@ -28,14 +50,9 @@
                     align: 'left',
                     value: 'id',
                 },
-                {
-                    text: 'Название',
-                    value: 'name'
-                },
-                {
-                    text: 'Дата',
-                    value: 'date_to'
-                },
+                { text: 'Название', value: 'name' },
+                { text: 'Дата', value: 'date_to' },
+                { text: 'Действия', value: 'action', sortable: false },
             ]
         }),
         created() {
@@ -54,6 +71,9 @@
         },
         methods: {
             ...mapActions([types.FETCH_REPORTS]),
+            createReport() {},
+            deleteReport() {},
+            editReport() {},
         }
     }
 </script>
