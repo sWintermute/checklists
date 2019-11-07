@@ -128,6 +128,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
     notes = serializers.SerializerMethodField()
 
     def get_notes(self, obj):
+        key_choices = obj.key_choices.split(";")
         notes = []
 
         dict_response_answers = defaultdict(list)
@@ -145,7 +146,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 
             for answer in [x for x in response_answers
                            if x.question_id is obj.id]:
-                if answer.body in obj.key_choices.split(";"):
+                if answer.body in key_choices:
                     notes.append({"created": response.created, "keys": keys})
 
         return notes
@@ -168,9 +169,9 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         que = [x for x in self.questions
                if x.survey_id is obj.id]
 
-        quests = [x for x in que if not x.is_key]
-
-        quests_key = [x for x in que if x.is_key]
+        dict_que = defaultdict(list)
+        for x in que:
+            dict_que[x.is_key].append(x)
 
         answers = [x for x in self.answers
                    for qu in que
@@ -179,10 +180,10 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         resps = [x for x in self.responses
                  if x.survey_id is obj.id]
 
-        return ReportQuestionSerializer(quests,
+        return ReportQuestionSerializer(dict_que[False],
                                         responses=resps,
                                         answers=answers,
-                                        questions=quests_key,
+                                        questions=dict_que[True],
                                         many=True).data
 
     class Meta:
@@ -208,7 +209,7 @@ class ReportGetEntitySerializer(serializers.ModelSerializer):
                    ]
 
         questions = [x for x in models.Question.objects
-                     .filter(survey__in=lists)
+                     .filter(survey__in=lists).order_by()
                      ]
 
         return ReportSurveySerializer(lists,
