@@ -59,6 +59,15 @@ let router = new Router({
         requiresAuth: true
       }
     },
+    {
+      path: '/responses',
+      name: 'responses',
+      component: () =>
+                import(/* webpackChunkName: "responses" */ "@/views/FilledChecklists.vue"),
+      meta: {
+        requiresAuth: true
+      }
+    },
   ]
 });
 

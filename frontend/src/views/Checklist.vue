@@ -90,17 +90,6 @@
         },
         methods: {
             ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),
-            foo(value, id) {
-                if (!!this.answers[id]) {
-                    ~this.answers[id].indexOf(value) ?
-                        this.answers[id].splice(this.answers[id].indexOf(value), 1):
-                        this.answers[id].push(value);
-                } else {
-                    this.answers[id] = [];
-                    this.answers[id].push(value);
-                }
-                // Array.isArray(this.answers[id]) ? this.answers[id].split(";"): this.answers[id].join(";");
-            },
             sendChecklist() {
                 this.$store.commit('SET_ANSWERS', this.answers);
                 this.SEND_CHECKLIST({

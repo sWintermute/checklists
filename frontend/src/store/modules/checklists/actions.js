@@ -1,10 +1,9 @@
-import axios from 'axios';
 import router from "@/router";
 import ApiService from "@/services/api.js";
 import types from "@/store/types/checklists.js"
 
 export default {
-    [types.SEND_CHECKLIST]({commit, state}, {fileList, listId}){
+    [types.SEND_CHECKLIST]({ commit, state }, { fileList, listId }){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             state.list.id = parseInt(listId);
@@ -18,23 +17,15 @@ export default {
                 state.list.answers.push({question: key, body: value});
             }
             commit('SET_LOADING_STATUS', false);
-            axios({
-                url: '/api/v1/response/',
-                headers: {
-                    Authorization: 'Token ' + state.token,
-                },
-                data: state.list,
-                method: 'POST'
-            }).then(response => {
-                const list = response.data;
-                localStorage.setItem('list', list);
-                commit('SET_LIST', list);
-                resolve(response);
-                router.push('/')
-            }).catch(error => {
-                console.log(error);
-                reject(error)
-            })
+            ApiService.setHeader();
+            ApiService.post('/api/v1/response/', state.list)
+                .then(response => {
+                    resolve(response);
+                    router.push('/')
+                }).catch(error => {
+                    console.log(error);
+                    reject(error)
+                })
         })
     },
     [types.FETCH_CHECKLIST]({commit}, list_id) {
