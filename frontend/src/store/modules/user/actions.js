@@ -13,8 +13,10 @@ export default {
                     commit('SET_USER', data);
                     resolve(data)
                 }).catch(error => {
-                    console.log(error);
-                    reject(error)
+                    error.response.data["snackbar"] = true;
+                    commit(types.SET_ERROR, error.response);
+                    console.log(error.response);
+                    reject(error);
                 })
         })
     },
@@ -31,10 +33,10 @@ export default {
                     router.push("/profile");
                 })
                 .catch(error => {
-                    commit('SET_AUTH_ERROR');
-                    commit('SET_ERROR', error);
-                    localStorage.removeItem('token');
-                    reject(error)
+                    error.response.data["snackbar"] = true;
+                    commit(types.SET_ERROR, error.response);
+                    console.log(error.response);
+                    reject(error);
                 })
         })
     },

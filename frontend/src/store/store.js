@@ -11,15 +11,22 @@ const store = new Vuex.Store({
     state: {
         status: '',
         loading: false,
-        errors: null,
-    },
-    mutations: {
-        SET_ERROR: (state, error) => state.error = error,
-        SET_LOADING_STATUS: (state, payload) => state.loading = payload,
+        error: {
+            data: {
+                snackbar: false,
+                deteils: ""
+            }
+        },
     },
     getters: {
+        error: state => state.error,
         isLoading: state => state.loading,
-        errors: state => state.errors
+    },
+    mutations: {
+        SET_ERROR(state, payload) {
+            state.error = payload;
+        },
+        SET_LOADING_STATUS: (state, payload) => state.loading = payload,
     },
     actions: {},
     modules: {

@@ -25,6 +25,21 @@
                     v-btn(v-else text class="hidden-sm-and-down" to="/login") Войти
         v-content(fluid)
             router-view
+            v-snackbar(
+                v-model="error.data.snackbar"
+                bottom
+                color="error"
+                multi-line
+                :timeout="6000"
+                vertical
+            )
+                    | {{ error.data.detail }}
+                    v-btn(
+                        dark
+                        text
+                        @click="error.data.snackbar = false"
+                    )
+                        | Close
 </template>
 
 <script>
@@ -66,7 +81,7 @@ export default {
         ]
     }),
     computed: {
-        ...mapGetters(["isLoggedIn"])
+        ...mapGetters(["isLoggedIn", "error"])
     },
     methods: {
         ...mapActions([types.LOGOUT])
