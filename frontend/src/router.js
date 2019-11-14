@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store/store'
+
 import Login from './views/Login.vue'
 import Checklists from './views/Checklists.vue'
 import Checklist from './views/Checklist.vue'
@@ -13,10 +14,6 @@ Vue.use(Router);
 let router = new Router({
   mode: 'history',
   routes: [
-    {
-      path: '*',
-      redirect: '/'
-    },
     {
       path: '/login',
       name: 'login',
@@ -67,6 +64,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '*',
+      component: () =>
+                import(/* webpackChunkName: "PageNotFound" */ "@/views/PageNotFound.vue"),
     },
   ]
 });
