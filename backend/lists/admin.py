@@ -35,7 +35,7 @@ class ResponseAdmin(admin.ModelAdmin):
     list_filter = ("survey", "created")
     date_hierarchy = "created"
     inlines = [AttachmentInline, AnswerBaseInline]
-    readonly_fields = ("survey", "created", "updated", "interview_uuid", "user")
+    readonly_fields = ("survey", "created", "updated", "user")
 
 
 @admin.register(Report)

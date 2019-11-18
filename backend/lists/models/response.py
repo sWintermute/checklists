@@ -20,8 +20,7 @@ except (ImportError, AttributeError):
 
 class Response(models.Model):
     """
-        A Response object is a collection of questions and answers with a
-        unique interview uuid.
+        A Response object is a collection of questions and answers.
     """
 
     created = models.DateTimeField("Creation date", auto_now_add=True)
@@ -39,7 +38,7 @@ class Response(models.Model):
         null=True,
         blank=True,
     )
-    interview_uuid = models.CharField("Interview unique identifier", max_length=36)
+
     photo = fields.GenericRelation(Attachment)
 
     class Meta(object):

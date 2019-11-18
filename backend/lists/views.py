@@ -68,7 +68,7 @@ class UserViewset(GenericViewSet, ListModelMixin):
 # Report viewsets
 class ReportListViewset(GenericViewSet, ListModelMixin,
                         CreateModelMixin, DestroyModelMixin):
-    queryset = models.Report.objects.all()
+    queryset = models.Report.objects.prefetch_related('checklists').all()
     serializer_class = serializers.ReportSerializer
     permission_classes = (IsAdminUser,)
 
