@@ -103,7 +103,8 @@ class ResponseSerializer(serializers.ModelSerializer):
         for answer in answers:
             models.Answer.objects.create(response=response, **answer)
 
-        content_type = ContentType.objects.get(model='response')
+        content_type = ContentType.objects.get(model='response',
+                                               app_label='lists')
         for photo in photos:
             models.Attachment.objects.create(
                 object_id=response.id, content_type=content_type, **photo)
