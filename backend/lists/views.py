@@ -48,7 +48,7 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        return models.Response.objects.all()
+        return models.Response.objects.filter(user=self.request.user)
 
 class UserViewset(GenericViewSet, ListModelMixin):
     queryset = umodels.UserProfile.objects.all()
@@ -67,7 +67,7 @@ class UserViewset(GenericViewSet, ListModelMixin):
 # Report viewsets
 class ReportListViewset(GenericViewSet, ListModelMixin,
                         CreateModelMixin, DestroyModelMixin):
-    queryset = models.Report.objects.all()
+    queryset = models.Report.objects.prefetch_related('checklists').all()
     serializer_class = serializers.ReportSerializer
     permission_classes = (IsAdminUser,)
 

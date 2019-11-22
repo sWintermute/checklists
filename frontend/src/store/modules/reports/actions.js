@@ -12,7 +12,6 @@ export default {
                     commit('SET_REPORT', report);
                     resolve(response)
                 }).catch(error => {
-                    error.response.data["snackbar"] = true;
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
                     reject(error);
@@ -30,7 +29,6 @@ export default {
                     commit("SET_REPORTS", reports);
                     resolve(response)
                 }).catch(error => {
-                    error.response.data["snackbar"] = true;
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
                     reject(error);

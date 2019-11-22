@@ -86,7 +86,7 @@
             this.FETCH_CHECKLIST(this.$route.params.id);
         },
         computed: {
-            ...mapGetters(["list", "errors", "isLoading"])
+            ...mapGetters(["list", "error", "isLoading"])
         },
         methods: {
             ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),

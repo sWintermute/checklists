@@ -1,0 +1,9 @@
+branchName: full
+
+branches:
+  - label: enhancement
+    name: develop
+    prefix: feature/
+  - label: bug
+    name: develop
+    prefix: bugfix/

@@ -13,7 +13,6 @@ export default {
                     commit('SET_USER', data);
                     resolve(data)
                 }).catch(error => {
-                    error.response.data["snackbar"] = true;
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
                     reject(error);
@@ -33,7 +32,6 @@ export default {
                     router.push("/profile");
                 })
                 .catch(error => {
-                    error.response.data["snackbar"] = true;
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
                     reject(error);

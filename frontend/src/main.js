@@ -4,11 +4,13 @@ import router from './router'
 import store from './store/store.js'
 import VueLoading from 'vue-loading-template'
 import vuetify from './plugins/vuetify'
-import "./plugins/vee-validate";
+import "@/plugins/vee-validate";
 import ApiService from "@/services/api";
 
 Vue.config.productionTip = false;
+
 ApiService.init();
+
 Vue.use(VueLoading);
 
 new Vue({

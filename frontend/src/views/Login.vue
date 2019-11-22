@@ -28,7 +28,7 @@
                                         :error-messages="errors"
                                         v-model="email"
                                         label="Почта"
-                                        prepend-icon="mdi-account-circle"
+                                        :prepend-icon="mdiVk"
                                     )
                                 ValidationProvider(name="password" rules="required|min:8" v-slot="{ errors }")
                                     v-text-field(
@@ -52,6 +52,7 @@
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex"
     import types from "@/store/types/user"
+    import { mdiVk } from '@mdi/js'
 
     export default {
         name: "Login",
@@ -63,6 +64,7 @@
             source: String,
         },
         data: () => ({
+            mdiVk: mdiVk,
             email: "",
             password: ""
         }),
@@ -82,7 +84,7 @@
             }
         },
         computed: {
-            ...mapGetters(['errors'])
+            ...mapGetters(['error'])
         },
     };
 </script>
