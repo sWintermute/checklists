@@ -172,7 +172,7 @@ class ReportSurveySerializer(serializers.ModelSerializer):
 
     def get_questions(self, obj):
         que = [x for x in self.questions
-               if x.survey_id is obj.id]
+               if (x.survey_id is obj.id) and (x.type != 'select-image')]
 
         dict_que = defaultdict(list)
         for x in que:
