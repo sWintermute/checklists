@@ -16,9 +16,11 @@ def get_file_path(instance, filename):
 class Attachment(models.Model):
     file = models.FileField('Файл', upload_to=get_file_path)
     name = models.CharField('Название', max_length=255, blank=True, null=True)
-    description = models.CharField("Описание", max_length=255, blank=True, null=True)
+    description = models.CharField(
+        "Описание", max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    content_type = models.ForeignKey(ContentType, verbose_name="Тип", on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType, verbose_name="Тип", on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField("ID")
     content_object = fields.GenericForeignKey('content_type', 'object_id')
 
@@ -33,4 +35,3 @@ class Attachment(models.Model):
 @receiver(pre_delete, sender=Attachment)
 def delete(sender, instance, using, **kwargs):
     os.remove(instance.file.path)
-
