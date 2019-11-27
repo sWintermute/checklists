@@ -23,25 +23,23 @@
                     v-card-text(class="px-6 pt-6 pb-0")
                         ValidationObserver(v-slot="{ passes }")
                             form(@keyup.enter="onSubmit")
-                                ValidationProvider(name="email" rules="required|email" v-slot="{ errors }")
+                                ValidationProvider(name="почта" rules="required|email" v-slot="{ errors }")
                                     v-text-field(
                                         :error-messages="errors"
                                         v-model="email"
                                         label="Почта"
-                                        :prepend-icon="mdiVk"
+                                        :prepend-icon="mdiEmail"
                                     )
-                                ValidationProvider(name="password" rules="required|min:8" v-slot="{ errors }")
+                                ValidationProvider(name="пароль" rules="required|min:8" v-slot="{ errors }")
                                     v-text-field(
                                         :error-messages="errors"
                                         v-model="password"
                                         id="password"
                                         label="Пароль"
                                         name="password"
-                                        prepend-icon="mdi-lock"
+                                        :prepend-icon="mdiLock"
                                         type="password"
                                     )
-                            div(v-if="errors" class="subtitle1 text-center red--text")
-                                p(v-for="(errorMessage, i) in errors" :key="i") {{ errorMessage[0] }}
                     v-card-actions(class="justify-end px-6")
                         v-btn(class="ma-2" tile outlined color="primary" @click="clear") Очистить
                         v-btn(tile color="primary" @click="onSubmit") Войти
@@ -52,7 +50,7 @@
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex"
     import types from "@/store/types/user"
-    import { mdiVk } from '@mdi/js'
+    import { mdiEmail, mdiLock } from '@mdi/js'
 
     export default {
         name: "Login",
@@ -64,7 +62,8 @@
             source: String,
         },
         data: () => ({
-            mdiVk: mdiVk,
+            mdiEmail,
+            mdiLock,
             email: "",
             password: ""
         }),
@@ -75,8 +74,6 @@
                     email: this.email,
                     password: this.password
                 })
-                    .then(() => this.$router.push('/profile'))
-                    .catch(error => console.log(error))
             },
             clear() {
                 this.email = '';

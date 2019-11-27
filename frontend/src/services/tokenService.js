@@ -1,4 +1,4 @@
-const ID_TOKEN_KEY = "token";
+const ID_TOKEN_KEY = "auth_token";
 
 export const getToken = () => {
   return window.localStorage.getItem(ID_TOKEN_KEY);

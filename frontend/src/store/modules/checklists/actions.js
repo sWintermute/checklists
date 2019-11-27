@@ -3,14 +3,14 @@ import ApiService from "@/services/api.js";
 import types from "@/store/types/checklists.js"
 
 export default {
-    [types.SEND_CHECKLIST]({ commit, state }, { fileList, listId }){
+    [types.SEND_CHECKLIST]({ commit, state }, { fileList, userProfile, listId }){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             state.list.id = parseInt(listId);
             state.list.created = new Date;
             state.list.updated = new Date;
             state.list.survey = parseInt(listId);
-            state.list.user = state.user.id;
+            state.list.user = userProfile.id;
             state.list.photo = fileList;
             state.list.answers = [];
             for (let [key, value] of Object.entries(state.answers)) {
@@ -18,10 +18,10 @@ export default {
             }
             commit('SET_LOADING_STATUS', false);
             ApiService.setHeader();
-            ApiService.post('/api/v1/response/', state.list)
+            ApiService.post('/api/v1/response', state.list)
                 .then(response => {
+                    router.push('/');
                     resolve(response);
-                    router.push('/')
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
@@ -29,7 +29,7 @@ export default {
                 })
         })
     },
-    [types.FETCH_CHECKLIST]({commit}, list_id) {
+    [types.FETCH_CHECKLIST]({ commit }, list_id) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
@@ -38,7 +38,7 @@ export default {
                     commit('SET_LOADING_STATUS', false);
                     const list = response.data;
                     commit('SET_LIST', list);
-                    resolve(response)
+                    resolve(response);
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
@@ -46,7 +46,7 @@ export default {
                 })
         })
     },
-    [types.FETCH_CHECKLISTS]({commit}) {
+    [types.FETCH_CHECKLISTS]({ commit }) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
@@ -55,7 +55,7 @@ export default {
                     commit('SET_LOADING_STATUS', false);
                     const lists = response.data;
                     commit('SET_LISTS', lists);
-                    resolve(response)
+                    resolve(response);
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);

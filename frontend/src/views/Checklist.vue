@@ -86,7 +86,7 @@
             this.FETCH_CHECKLIST(this.$route.params.id);
         },
         computed: {
-            ...mapGetters(["list", "error", "isLoading"])
+            ...mapGetters(["list", "error", "isLoading", "userProfile"])
         },
         methods: {
             ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),
@@ -94,6 +94,7 @@
                 this.$store.commit('SET_ANSWERS', this.answers);
                 this.SEND_CHECKLIST({
                     fileList: this.fileList,
+                    userProfile: this.userProfile,
                     listId: this.$route.params.id
                 });
             }

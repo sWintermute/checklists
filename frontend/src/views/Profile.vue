@@ -13,10 +13,10 @@
                 md="4"
             )
                 v-card(class="elevation-2 rounded-card" tile)
-                    v-card-text
+                    v-card-text(v-if="userProfile")
                         v-flex(class="mb-4 d-flex" justify-center align-center)
                             v-avatar(color="primary")
-                                v-icon(x-large dark) mdi-account-circle
+                                v-icon(x-large dark) {{ mdiAccountCircle }}
                         v-text-field(
                             :value="userProfile.first_name"
                             label="Имя"
@@ -42,15 +42,18 @@
 <script>
     import { mapGetters, mapActions } from 'vuex';
     import types from "@/store/types/user"
+    import { mdiAccountCircle } from '@mdi/js'
 
     export default {
         name: 'Profile',
-        data: () => ({}),
-        created: function () {
-            this.PROFILE();
+        data: () => ({
+            mdiAccountCircle
+        }),
+        async created() {
+            await this.PROFILE();
         },
         computed: {
-            ...mapGetters(['userProfile']),
+            ...mapGetters(["userProfile"]),
         },
         methods: {
             ...mapActions([types.PROFILE]),

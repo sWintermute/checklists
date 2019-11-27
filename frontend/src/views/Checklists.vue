@@ -16,7 +16,7 @@
                         tag="tr"
                         :to="'checklist/' + item.id"
                     )
-                        td {{ item.id }}
+                        td(style="width: 70px; text-align: center;") {{ item.id }}
                         td(class="text-xs-right") {{ item.name }}
 </template>
 

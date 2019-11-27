@@ -7,7 +7,7 @@
             flat
         )
             v-card-title(class="headline text-centered") {{checklist.name}}
-            v-text
+            v-card-text
                 v-data-table(
                     :items="checklist.questions"
                     :items-per-page="-1"

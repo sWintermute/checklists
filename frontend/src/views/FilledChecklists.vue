@@ -2,7 +2,7 @@
     v-container
         v-data-table(
             :headers="headers"
-            :items="lists"
+            :items="filledLists"
             :items-per-page="-1"
             item-key="id"
             hide-default-footer
@@ -22,7 +22,7 @@
 
 <script>
     import { mapGetters, mapActions} from "vuex";
-    import types from "@/store/types/checklists.js"
+    import types from "@/store/types/filledChecklists.js"
 
     export default {
         name: 'Checklists',
@@ -40,13 +40,13 @@
             ]
         }),
         created() {
-            this.FETCH_CHECKLISTS();
+            this.FETCH_FILLED_CHECKLISTS();
         },
         computed: {
-            ...mapGetters(["lists"])
+            ...mapGetters(["filledLists"])
         },
         methods: {
-            ...mapActions([types.FETCH_CHECKLISTS])
+            ...mapActions([types.FETCH_FILLED_CHECKLISTS])
         }
     }
 </script>

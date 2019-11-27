@@ -1,14 +1,15 @@
 import router from '@/router'
 import ApiService from "@/services/api.js";
+import tokenService from "@/services/tokenService.js";
 import types from "@/store/types/user.js"
 
 export default {
-    [types.PROFILE]({commit}){
+    async [types.PROFILE]({ commit }){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
-            ApiService.get("api/v1/me",)
-                .then(({data}) => {
+            return ApiService.get("api/v1/me",)
+                .then(({ data }) => {
                     commit('SET_LOADING_STATUS', false);
                     commit('SET_USER', data);
                     resolve(data)
@@ -19,31 +20,28 @@ export default {
                 })
         })
     },
-    [types.LOGIN]({commit}, user){
+    [types.LOGIN]({ commit }, user){
         return new Promise((resolve, reject) => {
-            commit('SET_LOADING_STATUS', true);
-            commit('SET_AUTH_SUCCESS');
             ApiService.post("auth/token/login", user)
-                .then(({data}) => {
-                    commit('SET_LOADING_STATUS', false);
-                    localStorage.setItem('token', data.auth_token);
-                    commit('SET_AUTH_SUCCESS', data.auth_token, data.user);
-                    resolve(data)
+                .then((response) => {
+                    tokenService.saveToken(response.data.auth_token)
+                    ApiService.setHeader();
+                    commit('SET_AUTH_SUCCESS', response.data.user);
                     router.push("/profile");
+                    resolve(response);
                 })
-                .catch(error => {
+                .catch((error) => {
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);
-                    reject(error);
+                    reject(error)
                 })
         })
     },
-    [types.LOGOUT]({commit}){
+    [types.LOGOUT]({ commit }){
         return new Promise(() => {
             ApiService.post("auth/token/logout");
             ApiService.removeHeader();
             commit('SET_LOGOUT');
-            localStorage.removeItem('token');
             router.push("/login");
         })
     }

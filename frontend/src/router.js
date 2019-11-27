@@ -8,6 +8,8 @@ import Checklist from './views/Checklist.vue'
 import Report from './views/Report.vue'
 import Reports from './views/Reports.vue'
 import Profile from './views/Profile.vue'
+import FilledChecklists from '@/views/FilledChecklists.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(Router);
 
@@ -59,16 +61,14 @@ let router = new Router({
     {
       path: '/responses',
       name: 'responses',
-      component: () =>
-                import(/* webpackChunkName: "responses" */ "@/views/FilledChecklists.vue"),
+      component: FilledChecklists,
       meta: {
         requiresAuth: true
       }
     },
     {
       path: '*',
-      component: () =>
-                import(/* webpackChunkName: "PageNotFound" */ "@/views/PageNotFound.vue"),
+      component: PageNotFound,
     },
   ]
 });
