@@ -22,7 +22,7 @@
 
 <script>
     import { mapGetters, mapActions} from "vuex";
-    import types from "@/store/types/checklists.js"
+    import types from "@/store/types"
 
     export default {
         name: 'Checklists',

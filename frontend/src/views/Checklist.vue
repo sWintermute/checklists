@@ -66,7 +66,7 @@
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex";
     import Uploader from "../components/checklist/Uploader.vue";
-    import types from "@/store/types/checklists.js"
+    import types from "@/store/types"
 
     export default {
         name: "Checklist",

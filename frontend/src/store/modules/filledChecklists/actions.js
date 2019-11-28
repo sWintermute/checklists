@@ -1,5 +1,5 @@
 import ApiService from "@/services/api.js";
-import types from "@/store/types/filledChecklists.js"
+import types from "@/store/types"
 
 export default {
     [types.FETCH_FILLED_CHECKLIST]({ commit }) {

@@ -41,7 +41,7 @@
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
-    import types from "@/store/types/user"
+    import types from "@/store/types"
     import { mdiAccountCircle } from '@mdi/js'
 
     export default {

@@ -1,5 +1,6 @@
 import ApiService from "@/services/api.js";
 import types from "@/store/types"
+import router from '@/router'
 
 export default {
     [types.FETCH_REPORT]({ commit },  report_id) {
@@ -40,10 +41,8 @@ export default {
             ApiService.setHeader();
             ApiService.post("api/v1/reports", report)
                 .then(response => {
-                    router.push('/');
                     resolve(response);
                 }).catch(error => {
-                    commit(types.SET_ERROR, error.response);
                     console.log(error);
                     reject(error);
                 })

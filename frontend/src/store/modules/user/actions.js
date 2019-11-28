@@ -1,7 +1,7 @@
 import router from '@/router'
 import ApiService from "@/services/api.js";
 import tokenService from "@/services/tokenService.js";
-import types from "@/store/types/user.js"
+import types from "@/store/types"
 
 export default {
     async [types.PROFILE]({ commit }){

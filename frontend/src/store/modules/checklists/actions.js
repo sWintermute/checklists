@@ -1,6 +1,6 @@
 import router from "@/router";
 import ApiService from "@/services/api.js";
-import types from "@/store/types/checklists.js"
+import types from "@/store/types"
 
 export default {
     [types.SEND_CHECKLIST]({ commit, state }, { fileList, userProfile, listId }){

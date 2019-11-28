@@ -53,7 +53,7 @@
 <script>
     import { format, compareAsc } from 'date-fns'
     import { mapActions, mapGetters } from 'vuex';
-    import types from "@/store/types/reports"
+    import types from "@/store/types"
 
 
     export default {

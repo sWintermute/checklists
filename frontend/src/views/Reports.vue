@@ -63,7 +63,6 @@
                                                         label="Дата"
                                                         readonly
                                                     )
-                                                    | {{editedItem.checklists}}
                                                 v-col(cols="12" class="d-flex justify-center")
                                                     v-date-picker(v-model="dates" range landscape full-width)
                             v-card-actions
@@ -193,6 +192,8 @@
             ...mapActions([types.FETCH_REPORTS, types.CREATE_REPORT, types.FETCH_CHECKLISTS]),
             sendReport() {
                 this.CREATE_REPORT(this.editedItem);
+                this.close()
+                this.FETCH_REPORTS();
             },
             toggle () {
                 this.$nextTick(() => {
@@ -207,7 +208,7 @@
                 const index = this.desserts.indexOf(item)
                 confirm('Вы уверены?') && this.desserts.splice(index, 1)
             },
-            close () {
+            close() {
                 this.dialog = false
                 setTimeout(() => {
                     this.editedItem = Object.assign({}, this.defaultItem)

@@ -49,7 +49,7 @@
 <script>
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex"
-    import types from "@/store/types/user"
+    import types from "@/store/types"
     import { mdiEmail, mdiLock } from '@mdi/js'
 
     export default {
