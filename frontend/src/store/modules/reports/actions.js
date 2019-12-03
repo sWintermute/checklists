@@ -3,12 +3,11 @@ import types from "@/store/types"
 import router from '@/router'
 
 export default {
-    [types.FETCH_REPORT]({ commit },  report_id) {
+    [types.FETCH_REPORT]({ commit },  reportId) {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
-            ApiService.get("api/v1/report", report_id)
+            ApiService.get("api/v1/report", reportId)
                 .then(response => {
-                    commit('SET_LOADING_STATUS', false);
                     const report = response.data;
                     commit('SET_REPORT', report);
                     resolve(response)
@@ -25,7 +24,6 @@ export default {
             ApiService.setHeader();
             ApiService.get("api/v1/reports")
                 .then(response => {
-                    commit("SET_LOADING_STATUS", false);
                     const reports = response.data;
                     commit("SET_REPORTS", reports);
                     resolve(response)
@@ -48,4 +46,10 @@ export default {
                 })
         })
     },
+    [types.REMOVE_REPORT]({ commit }, reportId) {
+        return new Promise((resolve, reject) => {
+            ApiService.setHeader();
+            ApiService.delete("api/v1/reports", reportId);
+        })
+    }
 }

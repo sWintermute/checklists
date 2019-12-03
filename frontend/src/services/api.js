@@ -21,6 +21,9 @@ const ApiService = {
     post(resource, params) {
         return Vue.axios.post(`${resource}/`, params);
     },
+    delete(resource, id="") {
+        return Vue.axios.delete(`${resource}/${id}`);
+    },
 };
 
 export default ApiService;

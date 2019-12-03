@@ -9,6 +9,7 @@ import Report from './views/Report.vue'
 import Reports from './views/Reports.vue'
 import Profile from './views/Profile.vue'
 import FilledChecklists from '@/views/FilledChecklists.vue'
+import FilledChecklist from '@/views/FilledChecklist.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(Router);
@@ -30,17 +31,17 @@ let router = new Router({
       }
     },
     {
-      path: '/reports',
-      name: 'reports',
-      component: Reports,
+      path: '/checklist/:id',
+      name: 'checklist',
+      component: Checklist,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/checklist/:id',
-      name: 'checklist',
-      component: Checklist,
+      path: '/reports',
+      name: 'reports',
+      component: Reports,
       meta: {
         requiresAuth: true
       }
@@ -62,6 +63,14 @@ let router = new Router({
       path: '/responses',
       name: 'responses',
       component: FilledChecklists,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/response/:id',
+      name: 'response',
+      component: FilledChecklist,
       meta: {
         requiresAuth: true
       }

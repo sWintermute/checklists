@@ -133,7 +133,6 @@
                 dates: ['2019-09-10', '2019-09-20'],
                 name: '',
             },
-            desserts: [],
             selectedChecklists: [],
         }),
         computed: {
@@ -189,7 +188,12 @@
             }
         },
         methods: {
-            ...mapActions([types.FETCH_REPORTS, types.CREATE_REPORT, types.FETCH_CHECKLISTS]),
+            ...mapActions([
+                types.FETCH_REPORTS,
+                types.CREATE_REPORT,
+                types.FETCH_CHECKLISTS,
+                types.REMOVE_REPORT
+                ]),
             sendReport() {
                 this.CREATE_REPORT(this.editedItem);
                 this.close()
@@ -205,8 +209,9 @@
                 })
             },
             deleteItem(item) {
-                const index = this.desserts.indexOf(item)
-                confirm('Вы уверены?') && this.desserts.splice(index, 1)
+                confirm('Вы уверены?');
+                this.REMOVE_REPORT(item.id);
+                this.FETCH_REPORTS();
             },
             close() {
                 this.dialog = false

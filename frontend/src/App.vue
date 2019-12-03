@@ -21,7 +21,7 @@
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/responses") Ответы на чеклисты
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/reports") Отчеты
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/profile") Профиль
-                    v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" @click='LOGOUT') Выйти
+                    v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" @click="LOGOUT") Выйти
                     v-btn(v-else text class="hidden-sm-and-down" to="/login") Войти
         v-content(fluid)
             router-view
