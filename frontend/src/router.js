@@ -8,7 +8,7 @@ import Report from './views/Report.vue'
 import Reports from './components/Reports.vue'
 import Profile from './components/Profile.vue'
 
-Vue.use(Router);
+Vue.use(Router)
 
 let router = new Router({
   mode: 'history',
@@ -49,7 +49,7 @@ let router = new Router({
     {
       path: '/report/:id',
       name: 'report',
-      component: Report,
+      component: Report
     },
     {
       path: '/profile',
@@ -58,20 +58,20 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
-    },
+    }
   ]
-});
+})
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
-      next();
+      next()
       return
     }
     next('/login')
   } else {
     next()
   }
-});
+})
 
 export default router
