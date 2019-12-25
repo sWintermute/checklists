@@ -22,7 +22,15 @@
                     v-card-text(class="px-6 pt-6 pb-0")
                             v-form
                                 div(v-for="(question, i) in list.questions" :key="i")
-                                    template(v-if="question.type === 'textarea'")
+                                    template(v-if="question.type === 'address-autocomplete'")
+                                        header {{ question.text }}
+                                        v-textarea(
+                                            solo
+                                            label="Оставьте замечания..."
+                                            class="mt-3"
+                                            v-model="answers[question.id]"
+                                        )
+                                    template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
                                         v-textarea(
                                             solo
