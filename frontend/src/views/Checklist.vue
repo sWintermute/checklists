@@ -24,11 +24,9 @@
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'address-autocomplete'")
                                         header {{ question.text }}
-                                        v-textarea(
-                                            solo
-                                            label="Оставьте замечания..."
-                                            class="mt-3"
-                                            v-model="answers[question.id]"
+                                        v-autocomplete(
+                                            label="Components"
+                                            :items="components"
                                         )
                                     template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
