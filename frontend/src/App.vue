@@ -1,6 +1,6 @@
 <template lang="pug">
     v-app(id="inspire")
-        span
+        div
             v-navigation-drawer(app v-model="drawer" v-if="isLoggedIn")
                 v-list
                     template(v-for="(menu, i) in menus")
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters, mapActions, mapState } from "vuex"
 import types from "@/store/types"
 
 
@@ -81,6 +81,7 @@ export default {
         ]
     }),
     computed: {
+        ...mapState(["auth_token"]),
         ...mapGetters(["isLoggedIn", "error"])
     },
     methods: {

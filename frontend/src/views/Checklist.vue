@@ -25,7 +25,7 @@
                                     template(v-if="question.type === 'address-autocomplete'")
                                         header {{ question.text }}
                                         v-autocomplete(
-                                            label="Components"
+                                            label="Введите адрес..."
                                             :items="components"
                                         )
                                     template(v-else-if="question.type === 'textarea'")

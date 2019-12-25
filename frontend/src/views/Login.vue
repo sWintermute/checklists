@@ -73,7 +73,7 @@
                 this[types.LOGIN]( {
                     email: this.email,
                     password: this.password
-                })
+                });
             },
             clear() {
                 this.email = '';
