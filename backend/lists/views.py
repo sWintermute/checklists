@@ -50,7 +50,6 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
         """
         return models.Response.objects.filter(user=self.request.user)
 
-
 class UserViewset(GenericViewSet, ListModelMixin):
     queryset = umodels.UserProfile.objects.all()
     model = umodels.UserProfile

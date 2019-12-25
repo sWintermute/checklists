@@ -1,7 +1,12 @@
 {
-  "name": "some-app",
-  "short_name": "some-app",
+  "name": "checklists",
+  "short_name": "checklists",
   "icons": [
+    {
+      "src": "http://localhost/static/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
     {
       "src": "/img/icons/android-chrome-192x192.png",
       "sizes": "192x192",

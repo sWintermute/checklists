@@ -147,7 +147,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
                     ]
 
             for k in self.photos:
-                keys.append({"name": k.name, "keys": k.file.url})
+                keys.append({"name": "image", "keys": k.file.url})
 
             for answer in [x for x in response_answers
                            if x.question_id is obj.id]:
