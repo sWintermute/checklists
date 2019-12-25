@@ -28,6 +28,13 @@
                                             label="Введите адрес..."
                                             :items="components"
                                         )
+                                        VueSuggestions(
+                                            :model.sync="city"
+                                            :coordinates.sync="coordinates"
+                                            :placeholder="'Начните вводить'"
+                                            class="form-control"
+                                            :options="suggestionOptions"
+                                        )
                                     template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
                                         v-textarea(
@@ -74,22 +81,50 @@
     import Uploader from "../components/checklist/Uploader.vue";
     import types from "@/store/types"
 
+    import $ from 'jquery';
+    import 'suggestions-jquery';
+    import VueSuggestions from 'vue-suggestions';
+
     export default {
         name: "Checklist",
         components: {
             Uploader,
             ValidationObserver,
-            ValidationProvider
+            ValidationProvider,
+            VueSuggestions
         },
         data: () => ({
             test: [],
             fileList: [],
             answers: {},
             choices: {},
-            toggleChecked: false
+            toggleChecked: false,
+
+            city: 'Новокузнецк',
+            coordinates: {
+                latitude: '',
+                longitude: ''
+            },
+            suggestionOptions: {
+                // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454318
+                token: '519fbd1afac8c2380f617046c95a6789a39fa021',
+                type: "ADDRESS",
+                scrollOnFocus: false,
+                triggerSelectOnBlur: false,
+                triggerSelectOnEnter: false,
+                addon: 'none',
+                // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454320
+                onSelect (suggestion) {
+                    
+                }
+            },
         }),
         created() {
             this.FETCH_CHECKLIST(this.$route.params.id);
+        },
+        mounted() {
+            this.callbacks = $.Callbacks();
+            console.log(this.callbacks)
         },
         computed: {
             ...mapGetters(["list", "error", "isLoading", "userProfile"])
