@@ -62,5 +62,23 @@ export default {
                     reject(error);
                 })
         })
+    },
+    [types.CHECKLIST_AUTOCOMPLETE_FIELD]({ commit }, { search,count}) {
+        return new Promise((resolve, reject) => {
+            commit('SET_LOADING_STATUS', true);
+            ApiService.setHeader("519fbd1afac8c2380f617046c95a6789a39fa021");
+            ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+                count: count,
+                query: search
+            })
+                .then(res => {
+                    commit('SET_ENTRIES', res.data.suggestions);
+                    resolve(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                })
+        })
     }
 }

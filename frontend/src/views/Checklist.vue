@@ -28,8 +28,7 @@
                                         //-     label="Введите адрес..."
                                         //-     :items="components"
                                         //- )
-                                        autocomplete(
-                                        )
+                                        autocomplete(:title="question.text")
                                         //- VueSuggestions(
                                         //-     :model.sync="city"
                                         //-     :coordinates.sync="coordinates"
@@ -80,7 +79,7 @@
 <script>
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex";
-    import Uploader from "../components/checklist/Uploader.vue";
+    import Uploader from "@/components/checklist/Uploader.vue";
     import types from "@/store/types"
 
     import VueSuggestions from 'vue-suggestions';
@@ -102,27 +101,6 @@
             answers: {},
             choices: {},
             toggleChecked: false,
-
-            city: 'Новокузнецк',
-            coordinates: {
-                latitude: '',
-                longitude: ''
-            },
-            suggestionOptions: {
-                // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454318
-                token: 123,
-                type: "ADDRESS",
-                scrollOnFocus: false,
-                triggerSelectOnBlur: false,
-                triggerSelectOnEnter: false,
-                addon: 'none',
-                deferRequestBy: 1000,
-                minChars: 2,
-                // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454320
-                onSelect (suggestion) {
-                    
-                }
-            },
         }),
         created() {
             this.FETCH_CHECKLIST(this.$route.params.id);

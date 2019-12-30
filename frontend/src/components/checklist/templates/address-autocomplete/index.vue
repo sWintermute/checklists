@@ -1,6 +1,6 @@
 <template lang="pug">
     div
-        header {{search}}
+        header {{ title }}
         v-autocomplete(
             v-model="model"
             :items="items"
@@ -9,42 +9,34 @@
             color="white"
             item-text="value"
             item-value="value"
-            label="Public APIs dadata"
             placeholder="Start typing to Search"
-            prepend-icon="mdi-database-search"
             return-object
+            cache-items
+            dense
+            full-width
         )
-        | {{items}}
 </template>
 
 <script>
-import $ from 'jquery';
-import 'suggestions-jquery';
-import VueSuggestions from 'vue-suggestions';
-
 import ApiService from "@/services/api.js";
 import tokenService from "@/services/tokenService.js";
 import axios from 'axios';
+import types from "@/store/types"
+import { mapState, mapActions } from "vuex";
 
 export default {
     name: 'address-autocomplete',
+    props: {
+        title: String
+    },
     data: () => ({
+        count: 5,
         value: '',
-        coords: {
-          latitude: '',
-          longitude: ''
-        },
-        suggestions: [],
-        optionss: {"locations_boost":[{"kladr_id":"4200001200000"}],"count":5},
-        descriptionLimit: 60,
-        entries: [],
         isLoading: false,
         model: null,
         search: null,
+        entries: [],
     }),
-    created() {
-        console.log(process.env)
-    },
     computed: {
         fields () {
             if (!this.model) return []
@@ -57,42 +49,33 @@ export default {
             })
         },
         items () {
+            console.log(this.entries);
             return this.entries.map((entry) => {
-                const value = entry.value.split("").filter((item) => {
-                    return item !== ","
-                }).join("").split(" ").filter((item) => {
-                    console.log(item)
-                    return  item.length > 2
-                }).join(" ");
+                const value = [entry.data.city, entry.data.street, entry.data.house].join(" ");
                 return Object.assign({}, entry, { value });
             })
         }
     },
     watch: {
         search (val) {
-
-            // Items have already been requested
             if (this.isLoading) return
-
             this.isLoading = true
-
-            // Lazily load input items
             ApiService.setHeader(process.env.VUE_APP_DADATA_KEY);
-            this.optionss.query = this.model;
-            axios.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-                locations_boost: [{"kladr_id":"4200001200000"}],
-                count: 5,
-                query: "Новокузнецк " + this.search
+            ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+                count: this.count,
+                query: this.search
             })
                 .then(res => {
-                    console.log(res, 1337);
-                    this.entries = res.data.suggestions
+                    this.entries = res.data.suggestions;
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err);
                 })
                 .finally(() => (this.isLoading = false))
         },
+    },
+    methods: {
+        ...mapActions([types.CHECKLIST_AUTOCOMPLETE_FIELD])
     }
 }
 </script>

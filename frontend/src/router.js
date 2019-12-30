@@ -1,15 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store/store'
 
 import Login from './views/Login.vue'
-import Checklists from './views/Checklists.vue'
-import Checklist from './views/Checklist.vue'
-import Report from './views/Report.vue'
-import Reports from './views/Reports.vue'
-import Profile from './views/Profile.vue'
-import FilledChecklists from '@/views/FilledChecklists.vue'
-import FilledChecklist from '@/views/FilledChecklist.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(Router)

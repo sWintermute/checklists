@@ -9,9 +9,8 @@ const ApiService = {
         Vue.use(VueAxios, axios);
         Vue.axios.defaults.baseURL = BASE_URL;
     },
-    setHeader(token) {
-        if (token) {}
-        Vue.axios.defaults.headers.common["Authorization"] = token ? `Token ${token}`: `Token ${TokenService.getToken()}`;
+    setHeader(dadataToken) {
+        Vue.axios.defaults.headers.common["Authorization"] = dadataToken ? `Token ${dadataToken}`: `Token ${TokenService.getToken()}`;
     },
     removeHeader() {
         Vue.axios.defaults.headers.common["Authorization"] = null;
@@ -24,9 +23,6 @@ const ApiService = {
     },
     delete(resource, id="") {
         return Vue.axios.delete(`${resource}/${id}`);
-    },
-    bar(resource, options) {
-        return Vue.axios.post(`${resource}/`, options);
     },
 };
 
