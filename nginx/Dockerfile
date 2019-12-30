@@ -1,9 +1,9 @@
 # Stage 1 - build frontend app
-FROM node:13.5.0-alpine as build-deps
+FROM node:12.10-alpine as build-deps
 
 WORKDIR /app/
 
-COPY frontend/package.json /app/
+COPY frontend/package*.json /app/
 RUN npm install
 
 COPY frontend /app/

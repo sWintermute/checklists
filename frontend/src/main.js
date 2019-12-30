@@ -11,6 +11,8 @@ Vue.config.productionTip = false;
 
 ApiService.init();
 
+console.log(process.env);
+
 Vue.use(VueLoading);
 
 new Vue({

@@ -23,18 +23,20 @@
                             v-form
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'address-autocomplete'")
-                                        header {{ question.text }}
-                                        v-autocomplete(
-                                            label="Введите адрес..."
-                                            :items="components"
+                                        //- header {{ question.text }}
+                                        //- v-autocomplete(
+                                        //-     label="Введите адрес..."
+                                        //-     :items="components"
+                                        //- )
+                                        autocomplete(
                                         )
-                                        VueSuggestions(
-                                            :model.sync="city"
-                                            :coordinates.sync="coordinates"
-                                            :placeholder="'Начните вводить'"
-                                            class="form-control"
-                                            :options="suggestionOptions"
-                                        )
+                                        //- VueSuggestions(
+                                        //-     :model.sync="city"
+                                        //-     :coordinates.sync="coordinates"
+                                        //-     :placeholder="'Начните вводить'"
+                                        //-     class="form-control"
+                                        //-     :options="suggestionOptions"
+                                        //- )
                                     template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
                                         v-textarea(
@@ -81,9 +83,8 @@
     import Uploader from "../components/checklist/Uploader.vue";
     import types from "@/store/types"
 
-    import $ from 'jquery';
-    import 'suggestions-jquery';
     import VueSuggestions from 'vue-suggestions';
+    import autocomplete from "@/components/checklist/templates/address-autocomplete/index.vue";
 
     export default {
         name: "Checklist",
@@ -91,7 +92,9 @@
             Uploader,
             ValidationObserver,
             ValidationProvider,
-            VueSuggestions
+            VueSuggestions,
+
+            autocomplete
         },
         data: () => ({
             test: [],
@@ -107,12 +110,14 @@
             },
             suggestionOptions: {
                 // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454318
-                token: '519fbd1afac8c2380f617046c95a6789a39fa021',
+                token: 123,
                 type: "ADDRESS",
                 scrollOnFocus: false,
                 triggerSelectOnBlur: false,
                 triggerSelectOnEnter: false,
                 addon: 'none',
+                deferRequestBy: 1000,
+                minChars: 2,
                 // @see https://confluence.hflabs.ru/pages/viewpage.action?pageId=207454320
                 onSelect (suggestion) {
                     
@@ -121,10 +126,6 @@
         }),
         created() {
             this.FETCH_CHECKLIST(this.$route.params.id);
-        },
-        mounted() {
-            this.callbacks = $.Callbacks();
-            console.log(this.callbacks)
         },
         computed: {
             ...mapGetters(["list", "error", "isLoading", "userProfile"])
@@ -142,3 +143,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .form-control {
+        padding: 0 !important;
+        width: 300px;
+    }
+</style>

@@ -8,7 +8,7 @@ export default {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
-            return ApiService.get("api/v1/me",)
+            return ApiService.get("api/v1/me")
                 .then(({ data }) => {
                     commit('SET_LOADING_STATUS', false);
                     commit('SET_USER', data);
