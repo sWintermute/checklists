@@ -72,7 +72,10 @@ export default {
             ApiService.setHeader(process.env.VUE_APP_DADATA_KEY);
             ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
                 count: this.count,
-                query: "Кемеровская область - Кузбасс," + this.search
+                query: "Кемеровская область - Кузбасс," + this.search,
+                locations_boost: [
+                    { kladr_id: "4200001200000" }
+                ]
             })
                 .then(res => {
                     this.entries = res.data.suggestions;
