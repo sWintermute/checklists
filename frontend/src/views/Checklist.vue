@@ -23,19 +23,10 @@
                             v-form
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'address-autocomplete'")
-                                        //- header {{ question.text }}
-                                        //- v-autocomplete(
-                                        //-     label="Введите адрес..."
-                                        //-     :items="components"
-                                        //- )
-                                        autocomplete(:title="question.text")
-                                        //- VueSuggestions(
-                                        //-     :model.sync="city"
-                                        //-     :coordinates.sync="coordinates"
-                                        //-     :placeholder="'Начните вводить'"
-                                        //-     class="form-control"
-                                        //-     :options="suggestionOptions"
-                                        //- )
+                                        autocomplete(
+                                            :id="question.id"
+                                            :title="question.text"
+                                        )
                                     template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
                                         v-textarea(

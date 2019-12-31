@@ -2,18 +2,19 @@
     div
         header {{ title }}
         v-autocomplete(
-            v-model="model"
+            v-model="autocomplete"
             :items="items"
             :loading="isLoading"
             :search-input.sync="search"
             color="white"
             item-text="value"
             item-value="value"
-            placeholder="Start typing to Search"
+            placeholder="Введите адрес..."
             return-object
             cache-items
             dense
             full-width
+            @input="tesrt"
         )
 </template>
 
@@ -22,14 +23,16 @@ import ApiService from "@/services/api.js";
 import tokenService from "@/services/tokenService.js";
 import axios from 'axios';
 import types from "@/store/types"
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, commit } from "vuex";
 
 export default {
     name: 'address-autocomplete',
     props: {
-        title: String
+        title: String,
+        id: Number
     },
     data: () => ({
+        ...mapState(["autocomplete"]),
         count: 5,
         value: '',
         isLoading: false,
@@ -37,7 +40,14 @@ export default {
         search: null,
         entries: [],
     }),
+    mounted() {
+        this.$store.commit("SET_TEST", this.id);
+    },
     computed: {
+        model: {
+            get() { return this.model },
+            set() { return null }
+        },
         fields () {
             if (!this.model) return []
 
@@ -49,7 +59,6 @@ export default {
             })
         },
         items () {
-            console.log(this.entries);
             return this.entries.map((entry) => {
                 const value = [entry.data.city, entry.data.street, entry.data.house].join(" ");
                 return Object.assign({}, entry, { value });
@@ -60,10 +69,10 @@ export default {
         search (val) {
             if (this.isLoading) return
             this.isLoading = true
-            ApiService.setHeader(process.env.VUE_APP_DADATA_KEY);
+            ApiService.setHeader("519fbd1afac8c2380f617046c95a6789a39fa021");
             ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
                 count: this.count,
-                query: this.search
+                query: "Кемеровская область - Кузбасс," + this.search
             })
                 .then(res => {
                     this.entries = res.data.suggestions;
@@ -75,7 +84,10 @@ export default {
         },
     },
     methods: {
-        ...mapActions([types.CHECKLIST_AUTOCOMPLETE_FIELD])
+        ...mapActions([types.CHECKLIST_AUTOCOMPLETE_FIELD]),
+        tesrt() {
+            this.$store.commit("SET_AUTOCOMPLETE", this.autocomplete);
+        }
     }
 }
 </script>

@@ -3,4 +3,6 @@ export default {
     lists: [],
     answers: [],
     entries: [],
+    autocomplete: "",
+    autocompleteId: 0,
 };
