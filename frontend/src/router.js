@@ -1,22 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store'
-import Login from './components/Login.vue'
-import Checklists from './components/Checklists.vue'
-import Checklist from './views/Checklist.vue'
-import Report from './views/Report.vue'
-import Reports from './components/Reports.vue'
-import Profile from './components/Profile.vue'
 
-Vue.use(Router);
+import Login from './views/Login.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
+
+Vue.use(Router)
 
 let router = new Router({
   mode: 'history',
   routes: [
-    {
-      path: '*',
-      redirect: '/'
-    },
     {
       path: '/login',
       name: 'login',
@@ -25,7 +17,16 @@ let router = new Router({
     {
       path: '/',
       name: 'checklists',
-      component: Checklists,
+      component: () => import(/* webpackChunkName: "checklists" */ './views/Checklists.vue'),
+      meta: {
+        requiresAuth: true
+      },
+      children: []
+    },
+    {
+      path: '/checklist/:id',
+      name: 'checklist',
+      component: () => import(/* webpackChunkName: "checklist" */ './views/Checklist.vue'),
       meta: {
         requiresAuth: true
       }
@@ -33,15 +34,7 @@ let router = new Router({
     {
       path: '/reports',
       name: 'reports',
-      component: Reports,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/checklist/:id',
-      name: 'checklist',
-      component: Checklist,
+      component: () => import(/* webpackChunkName: "reports" */ './views/Reports.vue'),
       meta: {
         requiresAuth: true
       }
@@ -49,29 +42,38 @@ let router = new Router({
     {
       path: '/report/:id',
       name: 'report',
-      component: Report,
+      component: () => import(/* webpackChunkName: "report" */ './views/Report.vue'),
     },
     {
       path: '/profile',
       name: 'profile',
-      component: Profile,
+      component: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue'),
       meta: {
         requiresAuth: true
       }
     },
+    {
+      path: '/responses',
+      name: 'responses',
+      component: () => import(/* webpackChunkName: "responses" */ './views/FilledChecklists.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/response/:id',
+      name: 'response',
+      component: () => import(/* webpackChunkName: "response" */ './views/FilledChecklist.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '*',
+      component: () => import(/* webpackChunkName: "page-not-found" */ './views/PageNotFound.vue'),
+      component: PageNotFound,
+    },
   ]
-});
-
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next();
-      return
-    }
-    next('/login')
-  } else {
-    next()
-  }
-});
+})
 
 export default router

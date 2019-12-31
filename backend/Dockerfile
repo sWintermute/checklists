@@ -1,4 +1,4 @@
-FROM alpine:3.10 AS build
+FROM alpine:3.11.2 AS build
 ARG DEBUG
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /app &&\

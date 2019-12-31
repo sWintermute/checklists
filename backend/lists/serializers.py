@@ -103,7 +103,8 @@ class ResponseSerializer(serializers.ModelSerializer):
         for answer in answers:
             models.Answer.objects.create(response=response, **answer)
 
-        content_type = ContentType.objects.get(model='response')
+        content_type = ContentType.objects.get(model='response',
+                                               app_label='lists')
         for photo in photos:
             models.Attachment.objects.create(
                 object_id=response.id, content_type=content_type, **photo)
@@ -122,6 +123,7 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.responses = kwargs.pop('responses', None)
         self.answers = kwargs.pop('answers', None)
+        self.photos = kwargs.pop('photos', None)
         self.questions = kwargs.pop('questions', None)
         super(ReportQuestionSerializer, self).__init__(*args, **kwargs)
 
@@ -143,6 +145,9 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
                     for answer in [x for x in response_answers
                                    if x.question_id is question.id]
                     ]
+
+            for k in self.photos:
+                keys.append({"name": "image", "keys": k.file.url})
 
             for answer in [x for x in response_answers
                            if x.question_id is obj.id]:
@@ -167,7 +172,7 @@ class ReportSurveySerializer(serializers.ModelSerializer):
 
     def get_questions(self, obj):
         que = [x for x in self.questions
-               if x.survey_id is obj.id]
+               if (x.survey_id is obj.id) and (x.type != 'select-image')]
 
         dict_que = defaultdict(list)
         for x in que:
@@ -180,10 +185,17 @@ class ReportSurveySerializer(serializers.ModelSerializer):
         resps = [x for x in self.responses
                  if x.survey_id is obj.id]
 
+        resps_id = [x.id for x in resps]
+        response_type_id = ContentType.objects.get_for_model(models.Response)
+        photos = [x for x in models.Attachment.objects.filter(
+            content_type_id=response_type_id,
+            object_id__in=resps_id)]
+
         return ReportQuestionSerializer(dict_que[False],
                                         responses=resps,
                                         answers=answers,
                                         questions=dict_que[True],
+                                        photos=photos,
                                         many=True).data
 
     class Meta:
