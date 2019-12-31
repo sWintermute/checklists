@@ -1,5 +1,5 @@
 export default {
-    token: localStorage.getItem('auth_token') || '',
+    auth_token: localStorage.getItem('auth_token') || '',
     userProfile: {
         id: "123",
         email: "123",

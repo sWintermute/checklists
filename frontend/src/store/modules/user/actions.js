@@ -4,17 +4,17 @@ import tokenService from "@/services/tokenService.js";
 import types from "@/store/types"
 
 export default {
-    async [types.PROFILE]({ commit }){
+    [types.PROFILE]({ commit }){
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
-            return ApiService.get("api/v1/me",)
+            return ApiService.get("api/v1/me")
                 .then(({ data }) => {
                     commit('SET_LOADING_STATUS', false);
                     commit('SET_USER', data);
                     resolve(data)
                 }).catch(error => {
-                    commit(types.SET_ERROR, error.response);
+                    commit("SET_ERROR", error.response);
                     console.log(error.response);
                     reject(error);
                 })
@@ -24,25 +24,22 @@ export default {
         return new Promise((resolve, reject) => {
             ApiService.post("auth/token/login", user)
                 .then((response) => {
-                    tokenService.saveToken(response.data.auth_token)
-                    ApiService.setHeader();
-                    commit('SET_AUTH_SUCCESS', response.data.user);
-                    router.push("/profile");
+                    tokenService.saveToken(response.data["auth_token"]);
+                    router.push({ name: 'profile' });
                     resolve(response);
                 })
                 .catch((error) => {
-                    commit(types.SET_ERROR, error.response);
+                    commit("SET_ERROR", error.response);
                     console.log(error.response);
-                    reject(error)
+                    reject(error);
                 })
         })
     },
     [types.LOGOUT]({ commit }){
-        return new Promise(() => {
-            ApiService.post("auth/token/logout");
-            ApiService.removeHeader();
-            commit('SET_LOGOUT');
-            router.push("/login");
-        })
+        ApiService.post("auth/token/logout");
+        ApiService.removeHeader();
+        tokenService.destroyToken();
+        commit('SET_LOGOUT');
+        router.push("/login");
     }
 }

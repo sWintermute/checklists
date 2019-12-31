@@ -14,5 +14,6 @@ export default {
     },
     SET_LOGOUT(state) {
         state.status = '';
+        state.userProfile = {}
     },
 }
