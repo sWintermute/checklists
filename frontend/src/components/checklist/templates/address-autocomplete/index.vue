@@ -69,7 +69,7 @@ export default {
         search (val) {
             if (this.isLoading) return
             this.isLoading = true
-            ApiService.setHeader("519fbd1afac8c2380f617046c95a6789a39fa021");
+            ApiService.setHeader(process.env.VUE_APP_DADATA_KEY);
             ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
                 count: this.count,
                 query: "Кемеровская область - Кузбасс," + this.search
