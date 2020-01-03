@@ -9,8 +9,8 @@ const ApiService = {
         Vue.use(VueAxios, axios);
         Vue.axios.defaults.baseURL = BASE_URL;
     },
-    setHeader() {
-        Vue.axios.defaults.headers.common["Authorization"] = `Token ${TokenService.getToken()}`;
+    setHeader(dadataToken) {
+        Vue.axios.defaults.headers.common["Authorization"] = dadataToken ? `Token ${dadataToken}`: `Token ${TokenService.getToken()}`;
     },
     removeHeader() {
         Vue.axios.defaults.headers.common["Authorization"] = null;

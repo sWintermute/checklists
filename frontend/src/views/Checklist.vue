@@ -22,7 +22,12 @@
                     v-card-text(class="px-6 pt-6 pb-0")
                             v-form
                                 div(v-for="(question, i) in list.questions" :key="i")
-                                    template(v-if="question.type === 'textarea'")
+                                    template(v-if="question.type === 'address-autocomplete'")
+                                        autocomplete(
+                                            :id="question.id"
+                                            :title="question.text"
+                                        )
+                                    template(v-else-if="question.type === 'textarea'")
                                         header {{ question.text }}
                                         v-textarea(
                                             solo
@@ -65,22 +70,28 @@
 <script>
     import { ValidationObserver, ValidationProvider } from "vee-validate";
     import { mapGetters, mapActions } from "vuex";
-    import Uploader from "../components/checklist/Uploader.vue";
+    import Uploader from "@/components/checklist/Uploader.vue";
     import types from "@/store/types"
+
+    import VueSuggestions from 'vue-suggestions';
+    import autocomplete from "@/components/checklist/templates/address-autocomplete/index.vue";
 
     export default {
         name: "Checklist",
         components: {
             Uploader,
             ValidationObserver,
-            ValidationProvider
+            ValidationProvider,
+            VueSuggestions,
+
+            autocomplete
         },
         data: () => ({
             test: [],
             fileList: [],
             answers: {},
             choices: {},
-            toggleChecked: false
+            toggleChecked: false,
         }),
         created() {
             this.FETCH_CHECKLIST(this.$route.params.id);
@@ -101,3 +112,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .form-control {
+        padding: 0 !important;
+        width: 300px;
+    }
+</style>

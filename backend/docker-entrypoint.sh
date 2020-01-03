@@ -43,9 +43,9 @@ then
   exec python3 manage.py runserver 0.0.0.0:8000
 else
     >&2 echo "Starting Gunicorn..."
-    exec gunicorn newChecklists.wsgi:application \
+    exec gunicorn checklists.wsgi:application \
       -k egg:meinheld#gunicorn_worker \
-      --name newChecklists \
+      --name checklists \
       --bind 0.0.0.0:8000 \
       --workers 3 \
       "$@"
