@@ -1,7 +1,6 @@
-version: '3.4'
+version: "3.4"
 
 services:
-
   backend:
     container_name: checklists_backend_dev
     env_file: .env
@@ -56,6 +55,7 @@ services:
 
   frontend:
     container_name: checklists_frontend_dev
+    env_file: .env
     user: ${CURRENT_UID}
     image: node:12.10-alpine
     command: npm run serve
@@ -93,7 +93,6 @@ networks:
       driver: default
       config:
         - subnet: 172.25.0.0/16
-
 
 volumes:
   checklists_db_data_dev:
