@@ -50,6 +50,7 @@
             mdiAccountCircle
         }),
         async created() {
+            console.log(process.env);
             await this.PROFILE();
         },
         computed: {
