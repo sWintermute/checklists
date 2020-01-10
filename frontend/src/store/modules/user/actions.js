@@ -36,10 +36,17 @@ export default {
         })
     },
     [types.LOGOUT]({ commit }){
-        ApiService.post("auth/token/logout");
-        ApiService.removeHeader();
-        tokenService.destroyToken();
-        commit('SET_LOGOUT');
-        router.push("/login");
+        return new Promise((res, rej) => {
+            ApiService.post("auth/token/logout").then((response) => {
+                ApiService.removeHeader();
+                tokenService.destroyToken();
+                commit('SET_LOGOUT');
+                router.push({name: "login"});
+                res(response.data);
+            }).catch((error) => {
+                console.log(error);
+                rej(error);
+            });
+        });
     }
 }
