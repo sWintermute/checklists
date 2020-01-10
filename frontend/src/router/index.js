@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Login from './views/Login.vue'
-import PageNotFound from '@/views/PageNotFound.vue'
-
 Vue.use(Router)
 
 let router = new Router({
@@ -12,12 +9,12 @@ let router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
     },
     {
       path: '/',
       name: 'checklists',
-      component: () => import(/* webpackChunkName: "checklists" */ './views/Checklists.vue'),
+      component: () => import(/* webpackChunkName: "checklists" */ '@/views/Checklists.vue'),
       meta: {
         requiresAuth: true
       },
@@ -26,7 +23,7 @@ let router = new Router({
     {
       path: '/checklist/:id',
       name: 'checklist',
-      component: () => import(/* webpackChunkName: "checklist" */ './views/Checklist.vue'),
+      component: () => import(/* webpackChunkName: "checklist" */ '@/views/Checklist.vue'),
       meta: {
         requiresAuth: true
       }
@@ -34,7 +31,7 @@ let router = new Router({
     {
       path: '/reports',
       name: 'reports',
-      component: () => import(/* webpackChunkName: "reports" */ './views/Reports.vue'),
+      component: () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue'),
       meta: {
         requiresAuth: true
       }
@@ -42,12 +39,12 @@ let router = new Router({
     {
       path: '/report/:id',
       name: 'report',
-      component: () => import(/* webpackChunkName: "report" */ './views/Report.vue'),
+      component: () => import(/* webpackChunkName: "report" */ '@/views/Report.vue'),
     },
     {
       path: '/profile',
       name: 'profile',
-      component: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue'),
+      component: () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
       meta: {
         requiresAuth: true
       }
@@ -55,7 +52,7 @@ let router = new Router({
     {
       path: '/responses',
       name: 'responses',
-      component: () => import(/* webpackChunkName: "responses" */ './views/FilledChecklists.vue'),
+      component: () => import(/* webpackChunkName: "responses" */ '@/views/FilledChecklists.vue'),
       meta: {
         requiresAuth: true
       }
@@ -63,15 +60,14 @@ let router = new Router({
     {
       path: '/response/:id',
       name: 'response',
-      component: () => import(/* webpackChunkName: "response" */ './views/FilledChecklist.vue'),
+      component: () => import(/* webpackChunkName: "response" */ '@/views/FilledChecklist.vue'),
       meta: {
         requiresAuth: true
       }
     },
     {
       path: '*',
-      component: () => import(/* webpackChunkName: "page-not-found" */ './views/PageNotFound.vue'),
-      component: PageNotFound,
+      component: () => import(/* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'),
     },
   ]
 })

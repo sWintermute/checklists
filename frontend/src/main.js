@@ -1,15 +1,13 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store/store.js'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
 import VueLoading from 'vue-loading-template'
-import vuetify from './plugins/vuetify'
+import vuetify from '@/plugins/vuetify'
+import '@/plugins/axios'
 import "@/plugins/vee-validate";
-import ApiService from "@/services/api";
 
 Vue.config.productionTip = false;
-
-ApiService.init();
 
 Vue.use(VueLoading);
 
