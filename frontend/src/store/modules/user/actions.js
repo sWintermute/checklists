@@ -1,7 +1,8 @@
-import router from '@/router'
+import Vue from 'vue';
+import router from '@/router';
 import ApiService from "@/services/api.js";
 import tokenService from "@/services/tokenService.js";
-import types from "@/store/types"
+import types from "@/store/types";
 
 export default {
     [types.PROFILE]({ commit }){
@@ -24,29 +25,34 @@ export default {
         return new Promise((resolve, reject) => {
             ApiService.post("auth/token/login", user)
                 .then((response) => {
-                    tokenService.saveToken(response.data["auth_token"]);
-                    router.push({ name: 'profile' });
+                    tokenService.saveToken(response["data"]["auth_token"]);
+                    router.push("/profile");
                     resolve(response);
                 })
                 .catch((error) => {
-                    commit("SET_ERROR", error.response);
-                    console.log(error.response);
+                    Vue.$toast.open(error);
+                    console.log({error});
                     reject(error);
                 })
         })
     },
     [types.LOGOUT]({ commit }){
-        return new Promise((res, rej) => {
-            ApiService.post("auth/token/logout").then((response) => {
+        return new Promise((resolve, reject) => {
+            ApiService.setHeader();
+            ApiService.post("auth/token/logout")
+            .then((response) => {
                 ApiService.removeHeader();
-                tokenService.destroyToken();
                 commit('SET_LOGOUT');
-                router.push({name: "login"});
-                res(response.data);
-            }).catch((error) => {
+                resolve();
+            })
+            .catch((error) => {
                 console.log(error);
-                rej(error);
-            });
+                reject(error);
+            })
+            .finally(() => {
+                tokenService.destroyToken();
+                router.push("/login");
+            })
         });
     }
 }

@@ -7,11 +7,10 @@
                         v-list-item(:key="i")
                             v-list-item-content
                                 v-btn(v-if="menu.title === 'Выйти'" @click='LOGOUT' text :to="menu.path") {{menu.title}}
-                                v-btn(v-else-if="menu.title === 'Войти'" text class="hidden-sm-and-down" to="/login") Войти
                                 v-btn(v-else text :to="menu.path") {{menu.title}}
             v-app-bar(app)
-                v-app-bar-nav-icon(class="hidden-md-and-up" @click="drawer = !drawer")
-                v-spacer(class="hidden-md-and-up")
+                v-app-bar-nav-icon(class="hidden-md-and-up" @click="drawer = !drawer" v-if="isLoggedIn")
+                v-spacer(class="hidden-md-and-up" v-if="isLoggedIn")
                 v-img(src="/static/blue-tick2.png" max-width="22px" max-height="22px")
                 router-link(to="/" tag="a" style="text-decoration: none;")
                     v-toolbar-title(class="mx-2 headline primary--text") Checklists
@@ -22,7 +21,6 @@
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/reports") Отчеты
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/profile") Профиль
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" @click="LOGOUT") Выйти
-                    v-btn(v-else text class="hidden-sm-and-down" to="/login") Войти
         v-content(fluid)
             router-view
             v-snackbar(
@@ -73,10 +71,6 @@ export default {
             {
                 title: 'Выйти',
                 path: '/logout'
-            },
-            {
-                title: 'Войти',
-                path: '/login'
             },
         ]
     }),

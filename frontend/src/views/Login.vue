@@ -58,9 +58,6 @@
             ValidationObserver,
             ValidationProvider
         },
-        props: {
-            source: String,
-        },
         data: () => ({
             mdiEmail,
             mdiLock,
