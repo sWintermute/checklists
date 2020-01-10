@@ -11,6 +11,5 @@ extend("min", min);
 localize("ru", {
     messages: {
         ...ru.messages,
-        required: "Ответьте на вопрос"
     }
 });

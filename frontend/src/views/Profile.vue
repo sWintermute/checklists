@@ -49,9 +49,8 @@
         data: () => ({
             mdiAccountCircle
         }),
-        async created() {
-            console.log(process.env);
-            await this.PROFILE();
+        created() {
+            this.PROFILE();
         },
         computed: {
             ...mapGetters(["userProfile"]),

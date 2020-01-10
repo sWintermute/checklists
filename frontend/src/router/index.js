@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '@/store';
 import Router from 'vue-router'
 
 Vue.use(Router)
@@ -70,6 +71,18 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'),
     },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next() 
+  }
 })
 
 export default router
