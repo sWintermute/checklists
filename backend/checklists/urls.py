@@ -18,7 +18,7 @@ urlpatterns = [
 
 # API
 urlpatterns += [
-    path('auth/', include('djoser.urls.authtoken')),
+    path('api/', include('djoser.urls')),
     path('api/', include('lists.urls')),
 ]
 
