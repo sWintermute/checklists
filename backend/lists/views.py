@@ -50,20 +50,6 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
         """
         return models.Response.objects.filter(user=self.request.user)
 
-class UserViewset(GenericViewSet, ListModelMixin):
-    queryset = umodels.UserProfile.objects.all()
-    model = umodels.UserProfile
-    serializer_class = serializers.UserSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    def list(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-
 # Report viewsets
 class ReportListViewset(GenericViewSet, ListModelMixin,
                         CreateModelMixin, DestroyModelMixin):
