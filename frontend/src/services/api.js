@@ -2,15 +2,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import TokenService from './tokenService';
-import BASE_URL from './config'
-
-function authHeaders(token) {
-    return {
-        headers: {
-            Authorization: `Token ${token}`,
-        },
-    };
-}
+import { BASE_URL } from './config'
 
 const ApiService = {
     init() {
@@ -24,7 +16,7 @@ const ApiService = {
         Vue.axios.defaults.headers.common["Authorization"] = null;
     },
     get(resource, id="") {
-        return Vue.axios.get(`${resource}/${id}/`);
+        return Vue.axios.get(`${resource}/${id ? id + "/" : ""}`);
     },
     post(resource, params) {
         return Vue.axios.post(`${resource}/`, params);

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import store from '@/store';
 import Router from 'vue-router';
-import BASE_URL from '@/services/config';
 
 Vue.use(Router)
 

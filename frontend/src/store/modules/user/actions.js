@@ -23,6 +23,7 @@ export default {
     },
     [types.LOGIN]({ commit }, user){
         return new Promise((resolve, reject) => {
+            ApiService.removeHeader();
             ApiService.post("api/auth/token/login", user)
                 .then((response) => {
                     tokenService.saveToken(response["data"]["auth_token"]);
@@ -32,7 +33,12 @@ export default {
                     resolve();
                 })
                 .catch((error) => {
-                    Vue.$toast.open(error.response.statusText);
+                    Vue.$toast.open({
+                        message: [
+                            "Невозможно войти с предоставленными учетными данными.",
+                            "Статус: " + error.response.status].join(" "),
+                        type: 'error',
+                    });
                     console.log({error});
                     reject(error);
                 })

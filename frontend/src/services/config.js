@@ -1,2 +1,13 @@
-export const BASE_URL = process.env.NODE_ENV === "production" ? process.env.VUE_APP_DOMAIN_PROD : process.env.VUE_APP_DOMAIN_DEV;
-export default BASE_URL;
+const env = process.env.VUE_APP_ENV;
+
+let envApiUrl = '';
+
+if (env === 'production') {
+  envApiUrl = `https://${process.env.VUE_APP_DOMAIN_PROD}`;
+} else if (env === 'staging') {
+  envApiUrl = `https://${process.env.VUE_APP_DOMAIN_STAG}`;
+} else {
+  envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
+}
+
+export const BASE_URL = envApiUrl;
