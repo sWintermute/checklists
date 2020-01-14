@@ -9,7 +9,7 @@ export default {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
-            return ApiService.get("api/v1/me")
+            return ApiService.get("api/users/me")
                 .then(({ data }) => {
                     commit('SET_LOADING_STATUS', false);
                     commit('SET_USER', data);
@@ -23,14 +23,16 @@ export default {
     },
     [types.LOGIN]({ commit }, user){
         return new Promise((resolve, reject) => {
-            ApiService.post("auth/token/login", user)
+            ApiService.post("api/auth/token/login", user)
                 .then((response) => {
                     tokenService.saveToken(response["data"]["auth_token"]);
+                    commit("SET_AUTH_TOKEN", response["data"]["auth_token"]);
+                    commit("SET_AUTH_SUCCESS");
                     router.push("/profile");
-                    resolve(response);
+                    resolve();
                 })
                 .catch((error) => {
-                    Vue.$toast.open(error);
+                    Vue.$toast.open(error.response.statusText);
                     console.log({error});
                     reject(error);
                 })
@@ -39,10 +41,10 @@ export default {
     [types.LOGOUT]({ commit }){
         return new Promise((resolve, reject) => {
             ApiService.setHeader();
-            ApiService.post("auth/token/logout")
+            ApiService.post("api/auth/token/logout")
             .then((response) => {
                 ApiService.removeHeader();
-                commit('SET_LOGOUT');
+                commit("SET_LOGOUT");
                 resolve();
             })
             .catch((error) => {
