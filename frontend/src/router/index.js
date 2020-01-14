@@ -1,6 +1,7 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import store from '@/store';
-import Router from 'vue-router'
+import Router from 'vue-router';
+import BASE_URL from '@/services/config';
 
 Vue.use(Router)
 
@@ -19,7 +20,6 @@ let router = new Router({
       meta: {
         requiresAuth: true
       },
-      children: []
     },
     {
       path: '/checklist/:id',
@@ -67,8 +67,7 @@ let router = new Router({
       }
     },
     {
-      path: '*',
-      component: () => import(/* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'),
+      path: '/*', redirect: '/login',
     },
   ]
 })

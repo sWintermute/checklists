@@ -51,11 +51,12 @@ export default {
         return new Promise((resolve, reject) => {
             commit('SET_LOADING_STATUS', true);
             ApiService.setHeader();
-            ApiService.get('api/v1/lists',)
+            ApiService.get('api/v1/lists')
                 .then(response => {
                     commit('SET_LOADING_STATUS', false);
                     const lists = response.data;
                     commit('SET_LISTS', lists);
+                    console.log(process);
                     resolve(response);
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);

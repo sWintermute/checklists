@@ -4,6 +4,14 @@ import VueAxios from 'vue-axios';
 import TokenService from './tokenService';
 import BASE_URL from './config'
 
+function authHeaders(token) {
+    return {
+        headers: {
+            Authorization: `Token ${token}`,
+        },
+    };
+}
+
 const ApiService = {
     init() {
         Vue.use(VueAxios, axios);
@@ -16,14 +24,14 @@ const ApiService = {
         Vue.axios.defaults.headers.common["Authorization"] = null;
     },
     get(resource, id="") {
-        return Vue.axios.get(`${resource}/${id}`);
+        return Vue.axios.get(`${resource}/${id}/`);
     },
     post(resource, params) {
         return Vue.axios.post(`${resource}/`, params);
     },
     delete(resource, id="") {
         return Vue.axios.delete(`${resource}/${id}`);
-    },
+    }
 };
 
 export default ApiService;
