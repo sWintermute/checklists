@@ -13,7 +13,9 @@ export default {
             state.list.user = userProfile.id;
             state.list.photo = fileList;
             state.list.answers = [];
-            state.list.answers.push({question: state.autocompleteId, body: state.autocomplete.value});
+            if (state.autocomplete) {
+                state.list.answers.push({question: state.autocompleteId, body: state.autocomplete.value});
+            }
             for (let [key, value] of Object.entries(state.answers)) {
                 state.list.answers.push({question: key, body: value});
             }
