@@ -44,10 +44,6 @@ export default {
         this.$store.commit("SET_TEST", this.id);
     },
     computed: {
-        model: {
-            get() { return this.model },
-            set() { return null }
-        },
         fields () {
             if (!this.model) return []
 
