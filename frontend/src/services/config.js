@@ -1,13 +1,6 @@
-const env = process.env.VUE_APP_ENV;
+const protocol = process.env.VUE_APP_PROTOCOL;
+const domain = process.env.VUE_APP_DOMAIN;
 
-let envApiUrl = '';
-
-if (env === 'production') {
-  envApiUrl = `http://${process.env.VUE_APP_DOMAIN_PROD}`;
-} else if (env === 'staging') {
-  envApiUrl = `https://${process.env.VUE_APP_DOMAIN_STAG}`;
-} else {
-  envApiUrl = `http://${process.env.VUE_APP_DOMAIN_DEV}`;
-}
+let envApiUrl = `${protocol}://${domain}/`;
 
 export const BASE_URL = envApiUrl;
