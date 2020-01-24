@@ -83,7 +83,6 @@
             ValidationObserver,
             ValidationProvider,
             VueSuggestions,
-
             autocomplete
         },
         data: () => ({

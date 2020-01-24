@@ -15,7 +15,7 @@ const store = new Vuex.Store({
         error: {
             data: {
                 snackbar: false,
-                deteils: ""
+                details: ""
             }
         },
     },
