@@ -22,7 +22,7 @@ const ApiService = {
         return Vue.axios.post(`${resource}/`, params);
     },
     delete(resource, id="") {
-        return Vue.axios.delete(`${resource}/${id}`);
+        return Vue.axios.delete(`${resource}/${id ? id + "/" : ""}`);
     }
 };
 

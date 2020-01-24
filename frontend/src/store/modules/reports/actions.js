@@ -10,6 +10,7 @@ export default {
                 .then(response => {
                     const report = response.data;
                     commit('SET_REPORT', report);
+                    commit('SET_LOADING_STATUS', false);
                     resolve(response)
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
@@ -26,6 +27,7 @@ export default {
                 .then(response => {
                     const reports = response.data;
                     commit("SET_REPORTS", reports);
+                    commit('SET_LOADING_STATUS', false);
                     resolve(response)
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
@@ -34,11 +36,14 @@ export default {
                 })
         })
     },
-    [types.CREATE_REPORT]({ commit }, report) {
+    [types.CREATE_REPORT]({ commit, dispatch }, report) {
         return new Promise((resolve, reject) => {
             ApiService.setHeader();
+            commit('SET_LOADING_STATUS', true);
             ApiService.post("api/v1/reports", report)
                 .then(response => {
+                    commit('SET_LOADING_STATUS', false);
+                    dispatch(types.FETCH_REPORTS)
                     resolve(response);
                 }).catch(error => {
                     console.log(error);
@@ -46,10 +51,11 @@ export default {
                 })
         })
     },
-    [types.REMOVE_REPORT]({ commit }, reportId) {
-        return new Promise((resolve, reject) => {
-            ApiService.setHeader();
-            ApiService.delete("api/v1/reports", reportId);
-        })
+    async [types.REMOVE_REPORT]({ commit, dispatch }, reportId) {
+        ApiService.setHeader();
+        try {
+            await ApiService.delete("api/v1/reports", reportId),
+            await dispatch(types.FETCH_REPORTS)
+        } catch {}
     }
 }

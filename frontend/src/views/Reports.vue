@@ -197,7 +197,6 @@
             sendReport() {
                 this.CREATE_REPORT(this.editedItem);
                 this.close()
-                this.FETCH_REPORTS();
             },
             toggle () {
                 this.$nextTick(() => {
@@ -211,7 +210,6 @@
             deleteItem(item) {
                 confirm('Вы уверены?');
                 this.REMOVE_REPORT(item.id);
-                this.FETCH_REPORTS();
             },
             close() {
                 this.dialog = false
