@@ -13,7 +13,8 @@ export default {
                 .then(response => {
                     const lists = response.data;
                     commit('SET_FILLED_LISTS', lists);
-                    resolve(response)
+                    commit('SET_LOADING_STATUS', false);
+                    resolve(response);
                 }).catch(error => {
                     commit(types.SET_ERROR, error.response);
                     console.log(error.response);

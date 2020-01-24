@@ -11,8 +11,8 @@ export default {
             ApiService.setHeader();
             return ApiService.get("api/users/me")
                 .then(({ data }) => {
-                    commit('SET_LOADING_STATUS', false);
                     commit('SET_USER', data);
+                    commit('SET_LOADING_STATUS', false);
                     resolve(data)
                 }).catch(error => {
                     commit("SET_ERROR", error.response);
@@ -24,6 +24,7 @@ export default {
     [types.LOGIN]({ commit }, user){
         return new Promise((resolve, reject) => {
             ApiService.removeHeader();
+            commit('SET_LOADING_STATUS', true);
             ApiService.post("api/auth/token/login", user)
                 .then((response) => {
                     tokenService.saveToken(response["data"]["auth_token"]);
@@ -42,11 +43,15 @@ export default {
                     console.log({error});
                     reject(error);
                 })
+                .finally(() => {
+                    commit('SET_LOADING_STATUS', false);
+                })
         })
     },
     [types.LOGOUT]({ commit }){
         return new Promise((resolve, reject) => {
             ApiService.setHeader();
+            commit('SET_LOADING_STATUS', true);
             ApiService.post("api/auth/token/logout")
             .then((response) => {
                 ApiService.removeHeader();
@@ -58,6 +63,7 @@ export default {
                 reject(error);
             })
             .finally(() => {
+                commit('SET_LOADING_STATUS', false);
                 tokenService.destroyToken();
                 router.push("/login");
             })

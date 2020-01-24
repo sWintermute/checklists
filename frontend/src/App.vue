@@ -23,31 +23,31 @@
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" @click="LOGOUT") Выйти
         v-content(fluid)
             router-view
-            v-snackbar(
-                v-model="error.data.snackbar"
-                bottom
-                color="error"
-                multi-line
-                :timeout="6000"
-                vertical
+            loading(
+                :active.sync="loading" 
+                :can-cancel="true" 
+                is-full-page
             )
-                    | {{ error.data.detail }}
-                    v-btn(
-                        dark
-                        text
-                        @click="error.data.snackbar = false"
-                    )
-                        | Close
 </template>
 
 <script>
+
+// Import component
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
+
 import { mapGetters, mapActions, mapState } from "vuex"
 import types from "@/store/types"
 
 
 export default {
     name: 'App',
+    components: {
+        Loading
+    },
     data: () => ({
+        onCancel: false,
         drawer: false,
         clipped: false,
         menus: [
@@ -75,7 +75,7 @@ export default {
         ]
     }),
     computed: {
-        ...mapState(["auth_token"]),
+        ...mapState(["auth_token", "loading"]),
         ...mapGetters(["isLoggedIn", "error"])
     },
     methods: {
