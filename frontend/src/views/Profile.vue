@@ -40,23 +40,23 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex';
-    import types from "@/store/types"
-    import { mdiAccountCircle } from '@mdi/js'
+import { mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
+import { mdiAccountCircle } from '@mdi/js'
 
-    export default {
-        name: 'Profile',
-        data: () => ({
-            mdiAccountCircle
-        }),
-        created() {
-            this.PROFILE();
-        },
-        computed: {
-            ...mapGetters(["userProfile"]),
-        },
-        methods: {
-            ...mapActions([types.PROFILE]),
-        }
-    }
+export default {
+  name: 'Profile',
+  data: () => ({
+    mdiAccountCircle
+  }),
+  computed: {
+    ...mapGetters(['userProfile'])
+  },
+  created () {
+    this.PROFILE()
+  },
+  methods: {
+    ...mapActions([types.PROFILE])
+  }
+}
 </script>

@@ -1,16 +1,16 @@
-import Vue from 'vue';
-import store from '@/store';
-import Router from 'vue-router';
+import Vue from 'vue'
+import store from '@/store'
+import Router from 'vue-router'
 
 Vue.use(Router)
 
-let router = new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
+      component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
     },
     {
       path: '/',
@@ -18,7 +18,7 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "checklists" */ '@/views/Checklists.vue'),
       meta: {
         requiresAuth: true
-      },
+      }
     },
     {
       path: '/checklist/:id',
@@ -39,7 +39,7 @@ let router = new Router({
     {
       path: '/report/:id',
       name: 'report',
-      component: () => import(/* webpackChunkName: "report" */ '@/views/Report.vue'),
+      component: () => import(/* webpackChunkName: "report" */ '@/views/Report.vue')
     },
     {
       path: '/profile',
@@ -66,8 +66,8 @@ let router = new Router({
       }
     },
     {
-      path: '/*', redirect: '/login',
-    },
+      path: '/*', redirect: '/login'
+    }
   ]
 })
 

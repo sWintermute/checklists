@@ -6,8 +6,8 @@
             :items-per-page="-1"
             item-key="id"
             hide-default-footer
-            class="elevation-1"  
-        )       
+            class="elevation-1"
+        )
             template(v-slot:body="{ items }")
                 tbody
                     router-link(
@@ -21,32 +21,32 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions} from "vuex";
-    import types from "@/store/types"
+import { mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
 
-    export default {
-        name: 'Checklists',
-        data: () => ({
-            headers: [
-                {
-                    text: 'ID',
-                    align: 'left',
-                    value: 'id'
-                },
-                {
-                    text: 'Name',
-                    value: 'name'
-                },
-            ]
-        }),
-        created() {
-            this.FETCH_CHECKLISTS();
-        },
-        computed: {
-            ...mapGetters(["lists"])
-        },
-        methods: {
-            ...mapActions([types.FETCH_CHECKLISTS])
-        }
-    }
+export default {
+  name: 'Checklists',
+  data: () => ({
+    headers: [
+      {
+        text: 'ID',
+        align: 'left',
+        value: 'id'
+      },
+      {
+        text: 'Name',
+        value: 'name'
+      }
+    ]
+  }),
+  computed: {
+    ...mapGetters(['lists'])
+  },
+  created () {
+    this.FETCH_CHECKLISTS()
+  },
+  methods: {
+    ...mapActions([types.FETCH_CHECKLISTS])
+  }
+}
 </script>
