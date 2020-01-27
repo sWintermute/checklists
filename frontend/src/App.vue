@@ -17,8 +17,7 @@
                 v-spacer(class="hidden-sm-and-down")
                 v-toolbar-items
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/") Чеклисты
-                    //- TODO: fix it
-                    //- v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/responses") Ответы на чеклисты
+                    v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/responses") Ответы на чеклисты
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/reports") Отчеты
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" to="/profile") Профиль
                     v-btn(v-if="isLoggedIn" text class="hidden-sm-and-down" @click="LOGOUT") Выйти
@@ -32,54 +31,55 @@
 </template>
 
 <script>
-// Import component
-import Loading from "vue-loading-overlay";
-// Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css";
 
-import { mapGetters, mapActions, mapState } from "vuex";
-import types from "@/store/types";
+// Import component
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
+
+import { mapGetters, mapActions, mapState } from "vuex"
+import types from "@/store/types"
+
 
 export default {
-  name: "App",
-  components: {
-    Loading
-  },
-  data: () => ({
-    onCancel: false,
-    drawer: false,
-    clipped: false,
-    menus: [
-      {
-        title: "Чеклисты",
-        path: "/",
-        icon: ""
-      },
-      // TODO: Fix it
-      // {
-      //     title: 'Ответы на чеклисты',
-      //     path: '/responses'
-      // },
-      {
-        title: "Отчеты",
-        path: "/reports"
-      },
-      {
-        title: "Профиль",
-        path: "/profile"
-      },
-      {
-        title: "Выйти",
-        path: "/logout"
-      }
-    ]
-  }),
-  computed: {
-    ...mapState(["auth_token", "loading"]),
-    ...mapGetters(["isLoggedIn", "error"])
-  },
-  methods: {
-    ...mapActions([types.LOGOUT])
-  }
+    name: 'App',
+    components: {
+        Loading
+    },
+    data: () => ({
+        onCancel: false,
+        drawer: false,
+        clipped: false,
+        menus: [
+            {
+                title: 'Чеклисты',
+                path: '/',
+                icon: ""
+            },
+            {
+                title: 'Ответы на чеклисты',
+                path: '/responses'
+            },
+            {
+                title: 'Отчеты',
+                path: '/reports'
+            },
+            {
+                title: 'Профиль',
+                path: '/profile'
+            },
+            {
+                title: 'Выйти',
+                path: '/logout'
+            },
+        ]
+    }),
+    computed: {
+        ...mapState(["auth_token", "loading"]),
+        ...mapGetters(["isLoggedIn", "error"])
+    },
+    methods: {
+        ...mapActions([types.LOGOUT])
+    },
 };
 </script>
