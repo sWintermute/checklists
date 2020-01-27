@@ -24,8 +24,8 @@
         v-content(fluid)
             router-view
             loading(
-                :active.sync="loading" 
-                :can-cancel="true" 
+                :active.sync="loading"
+                :can-cancel="true"
                 is-full-page
             )
 </template>
@@ -33,53 +33,52 @@
 <script>
 
 // Import component
-import Loading from 'vue-loading-overlay';
+import Loading from 'vue-loading-overlay'
 // Import stylesheet
-import 'vue-loading-overlay/dist/vue-loading.css';
+import 'vue-loading-overlay/dist/vue-loading.css'
 
-import { mapGetters, mapActions, mapState } from "vuex"
-import types from "@/store/types"
-
+import { mapGetters, mapActions, mapState } from 'vuex'
+import types from '@/store/types'
 
 export default {
-    name: 'App',
-    components: {
-        Loading
-    },
-    data: () => ({
-        onCancel: false,
-        drawer: false,
-        clipped: false,
-        menus: [
-            {
-                title: 'Чеклисты',
-                path: '/',
-                icon: ""
-            },
-            {
-                title: 'Ответы на чеклисты',
-                path: '/responses'
-            },
-            {
-                title: 'Отчеты',
-                path: '/reports'
-            },
-            {
-                title: 'Профиль',
-                path: '/profile'
-            },
-            {
-                title: 'Выйти',
-                path: '/logout'
-            },
-        ]
-    }),
-    computed: {
-        ...mapState(["auth_token", "loading"]),
-        ...mapGetters(["isLoggedIn", "error"])
-    },
-    methods: {
-        ...mapActions([types.LOGOUT])
-    },
-};
+  name: 'App',
+  components: {
+    Loading
+  },
+  data: () => ({
+    onCancel: false,
+    drawer: false,
+    clipped: false,
+    menus: [
+      {
+        title: 'Чеклисты',
+        path: '/',
+        icon: ''
+      },
+      {
+        title: 'Ответы на чеклисты',
+        path: '/responses'
+      },
+      {
+        title: 'Отчеты',
+        path: '/reports'
+      },
+      {
+        title: 'Профиль',
+        path: '/profile'
+      },
+      {
+        title: 'Выйти',
+        path: '/logout'
+      }
+    ]
+  }),
+  computed: {
+    ...mapState(['auth_token', 'loading']),
+    ...mapGetters(['isLoggedIn', 'error'])
+  },
+  methods: {
+    ...mapActions([types.LOGOUT])
+  }
+}
 </script>

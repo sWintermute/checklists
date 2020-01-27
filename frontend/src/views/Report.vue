@@ -32,11 +32,9 @@
                                     td(v-for="(choice, i) in item.choices.split(';')" :key="i")
                                         span(v-if="!(choice === item.key_choices)" style="color: red") {{choice}}
                                         span(v-else style="color: green") {{choice}}
-                                
                                 template(v-else)
                                     td
                                     td
-                                    
                                 td(v-if="item.notes")
                                     v-list-item(class="flex-column pa-0" two-line)
                                         v-list-item-content(
@@ -51,43 +49,42 @@
 </template>
 
 <script>
-    import { format, compareAsc } from 'date-fns'
-    import { mapActions, mapGetters } from 'vuex';
-    import types from "@/store/types"
+import { format } from 'date-fns'
+import { mapActions, mapGetters } from 'vuex'
+import types from '@/store/types'
 
-
-    export default {
-        name: "Report",
-        data: () => ({
-            headers: [
-                {
-                    text: '№ п/п',
-                    align: 'left',
-                    value: 'id',
-                },
-                {
-                    text: 'Параметры',
-                    value: 'text'
-                },
-                {
-                    text: 'Примечание',
-                    value: 'date_to'
-                },
-            ]
-        }),
-        created() {
-            this.FETCH_REPORT(this.$route.params.id);
-        },
-        computed: {
-            ...mapGetters(["report", "isLoading"]),
-        },
-        filters: {
-            date(value) {
-                return format(new Date(value), 'MM.dd.yyyy hh:mm')
-            }
-        },
-        methods: {
-            ...mapActions([types.FETCH_REPORT])
-        }
+export default {
+  name: 'Report',
+  filters: {
+    date (value) {
+      return format(new Date(value), 'MM.dd.yyyy hh:mm')
     }
+  },
+  data: () => ({
+    headers: [
+      {
+        text: '№ п/п',
+        align: 'left',
+        value: 'id'
+      },
+      {
+        text: 'Параметры',
+        value: 'text'
+      },
+      {
+        text: 'Примечание',
+        value: 'date_to'
+      }
+    ]
+  }),
+  computed: {
+    ...mapGetters(['report', 'isLoading'])
+  },
+  created () {
+    this.FETCH_REPORT(this.$route.params.id)
+  },
+  methods: {
+    ...mapActions([types.FETCH_REPORT])
+  }
+}
 </script>

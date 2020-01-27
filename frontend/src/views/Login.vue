@@ -47,38 +47,38 @@
 </template>
 
 <script>
-    import { ValidationObserver, ValidationProvider } from "vee-validate";
-    import { mapGetters, mapActions } from "vuex"
-    import types from "@/store/types"
-    import { mdiEmail, mdiLock } from '@mdi/js'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
+import { mdiEmail, mdiLock } from '@mdi/js'
 
-    export default {
-        name: "Login",
-        components: {
-            ValidationObserver,
-            ValidationProvider
-        },
-        data: () => ({
-            mdiEmail,
-            mdiLock,
-            email: "",
-            password: ""
-        }),
-        methods: {
-            ...mapActions([types.LOGIN]),
-            onSubmit() {
-                this[types.LOGIN]( {
-                    email: this.email,
-                    password: this.password
-                });
-            },
-            clear() {
-                this.email = '';
-                this.password = '';
-            }
-        },
-        computed: {
-            ...mapGetters(['error'])
-        },
-    };
+export default {
+  name: 'Login',
+  components: {
+    ValidationObserver,
+    ValidationProvider
+  },
+  data: () => ({
+    mdiEmail,
+    mdiLock,
+    email: '',
+    password: ''
+  }),
+  computed: {
+    ...mapGetters(['error'])
+  },
+  methods: {
+    ...mapActions([types.LOGIN]),
+    onSubmit () {
+      this[types.LOGIN]({
+        email: this.email,
+        password: this.password
+      })
+    },
+    clear () {
+      this.email = ''
+      this.password = ''
+    }
+  }
+}
 </script>

@@ -1,272 +1,294 @@
 <template>
-    <div class="vux-uploader">
-        <div class="vux-uploader_hd">
-            <p class="vux-uploader_title">{{ title }}</p>
-            <div class="vux-uploader_info">{{ fileList.length }} / {{ limit }}</div>
-        </div>
-        <div class="vux-uploader_bd">
-            <ul class="vux-uploader_files">
-                <li
-                    :class="{
-                        'vux-uploader_file': true,
-                        'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
-                    }"
-                    v-for="(item, index) in fileList"
-                    :key="index"
-                    :style="{
-                        backgroundImage: `url(${item.url})`
-                    }"
-                    @click="handleFileClick($event, item, index)">
-                    <div
-                        v-if="!!item.fetchStatus && item.fetchStatus !== 'success'"
-                        class="vux-uploader_file-content">
-                        {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
-                        <i v-if="item.fetchStatus === 'fail'" class="upload-error"></i>
-                    </div>
-                </li>
-            </ul>
-            <div class="vux-uploader_input-box" v-show="fileList.length < limit && !readonly">
-                <input
-                        class="vux-uploader_input"
-                        ref="input"
-                        type="file"
-                        name="uploadInput"
-                        accept="image/*"
-                        :capture="capture"
-                        :multiple="multiple"
-                        @change="change" />
-            </div>
-        </div>
-        <div
-            class="vux-uploader_previewer"
-            id="previewer"
-            v-if="previewVisible">
-            <div class="vux-uploader_preview-img" id="previewerImg" @click="hidePreviewer"></div>
-            <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
-        </div>
+  <div class="vux-uploader">
+    <div class="vux-uploader_hd">
+      <p class="vux-uploader_title">
+        {{ title }}
+      </p>
+      <div class="vux-uploader_info">
+        {{ fileList.length }} / {{ limit }}
+      </div>
     </div>
+    <div class="vux-uploader_bd">
+      <ul class="vux-uploader_files">
+        <li
+          v-for="(item, index) in fileList"
+          :key="index"
+          :class="{
+            'vux-uploader_file': true,
+            'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
+          }"
+          :style="{
+            backgroundImage: `url(${item.url})`
+          }"
+          @click="handleFileClick($event, item, index)"
+        >
+          <div
+            v-if="!!item.fetchStatus && item.fetchStatus !== 'success'"
+            class="vux-uploader_file-content"
+          >
+            {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
+            <i
+              v-if="item.fetchStatus === 'fail'"
+              class="upload-error"
+            />
+          </div>
+        </li>
+      </ul>
+      <div
+        v-show="fileList.length < limit && !readonly"
+        class="vux-uploader_input-box"
+      >
+        <input
+          ref="input"
+          class="vux-uploader_input"
+          type="file"
+          name="uploadInput"
+          accept="image/*"
+          :capture="capture"
+          :multiple="multiple"
+          @change="change"
+        >
+      </div>
+    </div>
+    <div
+      v-if="previewVisible"
+      id="previewer"
+      class="vux-uploader_previewer"
+    >
+      <div
+        id="previewerImg"
+        class="vux-uploader_preview-img"
+        @click="hidePreviewer"
+      />
+      <div
+        v-if="!readonly"
+        class="vux-uploader_del"
+        @click="deleteImg"
+      />
+    </div>
+  </div>
 </template>
 <script>
-    import { handleFile, transformCoordinate, dataURItoBlob } from "@/utils/uploader.js";
-    // compatibility for window.URL
-    const URL =
+import { handleFile, transformCoordinate, dataURItoBlob } from '@/utils/uploader.js'
+// compatibility for window.URL
+const URL =
         window.URL && window.URL.createObjectURL
-            ? window.URL
-            : window.webkitURL && window.webkitURL.createObjectURL
+          ? window.URL
+          : window.webkitURL && window.webkitURL.createObjectURL
             ? window.webkitURL
-            : null;
-    export default {
-        name: "Uploader",
-        model: {
-            prop: "files",
-            event: "on-fileList-change"
-        },
-        props: {
-            title: {
-                type: String,
-                default: "图片上传"
-            },
-            files: {
-                type: Array,
-                default: () => []
-            },
-            limit: {
-                type: Number | String,
-                default: 5
-            },
-            capture: {
-                type: Boolean | String,
-                default: false
-            },
-            enableCompress: {
-                type: Boolean,
-                default: true
-            },
-            maxWidth: {
-                type: String | Number,
-                default: 1024
-            },
-            quality: {
-                type: String | Number,
-                default: 0.92
-            },
-            url: {
-                type: String
-            },
-            params: {
-                type: Object,
-            },
-            name: {
-                type: String,
-                default: 'file',
-            },
-            autoUpload: {
-                type: Boolean,
-                default: true
-            },
-            multiple: {
-                type: String | Boolean,
-                default: ""
-            },
-            readonly: {
-                type: Boolean,
-                default: false,
-            },
-        },
-        data() {
-            return {
-                fileList: [],
-                currentIndex: 0,
-                previewVisible: false
-            };
-        },
-        watch: {
-            files: {
-                deep: true,
-                handler(files) {
-                    this.fileList = files;
-                }
-            },
-            fileList: {
-                deep: true,
-                handler(fileList) {
-                    this.$emit('on-fileList-change', fileList);
-                }
-            },
-        },
-        methods: {
-            async change(e) {
-                const {
-                    enableCompress,
-                    maxWidth,
-                    quality,
-                    limit,
-                    fileList,
-                    autoUpload,
-                    uploadFile
-                } = this;
-                const target = e.target || e.srcElement;
-                const inputChangeFiles = target.files;
-                if (inputChangeFiles.length > 0) {
-                    if (fileList.length + inputChangeFiles.length > limit) {
-                        alert(`${limit}`);
-                        return;
-                    }
-                    Promise.all(
-                        Array.prototype.map.call(inputChangeFiles, file => {
-                            return handleFile(file, {
-                                maxWidth,
-                                quality,
-                                enableCompress
-                            }).then(blob => {
-                                const blobURL = URL.createObjectURL(blob);
-                                var reader = new FileReader();
-                                reader.readAsDataURL(blob);
-                                const fileItem = {
-                                    url: blobURL,
-                                    blob,
-                                    file: ""
-                                };
-                                reader.addEventListener('loadend', function() {
-                                    fileItem.file = reader.result;
-                                });
-                                for (let key in file) {
-                                    if (["slice", "webkitRelativePath"].indexOf(key) === -1) {
-                                        fileItem[key] = file[key];
-                                    }
-                                }
-                                if (autoUpload){
-                                    uploadFile(blob, fileItem).then((result) => {
-                                        fileList.push(fileItem);
-                                        this.$emit('on-change', fileItem, fileList);
-                                    }).catch(e => {
-                                        fileList.push(fileItem);
-                                    });
-                                } else {
-                                    fileList.push(fileItem);
-                                    this.$emit('on-change', fileItem, fileList);
-                                }
-                            });
-                        })
-                    ).then(() => {
-                        this.$refs.input.value = "";
-                    });
-                } else {
-                    this.$emit("on-cancel");
-                }
-            },
-            handleFileClick(e, item, index) {
-                this.showPreviewer();
-                this.$nextTick(() => {
-                    const previewerImg = document.getElementById("previewerImg");
-                    previewerImg.style.backgroundImage = `url(${item.url})`;
-                    this.currentIndex = index;
-                })
-            },
-            showPreviewer() {
-                this.previewVisible = true;
-            },
-            hidePreviewer() {
-                this.previewVisible = false;
-            },
-            deleteImg() {
-                const { currentIndex, fileList } = this;
-                const delFn = () => {
-                    this.hidePreviewer();
-                    this.$emit('on-change', fileList[currentIndex], fileList);
-                    fileList.splice(currentIndex, 1);
-                };
-                console.log(this.$listeners);
-                if (this.$listeners['on-delete']) {
-                    this.$emit("on-delete", delFn);
-                } else {
-                    delFn();
-                }
-            },
-            uploadFile(blob, fileItem) {
-                return new Promise((resolve, reject) => {
-                    const me = this;
-                    const { url, params, name } = me;
-                    me.$set(fileItem, "fetchStatus", "progress");
-                    me.$set(fileItem, "progress", 0);
-                    const formData = new FormData();
-                    const xhr = new XMLHttpRequest();
-                    formData.append(name, blob);
-                    if (params) {
-                        for(let key in params) {
-                            formData.append(key, params[key]);
-                        }
-                    }
-                    xhr.onreadystatechange = () => {
-                        if (xhr.readyState === 4) {
-                            if (xhr.status === 200) {
-                                const result = JSON.parse(xhr.responseText);
-                                me.$emit("on-success", result, fileItem);
-                                me.$set(fileItem, "fetchStatus", "success");
-                                resolve(result);
-                            } else {
-                                me.$emit("on-error", xhr);
-                                me.$set(fileItem, "fetchStatus", "fail");
-                                reject(xhr);
-                            }
-                        }
-                    };
-                    xhr.upload.addEventListener(
-                        "progress",
-                        function(evt) {
-                            if (evt.lengthComputable) {
-                                const precent = Math.ceil((evt.loaded / evt.total) * 100);
-                                me.$set(fileItem, "progress", precent);
-                            }
-                        },
-                        false
-                    );
-                    xhr.open("POST", url, true);
-                    xhr.send(formData);
-                });
-            }
+            : null
+export default {
+  name: 'Uploader',
+  model: {
+    prop: 'files',
+    event: 'on-fileList-change'
+  },
+  props: {
+    title: {
+      type: String,
+      default: '图片上传'
+    },
+    files: {
+      type: Array,
+      default: () => []
+    },
+    limit: {
+      type: Number | String,
+      default: 5
+    },
+    capture: {
+      type: Boolean | String,
+      default: false
+    },
+    enableCompress: {
+      type: Boolean,
+      default: true
+    },
+    maxWidth: {
+      type: String | Number,
+      default: 1024
+    },
+    quality: {
+      type: String | Number,
+      default: 0.92
+    },
+    url: {
+      type: String
+    },
+    params: {
+      type: Object
+    },
+    name: {
+      type: String,
+      default: 'file'
+    },
+    autoUpload: {
+      type: Boolean,
+      default: true
+    },
+    multiple: {
+      type: String | Boolean,
+      default: ''
+    },
+    readonly: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      fileList: [],
+      currentIndex: 0,
+      previewVisible: false
+    }
+  },
+  watch: {
+    files: {
+      deep: true,
+      handler (files) {
+        this.fileList = files
+      }
+    },
+    fileList: {
+      deep: true,
+      handler (fileList) {
+        this.$emit('on-fileList-change', fileList)
+      }
+    }
+  },
+  methods: {
+    async change (e) {
+      const {
+        enableCompress,
+        maxWidth,
+        quality,
+        limit,
+        fileList,
+        autoUpload,
+        uploadFile
+      } = this
+      const target = e.target || e.srcElement
+      const inputChangeFiles = target.files
+      if (inputChangeFiles.length > 0) {
+        if (fileList.length + inputChangeFiles.length > limit) {
+          alert(`${limit}`)
+          return
         }
-    };
+        Promise.all(
+          Array.prototype.map.call(inputChangeFiles, file => {
+            return handleFile(file, {
+              maxWidth,
+              quality,
+              enableCompress
+            }).then(blob => {
+              const blobURL = URL.createObjectURL(blob)
+              var reader = new FileReader()
+              reader.readAsDataURL(blob)
+              const fileItem = {
+                url: blobURL,
+                blob,
+                file: ''
+              }
+              reader.addEventListener('loadend', function () {
+                fileItem.file = reader.result
+              })
+              for (const key in file) {
+                if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                  fileItem[key] = file[key]
+                }
+              }
+              if (autoUpload) {
+                uploadFile(blob, fileItem).then((result) => {
+                  fileList.push(fileItem)
+                  this.$emit('on-change', fileItem, fileList)
+                }).catch(e => {
+                  fileList.push(fileItem)
+                })
+              } else {
+                fileList.push(fileItem)
+                this.$emit('on-change', fileItem, fileList)
+              }
+            })
+          })
+        ).then(() => {
+          this.$refs.input.value = ''
+        })
+      } else {
+        this.$emit('on-cancel')
+      }
+    },
+    handleFileClick (e, item, index) {
+      this.showPreviewer()
+      this.$nextTick(() => {
+        const previewerImg = document.getElementById('previewerImg')
+        previewerImg.style.backgroundImage = `url(${item.url})`
+        this.currentIndex = index
+      })
+    },
+    showPreviewer () {
+      this.previewVisible = true
+    },
+    hidePreviewer () {
+      this.previewVisible = false
+    },
+    deleteImg () {
+      const { currentIndex, fileList } = this
+      const delFn = () => {
+        this.hidePreviewer()
+        this.$emit('on-change', fileList[currentIndex], fileList)
+        fileList.splice(currentIndex, 1)
+      }
+      console.log(this.$listeners)
+      if (this.$listeners['on-delete']) {
+        this.$emit('on-delete', delFn)
+      } else {
+        delFn()
+      }
+    },
+    uploadFile (blob, fileItem) {
+      return new Promise((resolve, reject) => {
+        const me = this
+        const { url, params, name } = me
+        me.$set(fileItem, 'fetchStatus', 'progress')
+        me.$set(fileItem, 'progress', 0)
+        const formData = new FormData()
+        const xhr = new XMLHttpRequest()
+        formData.append(name, blob)
+        if (params) {
+          for (const key in params) {
+            formData.append(key, params[key])
+          }
+        }
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const result = JSON.parse(xhr.responseText)
+              me.$emit('on-success', result, fileItem)
+              me.$set(fileItem, 'fetchStatus', 'success')
+              resolve(result)
+            } else {
+              me.$emit('on-error', xhr)
+              me.$set(fileItem, 'fetchStatus', 'fail')
+              reject(xhr)
+            }
+          }
+        }
+        xhr.upload.addEventListener(
+          'progress',
+          function (evt) {
+            if (evt.lengthComputable) {
+              const precent = Math.ceil((evt.loaded / evt.total) * 100)
+              me.$set(fileItem, 'progress', precent)
+            }
+          },
+          false
+        )
+        xhr.open('POST', url, true)
+        xhr.send(formData)
+      })
+    }
+  }
+}
 </script>
 <style lang="scss">
     @font-face {

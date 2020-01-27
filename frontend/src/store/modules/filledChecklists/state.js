@@ -1,4 +1,4 @@
 export default {
-    filledList: {},
-    filledLists: [],
-};
+  filledList: {},
+  filledLists: []
+}
