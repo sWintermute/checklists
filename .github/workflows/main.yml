@@ -11,24 +11,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create .env
-      env:
-        SECRET_KEY: CHANGEME!!!
-        POSTGRES_DB: postgres_db
-        POSTGRES_PASSWORD: mysecretpass
-        POSTGRES_USER: postgresuser
-        POSTGRES_HOST: 172.25.0.6
-        POSTGRES_PORT: 5432
-        VUE_APP_PROTOCOL: https
-        VUE_APP_DOMAIN: checklists.stdfo.ru
-        VUE_APP_NAME: checklists
-        VUE_APP_DADATA_KEY: CHANGEME!!!
-        PGADMIN_EMAIL: admin@example.com
-        PGADMIN_PASSWORD: qweqweqwe
-      run: touch .env
+      run: cp /opt/containers/checklists/.env ./.env
     - name: Create volumes
       run: |
         docker volume create checklists_db_data
         docker volume create checklists_db_backups
         docker volume create checklists_media
+    - name: Fix docker-compose.yml
+      run: |
+        rm ./docker-compose.yml
+        cp /opt/containers/checklists/docker-compose-prod.yml ./docker-compose-prod.yml
     - name: Make prod-upb
       run: make prod-upb
