@@ -4,6 +4,7 @@ services:
   backend:
     container_name: checklists_backend
     env_file: .env
+    user: ${CURRENT_UID}
     build:
       context: ./backend
       args:
