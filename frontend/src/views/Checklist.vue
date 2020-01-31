@@ -68,53 +68,46 @@
 </template>
 
 <script>
-    import { ValidationObserver, ValidationProvider } from "vee-validate";
-    import { mapGetters, mapActions } from "vuex";
-    import Uploader from "@/components/checklist/Uploader.vue";
-    import types from "@/store/types"
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
+import Uploader from '@/components/checklist/Uploader.vue'
+import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 
-    import VueSuggestions from 'vue-suggestions';
-    import autocomplete from "@/components/checklist/templates/address-autocomplete/index.vue";
-
-    export default {
-        name: "Checklist",
-        components: {
-            Uploader,
-            ValidationObserver,
-            ValidationProvider,
-            VueSuggestions,
-            autocomplete
-        },
-        data: () => ({
-            test: [],
-            fileList: [],
-            answers: {},
-            choices: {},
-            toggleChecked: false,
-        }),
-        created() {
-            this.FETCH_CHECKLIST(this.$route.params.id);
-        },
-        computed: {
-            ...mapGetters(["list", "error", "isLoading", "userProfile"])
-        },
-        methods: {
-            ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),
-            sendChecklist() {
-                this.$store.commit('SET_ANSWERS', this.answers);
-                this.SEND_CHECKLIST({
-                    fileList: this.fileList,
-                    userProfile: this.userProfile,
-                    listId: this.$route.params.id
-                });
-            }
-        }
+export default {
+  name: 'Checklist',
+  components: {
+    Uploader,
+    ValidationObserver,
+    ValidationProvider,
+    autocomplete
+  },
+  data: () => ({
+    test: [],
+    fileList: [],
+    answers: {},
+    choices: {},
+    toggleChecked: false
+  }),
+  computed: {
+    ...mapState({
+        list: state => state.checklists.list,
+        userProfile: state => state.user.userProfile
+    }),
+  },
+  created () {
+    this.FETCH_CHECKLIST(this.$route.params.id)
+  },
+  methods: {
+    ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),
+    sendChecklist () {
+      this.$store.commit('SET_ANSWERS', this.answers)
+      this.SEND_CHECKLIST({
+        fileList: this.fileList,
+        userProfile: this.userProfile,
+        listId: this.$route.params.id
+      })
     }
+  }
+}
 </script>
-
-<style scoped>
-    .form-control {
-        padding: 0 !important;
-        width: 300px;
-    }
-</style>

@@ -57,7 +57,7 @@ services:
     container_name: checklists_frontend_dev
     env_file: .env
     user: ${CURRENT_UID}
-    image: node:12.10-alpine
+    image: node:12.14.1-alpine3.10
     command: npm run serve
     volumes:
       - ./frontend:/app

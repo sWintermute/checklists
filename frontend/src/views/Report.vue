@@ -44,50 +44,46 @@
                                             :key="i"
                                             style="align-self: start !important;"
                                         )
-                                            v-list-item-title {{note.created | date}}
+                                            v-list-item-title {{ note.created | date }}
                                             v-list-item-subtitle
                                                 template(v-for="key in note.keys")
                                                     | {{ key.answer }}
 </template>
 
 <script>
-    import { format, compareAsc } from 'date-fns'
-    import { mapActions, mapGetters } from 'vuex';
-    import types from "@/store/types"
+import { mapState, mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
 
-
-    export default {
-        name: "Report",
-        data: () => ({
-            headers: [
-                {
-                    text: '№ п/п',
-                    align: 'left',
-                    value: 'id',
-                },
-                {
-                    text: 'Параметры',
-                    value: 'text'
-                },
-                {
-                    text: 'Примечание',
-                    value: 'date_to'
-                },
-            ]
-        }),
-        created() {
-            this.FETCH_REPORT(this.$route.params.id);
-        },
-        computed: {
-            ...mapGetters(["report", "isLoading"]),
-        },
-        filters: {
-            date(value) {
-                return format(new Date(value), 'MM.dd.yyyy hh:mm')
-            }
-        },
-        methods: {
-            ...mapActions([types.FETCH_REPORT])
-        }
-    }
+export default {
+  name: 'Report',
+  data: () => ({
+    headers: [
+      {
+        text: '№ п/п',
+        align: 'left',
+        value: 'id'
+      },
+      {
+        text: 'Параметры',
+        value: 'text'
+      },
+      {
+        text: 'Примечание',
+        value: 'date_to'
+      }
+    ]
+  }),
+  computed: {
+    ...mapState({
+      report: state => state.reports.report,
+    }),
+    ...mapGetters(['isLoading'])
+  },
+  created () {
+    this.FETCH_REPORT(this.$route.params.id)
+  },
+  methods: {
+    ...mapActions([types.FETCH_REPORT])
+  }
+}
 </script>
