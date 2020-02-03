@@ -1,8 +1,8 @@
 export default {
-    list: {},
-    lists: [],
-    answers: [],
-    entries: [],
-    autocomplete: "",
-    autocompleteId: 0,
-};
+  list: {},
+  lists: [],
+  answers: [],
+  entries: [],
+  autocomplete: '',
+  autocompleteId: 0
+}

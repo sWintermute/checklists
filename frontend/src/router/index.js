@@ -1,66 +1,63 @@
-import Vue from 'vue';
-import store from '@/store';
-import Router from 'vue-router';
+import Vue from 'vue'
+import store from '@/store'
+import VueRouter from 'vue-router'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-let router = new Router({
+const Login = () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+const Checklists = () => import(/* webpackChunkName: "checklists" */ '@/views/Checklists.vue')
+const Checklist = () => import(/* webpackChunkName: "checklist" */ '@/views/Checklist.vue')
+const Reports = () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue')
+const Report = () => import(/* webpackChunkName: "report" */ '@/views/Report.vue')
+const Profile = () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue')
+const FilledChecklists = () => import(/* webpackChunkName: "responses" */ '@/views/FilledChecklists.vue')
+const FilledChecklist = () => import(/* webpackChunkName: "response" */ '@/views/FilledChecklist.vue')
+
+const router = new VueRouter({
   mode: 'history',
   routes: [
     {
       path: '/login',
-      name: 'login',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue'),
+      component: Login
     },
     {
       path: '/',
-      name: 'checklists',
-      component: () => import(/* webpackChunkName: "checklists" */ '@/views/Checklists.vue'),
-      meta: {
-        requiresAuth: true
-      },
+      component: Checklists,
+      meta: { requiresAuth: true }
     },
     {
       path: '/checklist/:id',
-      name: 'checklist',
-      component: () => import(/* webpackChunkName: "checklist" */ '@/views/Checklist.vue'),
-      meta: {
-        requiresAuth: true
-      }
+      component: Checklist,
+      meta: { requiresAuth: true }
     },
     {
       path: '/reports',
-      name: 'reports',
-      component: () => import(/* webpackChunkName: "reports" */ '@/views/Reports.vue'),
-      meta: {
-        requiresAuth: true
-      }
+      component: Reports,
+      meta: { requiresAuth: true }
     },
     {
       path: '/report/:id',
-      name: 'report',
-      component: () => import(/* webpackChunkName: "report" */ '@/views/Report.vue'),
+      component: Report
     },
     {
       path: '/profile',
-      name: 'profile',
-      component: () => import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
-      meta: {
-        requiresAuth: true
-      }
+      component: Profile,
+      meta: { requiresAuth: true }
     },
     {
       path: '/responses',
-      name: 'responses',
-      component: () => import(/* webpackChunkName: "responses" */ '@/views/FilledChecklists.vue'),
-      meta: {
-        requiresAuth: true
-      }
+      component: FilledChecklists,
+      meta: { requiresAuth: true }
     },
     {
       path: '/response/:id',
-      name: 'response',
-      component: () => import(/* webpackChunkName: "response" */ '@/views/FilledChecklist.vue'),
+      component: FilledChecklist,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: () => import(/* webpackChunkName: "map" */ '@/views/ChecklistsMap.vue'),
       meta: {
         requiresAuth: true
       }

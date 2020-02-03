@@ -43,42 +43,39 @@
                     v-card-actions(class="justify-end px-6")
                         v-btn(class="ma-2" tile outlined color="primary" @click="clear") Очистить
                         v-btn(tile color="primary" @click="onSubmit") Войти
-
 </template>
 
 <script>
-    import { ValidationObserver, ValidationProvider } from "vee-validate";
-    import { mapGetters, mapActions } from "vuex"
-    import types from "@/store/types"
-    import { mdiEmail, mdiLock } from '@mdi/js'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { mapGetters, mapActions } from 'vuex'
+import types from '@/store/types'
+import { mdiEmail, mdiLock } from '@mdi/js'
 
-    export default {
-        name: "Login",
-        components: {
-            ValidationObserver,
-            ValidationProvider
-        },
-        data: () => ({
-            mdiEmail,
-            mdiLock,
-            email: "",
-            password: ""
-        }),
-        methods: {
-            ...mapActions([types.LOGIN]),
-            onSubmit() {
-                this[types.LOGIN]( {
-                    email: this.email,
-                    password: this.password
-                });
-            },
-            clear() {
-                this.email = '';
-                this.password = '';
-            }
-        },
-        computed: {
-            ...mapGetters(['error'])
-        },
-    };
+export default {
+  name: 'Login',
+  components: {
+    ValidationObserver,
+    ValidationProvider
+  },
+  data: () => ({
+    mdiEmail,
+    mdiLock,
+    email: '',
+    password: ''
+  }),
+  computed: {},
+  methods: {
+    ...mapActions([types.LOGIN]),
+    onSubmit () {
+      this[types.LOGIN]({
+        email: this.email,
+        password: this.password
+      })
+    },
+    clear () {
+      this.email = ''
+      this.password = ''
+    }
+  }
+}
 </script>
