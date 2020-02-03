@@ -1,0 +1,25 @@
+name: clrn stage CI
+
+on:
+  push:
+    branches:
+      - develop
+  
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create .env
+      run: cp /opt/containers/checklists/.env ./.env
+    - name: Create volumes
+      run: |
+        docker volume create checklists_db_data
+        docker volume create checklists_db_backups
+        docker volume create checklists_media
+    - name: Fix docker-compose.yml
+      run: |
+        rm ./docker-compose-prod.yml
+        cp /opt/containers/checklists/docker-compose-prod.yml ./docker-compose-prod.yml
+    - name: Make prod-upb
+      run: make prod-upb

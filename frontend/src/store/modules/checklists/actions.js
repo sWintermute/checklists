@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import router from "@/router";
-import ApiService from "@/services/api.js";
-import types from "@/store/types"
+import Vue from 'vue'
+import router from '@/router'
+import ApiService from '@/services/api.js'
+import types from '@/store/types'
 
 export default {
   async [types.SEND_CHECKLIST] ({ commit, state }, { fileList, userProfile, listId }) {

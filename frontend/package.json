@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "core-js": "^3.6.1",
+    "core-js": "^3.6.4",
     "pug": "^2.0.4",
     "pug-lint-vue": "^0.3.0",
     "pug-plain-loader": "^1.0.0",
@@ -67,13 +67,32 @@
     "utf-8-validate": "^5.0.2",
     "moment": "^2.24.0"
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+  "jest": {
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^vue$": "vue/dist/vue.common.js"
+    },
+    "transform": {
+      "^.+\\.(js|jsx|ts)$": "<rootDir>/node_modules/babel-jest",
+      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "transformIgnorePatterns": [],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,vue}",
+      "!/node_modules/"
+    ]
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
+  "peerDependencies": {
+    "vue": "*",
+    "vuetify": "*"
+  },
+  "eslintIgnore": [
+    "dist/"
   ]
 }

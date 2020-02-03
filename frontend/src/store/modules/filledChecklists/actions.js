@@ -1,5 +1,5 @@
-import ApiService from "@/services/api.js";
-import types from "@/store/types"
+import ApiService from '@/services/api.js'
+import types from '@/store/types'
 
 export default {
   async [types.FETCH_FILLED_CHECKLIST] (state, { id }) {

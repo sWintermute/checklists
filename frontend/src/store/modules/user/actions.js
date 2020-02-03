@@ -1,8 +1,8 @@
-import Vue from 'vue';
-import router from '@/router';
-import ApiService from "@/services/api.js";
-import tokenService from "@/services/tokenService.js";
-import types from "@/store/types";
+import Vue from 'vue'
+import router from '@/router'
+import ApiService from '@/services/api.js'
+import tokenService from '@/services/tokenService.js'
+import types from '@/store/types'
 
 export default {
   [types.PROFILE] ({ commit }) {

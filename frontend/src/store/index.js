@@ -1,11 +1,11 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
 import user from './modules/user'
 import checklists from './modules/checklists'
 import filledChecklists from './modules/filledChecklists'
 import reports from './modules/reports'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const store = new Vuex.Store({
   strict: true,

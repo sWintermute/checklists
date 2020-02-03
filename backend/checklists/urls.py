@@ -1,9 +1,10 @@
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
 from rest_framework import permissions
 
-from . import settings
+from django.conf import settings
 
 admin.site.site_header = "Адмнистрирование чеклистов"
 admin.site.site_title = "Адмнистрирование чеклистов"
@@ -21,7 +22,8 @@ urlpatterns += [
     path('api/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/', include('lists.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     # Swagger

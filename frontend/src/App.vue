@@ -75,13 +75,12 @@
 <script>
 
 // Import component
-import Loading from 'vue-loading-overlay';
+import Loading from 'vue-loading-overlay'
 // Import stylesheet
-import 'vue-loading-overlay/dist/vue-loading.css';
+import 'vue-loading-overlay/dist/vue-loading.css'
 
-import { mapGetters, mapActions, mapState } from "vuex"
-import types from "@/store/types"
-
+import { mapGetters, mapActions, mapState } from 'vuex'
+import types from '@/store/types'
 
 export default {
   name: 'App',

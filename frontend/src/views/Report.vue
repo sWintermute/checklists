@@ -32,11 +32,9 @@
                                     td(v-for="(choice, i) in item.choices.split(';')" :key="i")
                                         span(v-if="!(choice === item.key_choices)" style="color: red") {{choice}}
                                         span(v-else style="color: green") {{choice}}
-                                
                                 template(v-else)
                                     td
                                     td
-                                    
                                 td(v-if="item.notes")
                                     v-list-item(class="flex-column pa-0" two-line)
                                         v-list-item-content(
