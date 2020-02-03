@@ -22,7 +22,7 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        return models.Response.objects.filter(user=self.request.user)
+        return models.Response.objects.all()
 
 
 class SurveyViewset(GenericViewSet, RetrieveModelMixin):
@@ -48,7 +48,7 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        return models.Response.objects.filter(user=self.request.user)
+        return models.Response.objects.all()
 
 # Report viewsets
 class ReportListViewset(GenericViewSet, ListModelMixin,
