@@ -19,13 +19,13 @@ export default {
     try {
       const response = await ApiService.get('api/v1/responses')
       state.commit('SET_FILLED_LISTS', response["data"])
-      const qweqwe = []
+	console.log(this.state.filledChecklists.filledLists)
       this.state.filledChecklists.filledLists
         .reduce(async (acc, currentValue, index, array) => {
           // Получение заполненных чеклистов по id чеклиста
           const foo = await ApiService.get(`api/v1/response/${currentValue.id}`)
           // Получение обьекта с адресом из answer заполненного чеклиста
-          const bar = await foo["data"].answers.filter(item => item.question === 2)[0]
+          const bar = await foo["data"].answers.filter(item => item.question === 65)[0]
           let lat, lon
           if (bar) {
             console.log(bar)
