@@ -36,47 +36,64 @@
                               v-card-text
                                   v-container
                                       v-row(no-gutters)
-                                          v-col(cols="12")
-                                              v-text-field(v-model="editedItem.name" label="Названите отчета")
-                                          v-col(cols="12")
-                                              v-select(
-                                                  v-model="editedItem.checklists"
-                                                  :items="lists"
-                                                  :menu-props="{ maxHeight: '400' }"
-                                                  label="Чеклисты"
-                                                  multiple
-                                                  persistent-hint
-                                                  item-text="name"
-                                                  item-value="id"
+                                        ValidationObserver(v-slot="{ passes }")
+                                          form
+                                            v-col(cols="12")
+                                              ValidationProvider(
+                                                name="название"
+                                                rules="required"
+                                                v-slot="{ errors }"
                                               )
-                                                  template(v-slot:selection="{ item, index }")
-                                                      v-chip(v-if="index === 0")
-                                                          span {{ item.name }}
-                                                      span(
-                                                          v-if="index === 1"
-                                                          class="grey--text caption"
-                                                      ) (+{{ editedItem.checklists.length - 1 }} других)
+                                                v-text-field(
+                                                  :error-messages="errors"
+                                                  v-model="editedItem.name"
+                                                  label="Название отчета"
+                                                )
+                                            v-col(cols="12")
+                                              ValidationProvider(
+                                                name="чеклисты"
+                                                rules="required"
+                                                v-slot="{ errors }"
+                                              )
+                                                v-select(
+                                                    v-model="editedItem.checklists"
+                                                    :items="lists"
+                                                    :error-messages="errors"
+                                                    :menu-props="{ maxHeight: '400' }"
+                                                    label="Чеклисты"
+                                                    multiple
+                                                    persistent-hint
+                                                    item-text="name"
+                                                    item-value="id"
+                                                )
+                                                    template(v-slot:selection="{ item, index }")
+                                                        v-chip(v-if="index === 0")
+                                                            span {{ item.name }}
+                                                        span(
+                                                            v-if="index === 1"
+                                                            class="grey--text caption"
+                                                        ) (+{{ editedItem.checklists.length - 1 }} других)
 
-                                                  template(v-slot:prepend-item)
-                                                      v-list-item(
-                                                          ripple
-                                                          @click="toggle"
-                                                      )
-                                                          v-list-item-action
-                                                              v-icon(:color="selectedChecklists.length > 0 ? 'primary' : ''") {{ icon }}
-                                                          v-list-item-content
-                                                              v-list-item-title Выбрать все
-                                                      v-divider(class="mt-2")
-                                          v-col(cols="12")
-                                              v-row(no-gutters)
-                                                  v-col(cols="12")
-                                                      v-text-field(
-                                                          v-model="dateRangeText"
-                                                          label="Дата"
-                                                          readonly
-                                                      )
-                                                  v-col(cols="12" class="d-flex justify-center")
-                                                      v-date-picker(v-model="dates" range landscape full-width)
+                                                    template(v-slot:prepend-item)
+                                                        v-list-item(
+                                                            ripple
+                                                            @click="toggle"
+                                                        )
+                                                            v-list-item-action
+                                                                v-icon(:color="selectedChecklists.length > 0 ? 'primary' : ''") {{ icon }}
+                                                            v-list-item-content
+                                                                v-list-item-title Выбрать все
+                                                        v-divider(class="mt-2")
+                                            v-col(cols="12")
+                                                v-row(no-gutters)
+                                                    v-col(cols="12")
+                                                        v-text-field(
+                                                            v-model="dateRangeText"
+                                                            label="Дата"
+                                                            readonly
+                                                        )
+                                                    v-col(cols="12" class="d-flex justify-center")
+                                                        v-date-picker(v-model="dates" range landscape full-width)
                               v-card-actions
                                   v-spacer
                                   v-btn(color="blue darken-1" text @click="close") Закрыть
@@ -111,6 +128,7 @@
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { format } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
@@ -125,6 +143,10 @@ import {
 
 export default {
   name: 'Reports',
+  components: {
+    ValidationObserver,
+    ValidationProvider
+  },
   data: () => ({
     mdiAccount,
     mdiDelete,
@@ -133,7 +155,7 @@ export default {
     mdiCloseBox,
     mdiCalendarClock,
     date: new Date().toISOString().substr(0, 10),
-    dates: ['2019-09-10', '2019-09-20'],
+    dates: [format(new Date(), "yyyy-MM-dd")],
     menu1: false,
     editedIndex: -1,
     dialog: false,
@@ -174,7 +196,7 @@ export default {
       return this.mdiCheckboxBlankOutline
     },
     dateRangeText () {
-      return this.defaultItem.dates.join(' ~ ')
+      return this.dates.join(' ~ ')
     },
     dateFormatted () {
       return this.formatDate(new Date().toISOString().substr(0, 10))

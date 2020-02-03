@@ -19,7 +19,7 @@
                 v-list-item-content
                   v-list-item-title(class="text-center")
                     | {{ item.name }}
-        v-col(cols="9")
+        v-col(cols="9" style="z-index: 1;")
             l-map(
               :zoom="zoom"
               :center="center"
@@ -27,16 +27,8 @@
             )
               l-tile-layer(
                 :url="url"
-                :attribution="attribution"
               )
-              l-marker(:lat-lng="withPopup")
-                l-popup
-                  div(@click="innerClick")
-                    | I am a popup
-                    p(v-show="showParagraph")
-                      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-                      | sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
-                      | Donec finibus semper metus id malesuada.
+              l-marker(v-for="(item, i) in address" :lat-lng="item")
 </template>
 
 <script>
@@ -58,7 +50,7 @@ export default {
   data() {
     return {
       zoom: 13,
-      center: latLng(47.41322, -1.219482),
+      center: latLng(53.764315, 87.1142745),
       url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -76,7 +68,8 @@ export default {
   computed: {
     ...mapState({
       filledLists: state => state.filledChecklists.filledLists,
-      lists: state => state.checklists.lists
+      lists: state => state.checklists.lists,
+      address: state => state.filledChecklists.address,
     }),
     getFilledListsByChecklistId(checklistId) {
       this.filledLists

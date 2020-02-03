@@ -115,7 +115,7 @@ export default {
         method: false
       },
       {
-        title: 'Карта',
+        title: 'Карта (BETA)',
         path: '/map',
         method: false
       },

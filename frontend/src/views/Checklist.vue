@@ -71,6 +71,7 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
+
 import Uploader from '@/components/checklist/Uploader.vue'
 import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 

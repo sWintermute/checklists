@@ -16,7 +16,8 @@
           )
               template(v-slot:body="{ items }")
                   tbody
-                      router-link(v-for="(item, i) in items" :key="i" tag="tr" :to="'response/' + item.id + '/'")
+                      //- router-link(v-for="(item, i) in items" :key="i" tag="tr" :to="'response/' + item.id + '/'")
+                      tr(v-for="(item, i) in items" :key="i")
                         td {{ item.id }}
                         td(class="text-xs-right") {{ item.created | date }}
                         td(class="text-xs-right") {{ item.updated | date }}
