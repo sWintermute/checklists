@@ -43,7 +43,6 @@
                     v-card-actions(class="justify-end px-6")
                         v-btn(class="ma-2" tile outlined color="primary" @click="clear") Очистить
                         v-btn(tile color="primary" @click="onSubmit") Войти
-
 </template>
 
 <script>
@@ -64,9 +63,7 @@ export default {
     email: '',
     password: ''
   }),
-  computed: {
-    ...mapGetters(['error'])
-  },
+  computed: {},
   methods: {
     ...mapActions([types.LOGIN]),
     onSubmit () {

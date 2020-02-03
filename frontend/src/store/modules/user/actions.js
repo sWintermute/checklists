@@ -15,7 +15,6 @@ export default {
           commit('SET_LOADING_STATUS', false)
           resolve(data)
         }).catch(error => {
-          commit('SET_ERROR', error.response)
           console.log(error.response)
           reject(error)
         })
@@ -27,11 +26,11 @@ export default {
       commit('SET_LOADING_STATUS', true)
       ApiService.post('api/auth/token/login', user)
         .then((response) => {
-          tokenService.saveToken(response.data.auth_token)
-          commit('SET_AUTH_TOKEN', response.data.auth_token)
+          tokenService.saveToken(response.data["auth_token"])
+          commit('SET_AUTH_TOKEN', response.data["auth_token"])
           commit('SET_AUTH_SUCCESS')
           router.push('/profile')
-          resolve()
+          resolve(response)
         })
         .catch((error) => {
           Vue.$toast.open({
@@ -65,7 +64,6 @@ export default {
         .finally(() => {
           commit('SET_LOADING_STATUS', false)
           tokenService.destroyToken()
-          router.push('/login')
         })
     })
   }

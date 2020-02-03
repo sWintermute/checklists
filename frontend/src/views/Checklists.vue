@@ -1,27 +1,40 @@
 <template lang="pug">
-    v-container
-        v-data-table(
+    v-container(
+      fluid
+      px-0
+    )
+      v-row(
+        no-gutters
+      )
+        v-col
+          v-data-table(
             :headers="headers"
             :items="lists"
             :items-per-page="-1"
             item-key="id"
             hide-default-footer
-            class="elevation-1"
-        )
-            template(v-slot:body="{ items }")
-                tbody
-                    router-link(
+          )
+              template(
+                v-slot:body="{ items }"
+              )
+                  tbody
+                      router-link(
+                        tag="tr"
                         v-for="item in items"
                         :key="item.name"
-                        tag="tr"
                         :to="'checklist/' + item.id"
-                    )
-                        td(style="width: 70px; text-align: center;") {{ item.id }}
-                        td(class="text-xs-right") {{ item.name }}
+                      )
+                          td(
+                            style="width: 70px; text-align: center;"
+                          ) {{ item.id }}
+                          td(
+                            class="text-xs-right"
+                          ) {{ item.name }}
+          v-divider
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
@@ -40,7 +53,7 @@ export default {
     ]
   }),
   computed: {
-    ...mapGetters(['lists'])
+    ...mapState({lists: state => state.checklists.lists})
   },
   created () {
     this.FETCH_CHECKLISTS()

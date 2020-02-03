@@ -42,24 +42,18 @@
                                             :key="i"
                                             style="align-self: start !important;"
                                         )
-                                            v-list-item-title {{note.created | date}}
+                                            v-list-item-title {{ note.created | date }}
                                             v-list-item-subtitle
                                                 template(v-for="key in note.keys")
                                                     | {{ key.answer }}
 </template>
 
 <script>
-import { format } from 'date-fns'
-import { mapActions, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
   name: 'Report',
-  filters: {
-    date (value) {
-      return format(new Date(value), 'MM.dd.yyyy hh:mm')
-    }
-  },
   data: () => ({
     headers: [
       {
@@ -78,7 +72,10 @@ export default {
     ]
   }),
   computed: {
-    ...mapGetters(['report', 'isLoading'])
+    ...mapState({
+      report: state => state.reports.report,
+    }),
+    ...mapGetters(['isLoading'])
   },
   created () {
     this.FETCH_REPORT(this.$route.params.id)

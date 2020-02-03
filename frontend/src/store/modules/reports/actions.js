@@ -12,7 +12,6 @@ export default {
           commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
-          commit(types.SET_ERROR, error.response)
           console.log(error.response)
           reject(error)
         })
@@ -29,24 +28,23 @@ export default {
           commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
-          commit(types.SET_ERROR, error.response)
           console.log(error.response)
           reject(error)
         })
-    })
+      })
   },
-  [types.CREATE_REPORT] ({ commit, dispatch }, report) {
+  [types.CREATE_REPORT]({ commit, dispatch }, report) {
     return new Promise((resolve, reject) => {
-      ApiService.setHeader()
-      commit('SET_LOADING_STATUS', true)
-      ApiService.post('api/v1/reports', report)
+      ApiService.setHeader();
+      commit('SET_LOADING_STATUS', true);
+      ApiService.post("api/v1/reports", report)
         .then(response => {
-          commit('SET_LOADING_STATUS', false)
+          commit('SET_LOADING_STATUS', false);
           dispatch(types.FETCH_REPORTS)
-          resolve(response)
+          resolve(response);
         }).catch(error => {
-          console.log(error)
-          reject(error)
+          console.log(error);
+          reject(error);
         })
     })
   },

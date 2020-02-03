@@ -69,11 +69,10 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { mapGetters, mapActions } from 'vuex'
-import Uploader from '@/components/checklist/Uploader.vue'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
 
-import VueSuggestions from 'vue-suggestions'
+import Uploader from '@/components/checklist/Uploader.vue'
 import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 
 export default {
@@ -82,7 +81,6 @@ export default {
     Uploader,
     ValidationObserver,
     ValidationProvider,
-    VueSuggestions,
     autocomplete
   },
   data: () => ({
@@ -93,7 +91,10 @@ export default {
     toggleChecked: false
   }),
   computed: {
-    ...mapGetters(['list', 'error', 'isLoading', 'userProfile'])
+    ...mapState({
+        list: state => state.checklists.list,
+        userProfile: state => state.user.userProfile
+    }),
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
@@ -111,10 +112,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-    .form-control {
-        padding: 0 !important;
-        width: 300px;
-    }
-</style>

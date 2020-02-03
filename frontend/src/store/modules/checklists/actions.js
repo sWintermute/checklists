@@ -4,8 +4,8 @@ import ApiService from '@/services/api.js'
 import types from '@/store/types'
 
 export default {
-  [types.SEND_CHECKLIST] ({ commit, state }, { fileList, userProfile, listId }) {
-    return new Promise((resolve, reject) => {
+  async [types.SEND_CHECKLIST] ({ commit, state }, { fileList, userProfile, listId }) {
+    try {
       commit('SET_LOADING_STATUS', true)
       state.list.id = parseInt(listId)
       state.list.created = new Date()
@@ -21,29 +21,24 @@ export default {
         state.list.answers.push({ question: key, body: value })
       }
       ApiService.setHeader()
-      ApiService.post('/api/v1/response', state.list)
-        .then(response => {
-          router.push('/')
-          Vue.$toast.open({
-            message: [
-              'Чеклист успешно создан',
-              'Статус: ' + response.response.status].join(' '),
-            type: 'success'
-          })
-          commit('SET_LOADING_STATUS', false)
-          resolve(response)
-        }).catch(error => {
-          Vue.$toast.open({
-            message: [
-              'Невозможно создать чеклист',
-              'Статус: ' + error.response.status].join(' '),
-            type: 'error'
-          })
-          commit(types.SET_ERROR, error.response)
-          console.log(error.response)
-          reject(error)
-        })
-    })
+      const response = await ApiService.post('/api/v1/response', state.list)
+      router.push('/')
+      Vue.$toast.open({
+        message: 'Чеклист успешно создан!',
+        type: 'success'
+      })
+      commit('SET_LOADING_STATUS', false)
+    } catch (error) {
+      Vue.$toast.open({
+        message: [
+          'Невозможно создать чеклист',
+          'Статус: ' + error.response.status].join('.'),
+        type: 'error'
+      })
+      console.log(error.response)
+      commit('SET_LOADING_STATUS', false)
+      router.push('/')
+    }
   },
   [types.FETCH_CHECKLIST] ({ commit }, listId) {
     return new Promise((resolve, reject) => {
@@ -56,7 +51,6 @@ export default {
           commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
-          commit(types.SET_ERROR, error.response)
           console.log(error.response)
           reject(error)
         })
@@ -73,27 +67,26 @@ export default {
           commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
-          commit(types.SET_ERROR, error.response)
           console.log(error.response)
           reject(error)
         })
-    })
-  },
-  [types.CHECKLIST_AUTOCOMPLETE_FIELD] ({ commit }, { search, count }) {
-    return new Promise((resolve, reject) => {
-      ApiService.setHeader('519fbd1afac8c2380f617046c95a6789a39fa021')
-      ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-        count: count,
-        query: search
       })
-        .then(res => {
-          commit('SET_ENTRIES', res.data.suggestions)
-          resolve(res)
+    },
+    [types.CHECKLIST_AUTOCOMPLETE_FIELD]({ commit }, { search,count}) {
+      return new Promise((resolve, reject) => {
+        ApiService.setHeader("519fbd1afac8c2380f617046c95a6789a39fa021");
+        ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+            count: count,
+            query: search
         })
-        .catch(err => {
-          console.log(err)
-          reject(err)
-        })
-    })
-  }
+          .then(res => {
+            commit('SET_ENTRIES', res.data.suggestions);
+            resolve(res);
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+          })
+      })
+    }
 }

@@ -55,8 +55,16 @@ const router = new VueRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/*', redirect: '/login'
-    }
+      path: '/map',
+      name: 'map',
+      component: () => import(/* webpackChunkName: "map" */ '@/views/ChecklistsMap.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/*', redirect: '/login',
+    },
   ]
 })
 
