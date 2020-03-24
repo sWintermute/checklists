@@ -12,7 +12,7 @@ django-environ = "==0.4.5"
 pillow = "==6.2.1"
 
 [dev-packages]
-drf-yasg = "==1.17.0"
+drf-yasg = "==1.17.1"
 django-silk = "==4.0.1"
 
 [requires]
