@@ -13,27 +13,44 @@ const Profile = () => import(/* webpackChunkName: "profile" */ '@/views/Profile.
 const FilledChecklists = () => import(/* webpackChunkName: "responses" */ '@/views/FilledChecklists.vue')
 const FilledChecklist = () => import(/* webpackChunkName: "response" */ '@/views/FilledChecklist.vue')
 
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isLoggedIn) {
+    next()
+    return
+  }
+  next('/')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isLoggedIn) {
+    next()
+    return
+  }
+  next('/login')
+}
+
 const router = new VueRouter({
   mode: 'history',
   routes: [
     {
       path: '/login',
-      component: Login
+      component: Login,
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/',
       component: Checklists,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/checklist/:id',
       component: Checklist,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/reports',
       component: Reports,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/report/:id',
@@ -42,25 +59,23 @@ const router = new VueRouter({
     {
       path: '/profile',
       component: Profile,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/responses',
       component: FilledChecklists,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/response/:id',
       component: FilledChecklist,
-      meta: { requiresAuth: true }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/map',
       name: 'map',
       component: () => import(/* webpackChunkName: "map" */ '@/views/ChecklistsMap.vue'),
-      meta: {
-        requiresAuth: true
-      }
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/*', redirect: '/login',

@@ -1,20 +1,18 @@
 import Vue from 'vue'
-import store from '@/store'
-import router from '@/router'
-import types from '@/store/types'
+// import store from '@/store'
+// import router from '@/router'
+// import types from '@/store/types'
 import ApiService from '@/services/api'
 
 ApiService.init()
 
-Vue.axios.interceptors.response.use(function (response) {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
-  return response
-}, function (error) {
-  if (error.response.status === 401) {
-    console.log({ error })
-    store.commit('SET_LOADING_STATUS', false)
-    router.replace('/login')
-  }
-  return Promise.reject(error)
-})
+Vue.axios.interceptors.response.use(undefined, function (err) {
+  return new Promise(function (resolve, reject) {
+    if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+    // if you ever get an unauthorized, logout the user
+      this.$store.dispatch(AUTH_LOGOUT)
+    // you can also redirect to /login if needed !
+    }
+    throw err;
+  });
+});
