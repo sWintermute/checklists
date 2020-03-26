@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { ValidationObserver, ValidationProvider } from "vee-validate";
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { format } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
@@ -155,7 +155,7 @@ export default {
     mdiCloseBox,
     mdiCalendarClock,
     date: new Date().toISOString().substr(0, 10),
-    dates: [format(new Date(), "yyyy-MM-dd")],
+    dates: [format(new Date(), 'yyyy-MM-dd')],
     menu1: false,
     editedIndex: -1,
     dialog: false,

@@ -73,7 +73,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      report: state => state.reports.report,
+      report: state => state.reports.report
     }),
     ...mapGetters(['isLoading'])
   },

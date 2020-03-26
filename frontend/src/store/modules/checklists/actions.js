@@ -43,6 +43,7 @@ export default {
   async [types.FETCH_CHECKLIST] ({ commit }, listId) {
     try {
       commit('SET_LOADING_STATUS', true)
+      ApiService.setHeader()
       const response = await ApiService.get('api/v1/lists', listId)
       const list = response.data
       commit('SET_LIST', list)
@@ -54,6 +55,7 @@ export default {
   async [types.FETCH_CHECKLISTS] ({ commit }) {
     try {
       commit('SET_LOADING_STATUS', true)
+      ApiService.setHeader()
       const { lists } = await ApiService.get('api/v1/lists')
       commit('SET_LISTS', lists)
       commit('SET_LOADING_STATUS', false)
@@ -61,16 +63,16 @@ export default {
       console.log(error.response)
     }
   },
-  async [types.CHECKLIST_AUTOCOMPLETE_FIELD]({ commit }, { search,count}) {
+  async [types.CHECKLIST_AUTOCOMPLETE_FIELD] ({ commit }, { search, count }) {
     try {
-      ApiService.setHeader("519fbd1afac8c2380f617046c95a6789a39fa021");
+      ApiService.setHeader('519fbd1afac8c2380f617046c95a6789a39fa021')
       const response = await ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-          count: count,
-          query: search
+        count: count,
+        query: search
       })
-      commit('SET_ENTRIES', response.data.suggestions);
+      commit('SET_ENTRIES', response.data.suggestions)
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response)
     }
   }
 }
