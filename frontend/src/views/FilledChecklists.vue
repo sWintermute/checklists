@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
@@ -64,7 +64,7 @@ export default {
   methods: {
     ...mapActions([types.FETCH_FILLED_CHECKLISTS, types.FETCH_CHECKLISTS]),
     test (survey) {
-      return this.lists.find(checklist => checklist.id === survey).name;
+      return this.lists.find(checklist => checklist.id === survey).name
     }
   }
 }

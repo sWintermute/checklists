@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet'
 import { latLng } from 'leaflet'
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
@@ -47,11 +47,11 @@ export default {
     LPopup,
     LTooltip
   },
-  data() {
+  data () {
     return {
       zoom: 13,
       center: latLng(53.764315, 87.1142745),
-      url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: latLng(47.41322, -1.219482),
@@ -63,21 +63,21 @@ export default {
         zoomSnap: 0.5
       },
       showMap: true
-    };
+    }
   },
   computed: {
     ...mapState({
       filledLists: state => state.filledChecklists.filledLists,
       lists: state => state.checklists.lists,
-      address: state => state.filledChecklists.address,
+      address: state => state.filledChecklists.address
     }),
-    getFilledListsByChecklistId(checklistId) {
+    getFilledListsByChecklistId (checklistId) {
       this.filledLists
         .filter(item => item.id === checklistId)
         .reduce((accumulator, currentValue, i, arr) => {
           this.FETCH_FILLED_CHECKLIST(currentValue.id)
           accumulator.push()
-      }, [])
+        }, [])
     }
   },
   created () {
@@ -90,17 +90,17 @@ export default {
       types.FETCH_CHECKLISTS,
       types.FETCH_FILLED_CHECKLISTS
     ]),
-    zoomUpdate(zoom) {
-      this.currentZoom = zoom;
+    zoomUpdate (zoom) {
+      this.currentZoom = zoom
     },
-    centerUpdate(center) {
-      this.currentCenter = center;
+    centerUpdate (center) {
+      this.currentCenter = center
     },
-    showLongText() {
-      this.showParagraph = !this.showParagraph;
+    showLongText () {
+      this.showParagraph = !this.showParagraph
     },
-    innerClick() {
-      alert("Click!");
+    innerClick () {
+      alert('Click!')
     }
   }
 }

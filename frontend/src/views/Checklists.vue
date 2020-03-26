@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
@@ -53,7 +53,9 @@ export default {
     ]
   }),
   computed: {
-    ...mapState({lists: state => state.checklists.lists})
+    ...mapState({
+      lists: state => state.checklists.lists
+    })
   },
   created () {
     this.FETCH_CHECKLISTS()
