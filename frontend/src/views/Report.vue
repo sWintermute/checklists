@@ -1,5 +1,10 @@
 <template lang="pug">
     v-container(fluid)
+        v-btn(
+          @click="test"
+          color="success"
+          class="text-none"
+        ) Скачать в EXCEL
         v-card(
             v-for="(checklist, i) in report.checklists"
             :key="i"
@@ -51,10 +56,26 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import types from '@/store/types'
+import { format } from 'date-fns'
+
+// import Vue from 'vue'
+import download from 'downloadjs'
+import JsonExcel from 'vue-json-excel'
+import XLSX from 'xlsx'
 
 export default {
   name: 'Report',
+  components: {
+    downloadExcel: JsonExcel
+  },
   data: () => ({
+    qwe: null,
+    json_fields: {
+      Номер: 'id',
+      Название: 'name',
+      'Дата создания': 'date_from',
+      'Дата закрытия': 'date_to'
+    },
     headers: [
       {
         text: '№ п/п',
@@ -73,7 +94,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      report: state => state.reports.report,
+      report: state => state.reports.report
     }),
     ...mapGetters(['isLoading'])
   },
@@ -81,7 +102,56 @@ export default {
     this.FETCH_REPORT(this.$route.params.id)
   },
   methods: {
-    ...mapActions([types.FETCH_REPORT])
+    ...mapActions([types.FETCH_REPORT]),
+    async test () {
+      try {
+        // const wb = XLSX.utils.book_new()
+        // checklists.reduce((acc, checklist) => {
+        //   const foo = []
+        //   const questions = checklist.questions
+        //   foo.push({ B: report.name, C: `${report.date_from} - ${report.date_to}` })
+        //   foo.push({ B: checklist.name })
+        //   foo.push({})
+        //   foo.push({})
+        //   questions.map()
+        //   foo.push({ A: checklist.id })
+        //   const wsData = XLSX.utils.json_to_sheet([], { header: ['A', 'B', 'C', 'D', 'E', 'F', 'G'], skipHeader: true })
+        //   XLSX.utils.book_append_sheet(wb, wsData, checklist.name)
+        // })
+
+        const { id: reportId, name: reportName, date_from: reportDateFrom, date_to: reportDateTo, checklists: reportChecklists } = this.report
+
+        const dateFrom = format(new Date(reportDateFrom), 'yyyy-MM-dd HH:mm')
+        const dateTo = format(new Date(reportDateTo), 'yyyy-MM-dd HH:mm')
+
+        const wb = XLSX.utils.book_new()
+        for (const checklist of reportChecklists) {
+          const { id: checklistId, name: checklistName, questions: checklistQuestions } = checklist
+          const rows = [
+            [`Отчет ${reportName}`, `Дата ${dateFrom} - ${dateTo}`, ''],
+            [`№ ${checklistId} ${checklistName}`],
+            ['Вопросы', 'Варианты ответов', 'Ответы', 'Датаы']
+          ]
+          for (const question of checklistQuestions) {
+            const { text: questionText, choices: questionChoices, notes: questionNotes } = question
+            questionNotes.forEach((note) => {
+              const { created: noteCreatedDate, keys: noteKeys } = note
+              const endgame = noteKeys.map(({ name, answer }) => ([name, answer])).join('\n')
+              rows.push([questionText, questionChoices, endgame, format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')])
+              console.log(endgame)
+              // return `${format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')}\n${endgame}`
+            })
+          }
+          const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })
+          XLSX.utils.book_append_sheet(wb, wsData, checklistName)
+        }
+
+        const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+        download(str, 'test.xlsx', 'application/vnd.ms-excel')
+      } catch (error) {
+        console.log({ error })
+      }
+    }
   }
 }
 </script>
