@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create .env
-      run: cp /opt/containers/checklists/.env ./.env
+      run: cp /projects/checklists-runner/_config/.env ./.env
     - name: Create volumes
       run: |
         docker volume create checklists_db_data
@@ -20,6 +20,6 @@ jobs:
     - name: Fix docker-compose.yml
       run: |
         rm ./docker-compose-prod.yml
-        cp /opt/containers/checklists/docker-compose-prod.yml ./docker-compose-prod.yml
+        cp /projects/checklists-runner/_config/docker-compose-prod.yml ./docker-compose-prod.yml
     - name: Make prod-upb
       run: make prod-upb

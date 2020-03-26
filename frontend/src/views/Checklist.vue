@@ -69,7 +69,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import types from '@/store/types'
 
 import Uploader from '@/components/checklist/Uploader.vue'
@@ -92,9 +92,9 @@ export default {
   }),
   computed: {
     ...mapState({
-        list: state => state.checklists.list,
-        userProfile: state => state.user.userProfile
-    }),
+      list: state => state.checklists.list,
+      userProfile: state => state.user.userProfile
+    })
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
