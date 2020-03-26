@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "==2.2.10"
+django = "==2.2.11"
 djangorestframework = "==3.11.0"
 djoser = "==2.0.3"
 psycopg2-binary = "==2.8.4"
@@ -13,7 +13,13 @@ pillow = "==6.2.1"
 
 [dev-packages]
 drf-yasg = "==1.17.1"
-django-silk = "==4.0.1"
+django-silk = "*"
+autopep8 = "*"
+flake8 = "*"
+rope = "*"
+mypy = "*"
+ptvsd = "*"
+
 
 [requires]
 python_version = "3.7"

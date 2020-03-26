@@ -69,23 +69,23 @@ services:
       private_network:
         ipv4_address: 172.25.0.8
 
-  pgadmin:
-    container_name: checklists_pgadmin_dev
-    env_file: .env
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres_db
-    ports:
-      - 5555:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-    restart: on-failure
-    volumes:
-      - pgadmin_dev:/var/lib/pgadmin
-    networks:
-      private_network:
-        ipv4_address: 172.25.0.10
+  # pgadmin:
+  #   container_name: checklists_pgadmin_dev
+  #   env_file: .env
+  #   image: dpage/pgadmin4
+  #   depends_on:
+  #     - postgres_db
+  #   ports:
+  #     - 5555:8080
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+  #   restart: on-failure
+  #   volumes:
+  #     - pgadmin_dev:/var/lib/pgadmin
+  #   networks:
+  #     private_network:
+  #       ipv4_address: 172.25.0.10
 
 networks:
   private_network:
