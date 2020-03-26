@@ -6,7 +6,7 @@ module.exports = {
     hotOnly: true,
     disableHostCheck: true,
     historyApiFallback: true,
-    public: '0.0.0.0:80',
+    public: `0.0.0.0:${process.env.VUE_APP_PORT}`,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
