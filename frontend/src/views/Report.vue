@@ -45,7 +45,7 @@
                                             v-list-item-title {{ note.created | date }}
                                             v-list-item-subtitle
                                                 template(v-for="key in note.keys")
-                                                    | {{ key.answer }}&nbsp;
+                                                    | {{ key.answer }};&nbsp;
 </template>
 
 <script>
