@@ -40,8 +40,8 @@ export default {
       router.push('/')
     }
   },
-  async [types.FETCH_CHECKLIST] ({ commit }, listId) {
-    try {
+  [types.FETCH_CHECKLIST] ({ commit }, listId) {
+    return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const response = await ApiService.get('api/v1/lists', listId)
@@ -52,8 +52,8 @@ export default {
       console.log(error.response)
     }
   },
-  async [types.FETCH_CHECKLISTS] ({ commit }) {
-    try {
+  [types.FETCH_CHECKLISTS] ({ commit }) {
+    return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const { lists } = await ApiService.get('api/v1/lists')
@@ -74,5 +74,4 @@ export default {
     } catch (error) {
       console.log(error.response)
     }
-  }
 }

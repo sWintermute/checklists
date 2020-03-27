@@ -53,9 +53,7 @@ export default {
     ]
   }),
   computed: {
-    ...mapState({
-      lists: state => state.checklists.lists
-    })
+    ...mapState({lists: state => state.checklists.lists})
   },
   created () {
     this.FETCH_CHECKLISTS()
