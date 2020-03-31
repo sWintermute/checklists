@@ -22,10 +22,10 @@ export default {
   },
   async [types.LOGIN] ({ commit }, { vm, user }) {
     try {
-      const { auth_token } = await vm.$repositories.users.login(user)
-      console.log(auth_token)
-      tokenService.saveToken(response.data.auth_token)
-      commit('SET_AUTH_TOKEN', response.data.auth_token)
+      const { data } = await vm.$repositories.users.login(user)
+      const { authToken } = data
+      tokenService.saveToken(authToken)
+      commit('SET_AUTH_TOKEN', authToken)
       commit('SET_AUTH_SUCCESS')
       router.push('/profile')
     } catch (error) {
