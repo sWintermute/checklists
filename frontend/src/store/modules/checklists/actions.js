@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import router from '@/router'
-import ApiService from '@/services/api.js'
+import ApiService from '@/services/client/api.js'
 import types from '@/store/types'
 
 export default {
@@ -21,7 +21,7 @@ export default {
         state.list.answers.push({ question: key, body: value })
       }
       ApiService.setHeader()
-      const response = await ApiService.post('/api/v1/response', state.list)
+      await ApiService.post('/api/v1/response', state.list)
       router.push('/')
       Vue.$toast.open({
         message: 'Чеклист успешно создан!',
@@ -54,11 +54,11 @@ export default {
   },
   async [types.FETCH_CHECKLISTS] ({ commit }) {
     try {
-      commit('SET_LOADING_STATUS', true)
+      // commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
-      const { lists } = await ApiService.get('api/v1/lists')
-      commit('SET_LISTS', lists)
-      commit('SET_LOADING_STATUS', false)
+      const { data } = await ApiService.get('api/v1/lists')
+      commit('SET_LISTS', data)
+      // commit('SET_LOADING_STATUS', false)
     } catch (error) {
       console.log(error.response)
     }

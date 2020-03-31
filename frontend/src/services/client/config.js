@@ -4,4 +4,6 @@ const port = process.env.VUE_APP_PORT
 
 const envApiUrl = `${protocol}://${domain}${port ? ':' + port : ''}/`
 
-export const BASE_URL = envApiUrl
+export default {
+    BASE_URL: envApiUrl
+}

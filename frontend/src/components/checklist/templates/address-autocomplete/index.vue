@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import ApiService from '@/services/api.js'
-import tokenService from '@/services/tokenService.js'
+import ApiService from '@/services/client/api.js'
+import tokenService from '@/services/client/tokenService.js'
 import axios from 'axios'
 import types from '@/store/types'
 import { mapState, mapActions, commit } from 'vuex'

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import router from '@/router'
-import ApiService from '@/services/api.js'
-import tokenService from '@/services/tokenService.js'
+import ApiService from '@/services/client/api.js'
+import tokenService from '@/services/client/tokenService.js'
 import types from '@/store/types'
 
 export default {
@@ -20,51 +20,33 @@ export default {
         })
     })
   },
-  [types.LOGIN] ({ commit }, user) {
-    return new Promise((resolve, reject) => {
-      ApiService.removeHeader()
-      commit('SET_LOADING_STATUS', true)
-      ApiService.post('api/auth/token/login', user)
-        .then((response) => {
-          tokenService.saveToken(response.data["auth_token"])
-          commit('SET_AUTH_TOKEN', response.data["auth_token"])
-          commit('SET_AUTH_SUCCESS')
-          router.push('/profile')
-          resolve(response)
-        })
-        .catch((error) => {
-          Vue.$toast.open({
-            message: [
-              'Невозможно войти с предоставленными учетными данными.',
-              'Статус: ' + error.response.status].join(' '),
-            type: 'error'
-          })
-          console.log({ error })
-          reject(error)
-        })
-        .finally(() => {
-          commit('SET_LOADING_STATUS', false)
-        })
-    })
+  async [types.LOGIN] ({ commit }, { vm, user }) {
+    try {
+      const { auth_token } = await vm.$repositories.users.login(user)
+      console.log(auth_token)
+      tokenService.saveToken(response.data.auth_token)
+      commit('SET_AUTH_TOKEN', response.data.auth_token)
+      commit('SET_AUTH_SUCCESS')
+      router.push('/profile')
+    } catch (error) {
+      // Vue.$toast.open({
+      //   message: [
+      //     'Невозможно войти с предоставленными учетными данными.',
+      //     'Статус: ' + error.response.status].join(' '),
+      //   type: 'error'
+      // })
+      console.log({ error })
+    }
   },
-  [types.LOGOUT] ({ commit }) {
-    return new Promise((resolve, reject) => {
-      ApiService.setHeader()
-      commit('SET_LOADING_STATUS', true)
-      ApiService.post('api/auth/token/logout')
-        .then((response) => {
-          ApiService.removeHeader()
-          commit('SET_LOGOUT')
-          resolve()
-        })
-        .catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-        .finally(() => {
-          commit('SET_LOADING_STATUS', false)
-          tokenService.destroyToken()
-        })
-    })
+  async [types.LOGOUT] ({ commit }, { vm }) {
+    try {
+      console.log(this._vm.$repositories)
+      await vm.$repositories.users.logout('api/auth/token/logout')
+      commit('SET_LOGOUT')
+      tokenService.destroyToken()
+      router.push('/login')
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

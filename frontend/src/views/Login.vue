@@ -52,6 +52,7 @@ import types from '@/store/types'
 import { mdiEmail, mdiLock } from '@mdi/js'
 
 export default {
+  dependencies : '$repositories',
   name: 'Login',
   components: {
     ValidationObserver,
@@ -67,10 +68,10 @@ export default {
   methods: {
     ...mapActions([types.LOGIN]),
     onSubmit () {
-      this[types.LOGIN]({
+      this[types.LOGIN]({ vm: this, user: {
         email: this.email,
         password: this.password
-      })
+      }})
     },
     clear () {
       this.email = ''

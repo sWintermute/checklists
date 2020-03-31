@@ -15,7 +15,7 @@
                   v-list-item-content
                     v-btn(
                       v-if="menu.title === 'Выйти'"
-                      @click='LOGOUT'
+                      @click="logoutSubmit"
                       text
                       :to="menu.path"
                     ) {{menu.title}}
@@ -61,7 +61,7 @@
                       v-for="(menu, i) in menus"
                       :key="i"
                       :to="menu.path"
-                      @click="menu.method && LOGOUT()"
+                      @click="menu.method && logoutSubmit"
                     ) {{ menu.title }}
         v-content
             router-view
@@ -73,10 +73,7 @@
 </template>
 
 <script>
-
-// Import component
 import Loading from 'vue-loading-overlay'
-// Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 import { mapGetters, mapActions, mapState } from 'vuex'
@@ -99,7 +96,7 @@ export default {
         method: false
       },
       {
-        title: 'Ответы на чеклисты',
+        title: 'Ответы',
         path: '/responses',
         method: false
       },
@@ -130,7 +127,10 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   methods: {
-    ...mapActions([types.LOGOUT])
+    ...mapActions([types.LOGOUT]),
+    logoutSubmit () {
+      this.LOGOUT({ vm: this })
+    }
   }
 }
 </script>

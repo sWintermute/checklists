@@ -1,18 +1,35 @@
-import Vue from 'vue'
-// import store from '@/store'
-// import router from '@/router'
-// import types from '@/store/types'
-import ApiService from '@/services/api'
+import client from '@/services/client/api'
 
-ApiService.init()
+let loadFunction = (config) => {
+  console.log(test, test2)
+  this.$store.commit('SET_LOADING_STATUS', true)
+  return config
+}
 
-Vue.axios.interceptors.response.use(undefined, function (err) {
-  return new Promise(function (resolve, reject) {
-    if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-    // if you ever get an unauthorized, logout the user
-      this.$store.dispatch(AUTH_LOGOUT)
-    // you can also redirect to /login if needed !
-    }
-    throw err;
-  });
-});
+let finishFunction = response => {
+  this.$store.commit('SET_LOADING_STATUS', false)
+  return response
+}
+
+// let errorFunction = error => {
+//   this.$store.commit('SET_LOADING_STATUS', false)
+//   return Promise.reject(error)
+// }
+
+client.interceptors.request.use(loadFunction)
+// client.interceptors.response.use(finishFunction, errorFunction)
+
+client.interceptors.response.use(
+  finishFunction, 
+  error => {
+    return new Promise(function (resolve, reject) {
+      this.$store.commit('SET_LOADING_STATUS', false)
+      if (error.status === 401 && error.config && !error.config.__isRetryRequest) {
+        this.$store.dispatch('LOGOUT')
+      }
+      throw error
+    })
+  }
+)
+
+export default client

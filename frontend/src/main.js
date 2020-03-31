@@ -4,30 +4,35 @@ import router from '@/router'
 import store from '@/store'
 import VueLoading from 'vue-loading-template'
 import vuetify from '@/plugins/vuetify'
-import '@/plugins/axios'
+
+import '@/services/constants'
+import injector from 'vue-inject'
+require('@/services/constants')
+require('@/services/repositoryFactory')
+
 import '@/plugins/vee-validate'
 
 import VueToast from 'vue-toast-notification'
 import 'vue-toast-notification/dist/index.css'
 
-import DateFilter from '@/filters/dateFormat.filter.js'
+import DateFilter from '@/filters/dateFormat.filter'
 
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
+Vue.config.productionTip = false
+
 // this part resolve an issue where the markers would not appear
 delete Icon.Default.prototype._getIconUrl
-
 Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 })
 
-Vue.config.productionTip = false
-
 Vue.use(VueLoading)
 Vue.use(VueToast)
+Vue.use(injector);
 
 Vue.filter('date', DateFilter)
 

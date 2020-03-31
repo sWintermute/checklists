@@ -1,4 +1,5 @@
-import ApiService from '@/services/api.js'
+import ApiService from '@/services/client/api.js'
+import tokenService from '@/services/client/tokenService.js'
 import types from '@/store/types'
 
 export default {

@@ -105,21 +105,7 @@ export default {
     ...mapActions([types.FETCH_REPORT]),
     async test () {
       try {
-        // const wb = XLSX.utils.book_new()
-        // checklists.reduce((acc, checklist) => {
-        //   const foo = []
-        //   const questions = checklist.questions
-        //   foo.push({ B: report.name, C: `${report.date_from} - ${report.date_to}` })
-        //   foo.push({ B: checklist.name })
-        //   foo.push({})
-        //   foo.push({})
-        //   questions.map()
-        //   foo.push({ A: checklist.id })
-        //   const wsData = XLSX.utils.json_to_sheet([], { header: ['A', 'B', 'C', 'D', 'E', 'F', 'G'], skipHeader: true })
-        //   XLSX.utils.book_append_sheet(wb, wsData, checklist.name)
-        // })
-
-        const { id: reportId, name: reportName, date_from: reportDateFrom, date_to: reportDateTo, checklists: reportChecklists } = this.report
+        const { name: reportName, date_from: reportDateFrom, date_to: reportDateTo, checklists: reportChecklists } = this.report
 
         const dateFrom = format(new Date(reportDateFrom), 'yyyy-MM-dd HH:mm')
         const dateTo = format(new Date(reportDateTo), 'yyyy-MM-dd HH:mm')
@@ -139,7 +125,6 @@ export default {
               const endgame = noteKeys.map(({ name, answer }) => ([name, answer])).join('\n')
               rows.push([questionText, questionChoices, endgame, format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')])
               console.log(endgame)
-              // return `${format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')}\n${endgame}`
             })
           }
           const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })
