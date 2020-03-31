@@ -6,6 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from user_profile import models as umodels
 from . import models, serializers
+import datetime
 
 
 class SurveyListViewset(GenericViewSet, ListModelMixin):
@@ -23,6 +24,30 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
         for the currently authenticated user.
         """
         return models.Response.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = models.Response.objects.all()
+
+        fr = request.query_params.get("from", None)
+        if (fr):
+            queryset = queryset.filter(created__gte=datetime.date(fr))
+
+        to = request.query_params.get("to", None)
+        if (to):
+            queryset = queryset.filter(created__lte=datetime.date(to))
+
+        lsts = request.query_params.get("lists", None)
+        if lsts:
+            lists = [int(x) for x in lsts.split(',')]
+            queryset = queryset.filter(survey__in=lists)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.paginator.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class SurveyViewset(GenericViewSet, RetrieveModelMixin):
@@ -51,6 +76,8 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
         return models.Response.objects.all()
 
 # Report viewsets
+
+
 class ReportListViewset(GenericViewSet, ListModelMixin,
                         CreateModelMixin, DestroyModelMixin):
     queryset = models.Report.objects.prefetch_related('checklists').all()
