@@ -23,24 +23,26 @@ export default {
   async [types.LOGIN] ({ commit }, { vm, user }) {
     try {
       const { data } = await vm.$repositories.users.login(user)
-      const { authToken } = data
+      const { auth_token: authToken } = data
+      console.log(data, authToken)
       tokenService.saveToken(authToken)
+      vm.$axios.setToken(authToken, 'Token')
       commit('SET_AUTH_TOKEN', authToken)
       commit('SET_AUTH_SUCCESS')
       router.push('/profile')
     } catch (error) {
-      // Vue.$toast.open({
-      //   message: [
-      //     'Невозможно войти с предоставленными учетными данными.',
-      //     'Статус: ' + error.response.status].join(' '),
-      //   type: 'error'
-      // })
+      Vue.$toast.open({
+        message: [
+          'Невозможно войти с предоставленными учетными данными.',
+          'Статус: ' + error.response.status].join(' '),
+        type: 'error'
+      })
       console.log({ error })
     }
   },
   async [types.LOGOUT] ({ commit }, { vm }) {
     try {
-      console.log(this._vm.$repositories)
+      console.log(this.vm)
       await vm.$repositories.users.logout('api/auth/token/logout')
       commit('SET_LOGOUT')
       tokenService.destroyToken()

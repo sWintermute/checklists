@@ -33,4 +33,19 @@ client.interceptors.response.use(
   }
 )
 
+client.setHeader = (name, value, scopes = 'common') => {
+  for (let scope of Array.isArray(scopes) ? scopes : [ scopes ]) {
+    if (!value) {
+      delete this.defaults.headers[scope][name];
+      return
+    }
+    this.defaults.headers[scope][name] = value
+  }
+}
+
+client.setToken = (token, type, scopes = 'common') => {
+  const value = !token ? null : (type ? type + ' ' : '') + token
+  this.setHeader('Authorization', value, scopes)
+}
+
 export default client

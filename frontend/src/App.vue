@@ -80,6 +80,7 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 import types from '@/store/types'
 
 export default {
+  dependencies : '$repositories',
   name: 'App',
   components: {
     Loading
