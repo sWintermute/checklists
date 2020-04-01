@@ -7,7 +7,7 @@ import injector from 'vue-inject'
 import { $axios } from '@/services/constants'
 
 export default {
-  [types.PROFILE]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }, { vm }) => {
+  [types.PROFILE]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }) => {
     try {
       const { data: user } = await $repositories.users.get()
       commit('SET_USER', user)
@@ -20,9 +20,7 @@ export default {
       const { data } = await $repositories.users.login(user)
       const { auth_token: authToken } = data
       tokenService.saveToken(authToken)
-      $axios.setToken(authToken, 'Token')
       commit('SET_AUTH_TOKEN', authToken)
-      commit('SET_AUTH_SUCCESS')
       router.push('/profile')
     } catch ({ response }) {
       Vue.$toast.open({

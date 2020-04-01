@@ -3,6 +3,9 @@ import router from '@/router'
 import ApiService from '@/services/client/api.js'
 import types from '@/store/types'
 
+import injector from 'vue-inject'
+import { $axios } from '@/services/constants'
+
 export default {
   async [types.SEND_CHECKLIST] ({ commit, state }, { fileList, userProfile, listId }) {
     try {
@@ -40,29 +43,22 @@ export default {
       router.push('/')
     }
   },
-  async [types.FETCH_CHECKLIST] ({ commit }, listId) {
+  [types.FETCH_CHECKLIST]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }, { listId }) => {
     try {
-      commit('SET_LOADING_STATUS', true)
-      ApiService.setHeader()
-      const response = await ApiService.get('api/v1/lists', listId)
-      const list = response.data
+      const { data: list } = await $repositories.checklists.get(listId)
       commit('SET_LIST', list)
-      commit('SET_LOADING_STATUS', false)
     } catch (error) {
       console.log(error.response)
     }
-  },
-  async [types.FETCH_CHECKLISTS] ({ commit }) {
+  }),
+  [types.FETCH_CHECKLISTS]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }) => {
     try {
-      // commit('SET_LOADING_STATUS', true)
-      ApiService.setHeader()
-      const { data } = await ApiService.get('api/v1/lists')
+      const { data } = await $repositories.checklists.getAll()
       commit('SET_LISTS', data)
-      // commit('SET_LOADING_STATUS', false)
     } catch (error) {
       console.log(error.response)
     }
-  },
+  }),
   async [types.CHECKLIST_AUTOCOMPLETE_FIELD] ({ commit }, { search, count }) {
     try {
       ApiService.setHeader('519fbd1afac8c2380f617046c95a6789a39fa021')

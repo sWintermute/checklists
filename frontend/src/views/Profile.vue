@@ -45,7 +45,6 @@ import types from '@/store/types'
 import { mdiAccountCircle } from '@mdi/js'
 
 export default {
-    dependencies : '$repositories',
     name: 'Profile',
     data: () => ({
         mdiAccountCircle
@@ -54,7 +53,7 @@ export default {
         ...mapGetters(['userProfile'])
     },
     created () {
-        this.PROFILE({ vm: this })
+        this.PROFILE()
     },
     methods: {
         ...mapActions([types.PROFILE])

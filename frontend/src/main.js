@@ -9,6 +9,7 @@ import '@/services/constants'
 import injector from 'vue-inject'
 require('@/services/constants')
 require('@/services/repositoryFactory')
+import axios from '@/plugins/axios'
 
 import '@/plugins/vee-validate'
 
@@ -39,6 +40,7 @@ Vue.filter('date', DateFilter)
 new Vue({
   router,
   store,
+  axios,
   vuetify,
   render: h => h(App)
 }).$mount('#app')

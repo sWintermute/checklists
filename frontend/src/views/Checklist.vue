@@ -97,7 +97,7 @@ export default {
     })
   },
   created () {
-    this.FETCH_CHECKLIST(this.$route.params.id)
+    this.FETCH_CHECKLIST({ listId: this.$route.params.id })
   },
   methods: {
     ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),

@@ -238,7 +238,6 @@ export default {
         this.$emit('on-change', fileList[currentIndex], fileList)
         fileList.splice(currentIndex, 1)
       }
-      console.log(this.$listeners)
       if (this.$listeners['on-delete']) {
         this.$emit('on-delete', delFn)
       } else {

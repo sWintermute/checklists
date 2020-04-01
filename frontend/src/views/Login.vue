@@ -68,10 +68,12 @@ export default {
   methods: {
     ...mapActions([types.LOGIN]),
     onSubmit () {
-      this[types.LOGIN]({ vm: this, user: {
-        email: this.email,
-        password: this.password
-      }})
+      this[types.LOGIN]({ 
+        user: {
+          email: this.email,
+          password: this.password
+       }
+      })
     },
     clear () {
       this.email = ''

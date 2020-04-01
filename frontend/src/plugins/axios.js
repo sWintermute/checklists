@@ -1,9 +1,16 @@
 import client from '@/services/client/api'
 import store from '@/store'
+import tokenService from '@/services/client/tokenService.js'
+import { $axios } from '@/services/constants'
 
 
 let loadFunction = config => {
   store.commit('SET_LOADING_STATUS', true)
+  const authToken = tokenService.getToken()
+  if (authToken) {
+    config.headers['Authorization'] = `Token ${ authToken }`;
+  }
+  console.log(config)
   return config
 }
 
@@ -25,9 +32,9 @@ client.interceptors.response.use(
   error => {
     return new Promise(function (resolve, reject) {
       store.commit('SET_LOADING_STATUS', false)
-      console.log({error}, this)
       if (error.response.status === 401 && error.config && !error.config.__isRetryRequest) {
         store.dispatch('LOGOUT')
+        client.setToken()
       }
       throw error
     })
