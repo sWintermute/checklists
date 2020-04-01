@@ -7,17 +7,17 @@ import injector from 'vue-inject'
 import { $axios } from '@/services/constants'
 
 export default {
-  async [types.PROFILE] ({ commit }, { vm }) {
+  [types.PROFILE]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }, { vm }) => {
     try {
-      const { data: user } = await vm.$repositories.users.get()
+      const { data: user } = await $repositories.users.get()
       commit('SET_USER', user)
     } catch (error) {
       console.log(error.response)
     }
-  },
-  async [types.LOGIN] ({ commit }, { vm, user }) {
+  }),
+  [types.LOGIN]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }, { user }) => {
     try {
-      const { data } = await vm.$repositories.users.login(user)
+      const { data } = await $repositories.users.login(user)
       const { auth_token: authToken } = data
       tokenService.saveToken(authToken)
       $axios.setToken(authToken, 'Token')
@@ -32,7 +32,7 @@ export default {
         type: 'error'
       })
     }
-  },
+  }),
   [types.LOGOUT]: injector.encase([ '$repositories' ], ($repositories) => async ({ commit }) => {
     try {
       const token = tokenService.getToken()
