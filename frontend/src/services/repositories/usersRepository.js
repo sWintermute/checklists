@@ -15,12 +15,9 @@ export default $axios => resource => ({
     //   return $axios.delete(`${resource}/${id}`)
     // }
     login (payload) {
-        console.log(payload)
-        console.log({$axios})
         return $axios.post(`${resource}/auth/token/login`, payload)
     },
     logout () {
-        console.log($axios)
         return $axios.post(`${resource}/auth/token/logout`)
     }
   })
