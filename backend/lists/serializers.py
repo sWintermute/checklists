@@ -48,7 +48,7 @@ class ResponseListSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Answer
-        fields = ('id', 'question', 'body')
+        fields = ('id', 'question', 'question_text', 'body')
 
 
 class Base64ImageField(serializers.ImageField):

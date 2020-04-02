@@ -24,6 +24,10 @@ class Answer(models.Model):
     updated = models.DateTimeField("Update date", auto_now=True)
     body = models.TextField("Ответ", blank=True, null=True)
 
+    @property
+    def question_text(self):
+        return self.question.text
+
     def __init__(self, *args, **kwargs):
         try:
             question = Question.objects.get(pk=kwargs["question_id"])
