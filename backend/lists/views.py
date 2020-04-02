@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from user_profile import models as umodels
 from . import models, serializers
-import datetime
+from datetime import datetime
 
 
 class SurveyListViewset(GenericViewSet, ListModelMixin):
@@ -24,11 +24,13 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
 
         fr = request.query_params.get("from", None)
         if (fr):
-            queryset = queryset.filter(created__gte=datetime.date(fr))
+            queryset = queryset.filter(
+                created__gte=datetime.strptime(fr, '%Y-%m-%dT%H:%M:%S'))
 
         to = request.query_params.get("to", None)
         if (to):
-            queryset = queryset.filter(created__lte=datetime.date(to))
+            queryset = queryset.filter(
+                created__lte=datetime.strptime(to, '%Y-%m-%dT%H:%M:%S'))
 
         lsts = request.query_params.get("lists", None)
         if lsts:
