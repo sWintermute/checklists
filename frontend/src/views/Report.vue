@@ -138,8 +138,6 @@ export default {
               const { created: noteCreatedDate, keys: noteKeys } = note
               const endgame = noteKeys.map(({ name, answer }) => ([name, answer])).join('\n')
               rows.push([questionText, questionChoices, endgame, format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')])
-              console.log(endgame)
-              // return `${format(new Date(noteCreatedDate), 'yyyy-MM-dd HH:mm')}\n${endgame}`
             })
           }
           const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })

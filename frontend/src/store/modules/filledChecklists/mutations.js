@@ -8,4 +8,7 @@ export default {
     SET_ADDRESS(state, payload) {
         state.address.push(payload)
     },
+    SET_EXCEL (state, payload) {
+        state.excel = payload
+    }
 }
