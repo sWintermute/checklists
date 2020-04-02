@@ -15,18 +15,12 @@ class SurveyListViewset(GenericViewSet, ListModelMixin):
 
 
 class ResponseListViewset(GenericViewSet, ListModelMixin):
-    queryset = models.Response.objects.all()
+    queryset = models.Response.objects.prefetch_related(
+        'answers', 'answers__question').all()
     serializer_class = serializers.ResponseListSerializer
 
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        return models.Response.objects.all()
-
     def list(self, request, *args, **kwargs):
-        queryset = models.Response.objects.all()
+        queryset = self.queryset
 
         fr = request.query_params.get("from", None)
         if (fr):
@@ -58,8 +52,8 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
 
 class ResponseViewset(GenericViewSet, CreateModelMixin,
                       RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
-    answers = models.Answer.objects.all()
-    queryset = models.Response.objects.all()
+    queryset = models.Response.objects.prefetch_related(
+        'answers', 'answers__question').all()
     serializer_class = serializers.ResponseSerializer
 
     def perform_create(self, serializer):
@@ -68,12 +62,6 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
     def perform_update(self, serializer):
         serializer.update(user=self.request.user)
 
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        return models.Response.objects.all()
 
 # Report viewsets
 

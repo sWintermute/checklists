@@ -39,16 +39,23 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
 
 
-class ResponseListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Response
-        fields = ('id', 'created', 'updated', 'survey')
-
-
 class AnswerSerializer(serializers.ModelSerializer):
+    question_text = serializers.SerializerMethodField()
+
+    def get_question_text(self, obj):
+        return obj.question.text
+
     class Meta:
         model = models.Answer
         fields = ('id', 'question', 'question_text', 'body')
+
+
+class ResponseListSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = models.Response
+        fields = ('id', 'created', 'updated', 'survey', 'answers')
 
 
 class Base64ImageField(serializers.ImageField):
