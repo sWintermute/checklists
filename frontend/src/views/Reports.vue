@@ -98,7 +98,6 @@
                                   v-spacer
                                   v-btn(color="blue darken-1" text @click="close") Закрыть
                                   v-btn(color="blue darken-1" text @click="sendReport") Создать
-
               template(slot="item" slot-scope="{ item }")
                   tr
                       td(style="width: 70px; text-align: center;") {{ item.id }}

@@ -86,9 +86,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      types.FETCH_FILLED_CHECKLISTS,
-      types.FETCH_CHECKLISTS,
-      types.FETCH_FILLED_CHECKLISTS
+      types.FETCH_MAP,
+      types.FETCH_CHECKLISTS
     ]),
     zoomUpdate (zoom) {
       this.currentZoom = zoom
