@@ -16,7 +16,7 @@ class SurveyListViewset(GenericViewSet, ListModelMixin):
 
 class ResponseListViewset(GenericViewSet, ListModelMixin):
     queryset = models.Response.objects.prefetch_related(
-        'answers', 'answers__question').all()
+        'answers', 'answers__question', 'user').all()
     serializer_class = serializers.ResponseListSerializer
 
     def list(self, request, *args, **kwargs):

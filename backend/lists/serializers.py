@@ -52,10 +52,14 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 class ResponseListSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
+    user_text = serializers.SerializerMethodField()
+
+    def get_user_text(self, obj):
+        return obj.user.email
 
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', 'answers')
+        fields = ('id', 'created', 'updated', 'survey', 'answers', 'user_text')
 
 
 class Base64ImageField(serializers.ImageField):
@@ -97,10 +101,15 @@ class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
     photo = AttachmentSerializer(many=True, required=False)
+    user_text = serializers.SerializerMethodField()
+
+    def get_user_text(self, obj):
+        return obj.user.email
 
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', "answers", 'photo')
+        fields = ('id', 'created', 'updated', 'survey',
+                  "answers", 'photo', 'user_text')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')
