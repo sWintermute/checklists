@@ -56,13 +56,14 @@ class ResponseListSerializer(serializers.ModelSerializer):
 
     def get_user_text(self, obj):
         if obj.user.first_name and obj.user.last_name:
-            return f"{obj.user.first_name[0]}. {obj.user.last_name} <{obj.user.email}>"
+            return f"{obj.user.first_name[0]}. \
+                {obj.user.last_name} <{obj.user.email}>"
         else:
             return obj.user.email
 
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', 'answers', 'user_text')
+        fields = ('id', 'created', 'survey', 'answers', 'user_text')
 
 
 class Base64ImageField(serializers.ImageField):
@@ -108,7 +109,8 @@ class ResponseSerializer(serializers.ModelSerializer):
 
     def get_user_text(self, obj):
         if obj.user.first_name and obj.user.last_name:
-            return f"{obj.user.first_name[0]}. {obj.user.last_name} <{obj.user.email}>"
+            return f"{obj.user.first_name[0]}. \
+                {obj.user.last_name} <{obj.user.email}>"
         else:
             return obj.user.email
 
