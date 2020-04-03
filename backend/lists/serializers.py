@@ -55,7 +55,7 @@ class ResponseListSerializer(serializers.ModelSerializer):
     user_text = serializers.SerializerMethodField()
 
     def get_user_text(self, obj):
-        return obj.user.email
+        return f"{obj.user.first_name[0]}. {obj.user.last_name} <{obj.user.email}>"
 
     class Meta:
         model = models.Response
@@ -104,7 +104,7 @@ class ResponseSerializer(serializers.ModelSerializer):
     user_text = serializers.SerializerMethodField()
 
     def get_user_text(self, obj):
-        return obj.user.email
+        return f"{obj.user.first_name[0]}. {obj.user.last_name} <{obj.user.email}>"
 
     class Meta:
         model = models.Response
