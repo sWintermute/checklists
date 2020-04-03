@@ -38,17 +38,6 @@
                                       form
                                         v-col(cols="12")
                                           ValidationProvider(
-                                            name="название"
-                                            rules="required"
-                                            v-slot="{ errors }"
-                                          )
-                                            v-text-field(
-                                              :error-messages="errors"
-                                              v-model="editedItem.name"
-                                              label="Название excel файла"
-                                            )
-                                        v-col(cols="12")
-                                          ValidationProvider(
                                             name="чеклисты"
                                             rules="required"
                                             v-slot="{ errors }"
