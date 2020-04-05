@@ -121,10 +121,6 @@ export default {
         value: 'created'
       },
       {
-        text: 'Дата последнего редактирования',
-        value: 'updated'
-      },
-      {
         text: 'Чеклист',
         value: 'survey'
       }
@@ -176,9 +172,9 @@ export default {
       return this.formatDate(this.date)
     }
   },
-  created () {
-    // this.FETCH_FILLED_CHECKLISTS()
-    this.FETCH_CHECKLISTS()
+  async created () {
+    await this.FETCH_CHECKLISTS()
+    await this.FETCH_FILLED_CHECKLISTS()
   },
   watch: {
     dialog (val) {
