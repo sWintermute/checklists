@@ -79,7 +79,6 @@
                 tr(v-for="(item, i) in items" :key="i")
                   td {{ item.id }}
                   td(class="text-xs-right") {{ item.created | date }}
-                  td(class="text-xs-right") {{ item.updated | date }}
                   td(v-text="test(item.survey)")
 </template>
 
@@ -119,10 +118,6 @@ export default {
       {
         text: 'Дата создания',
         value: 'created'
-      },
-      {
-        text: 'Дата последнего редактирования',
-        value: 'updated'
       },
       {
         text: 'Чеклист',
@@ -176,9 +171,9 @@ export default {
       return this.formatDate(this.date)
     }
   },
-  created () {
-    // this.FETCH_FILLED_CHECKLISTS()
-    this.FETCH_CHECKLISTS()
+  async created () {
+    await this.FETCH_CHECKLISTS()
+    await this.FETCH_FILLED_CHECKLISTS()
   },
   watch: {
     dialog (val) {

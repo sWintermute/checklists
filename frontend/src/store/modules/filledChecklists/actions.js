@@ -21,7 +21,10 @@ export default {
     try {
       state.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
-      const response = await ApiService.get('api/v1/responses')
+      const response = (await Promise.all([
+        ApiService.get('api/v1/responses'),
+        await new Promise(resolve => setTimeout(() => resolve(), 500))
+      ]))[0]
       state.commit('SET_FILLED_LISTS', response["data"])
       state.commit('SET_LOADING_STATUS', false)
     } catch (error) {
