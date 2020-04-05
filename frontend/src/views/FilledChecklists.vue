@@ -177,7 +177,7 @@ export default {
     }
   },
   created () {
-    this.FETCH_FILLED_CHECKLISTS()
+    // this.FETCH_FILLED_CHECKLISTS()
     this.FETCH_CHECKLISTS()
   },
   watch: {
