@@ -1,10 +1,10 @@
 <template lang="pug">
     v-container(fluid)
-        v-btn(
-          @click="test"
-          color="success"
-          class="text-none"
-        ) Скачать в EXCEL
+        //- v-btn(
+        //-   @click="test"
+        //-   color="success"
+        //-   class="text-none"
+        //- ) Скачать в EXCEL
         v-card(
             v-for="(checklist, i) in report.checklists"
             :key="i"
