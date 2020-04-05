@@ -6,6 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from user_profile import models as umodels
 from . import models, serializers
+from datetime import datetime
 
 
 class SurveyListViewset(GenericViewSet, ListModelMixin):
@@ -14,15 +15,35 @@ class SurveyListViewset(GenericViewSet, ListModelMixin):
 
 
 class ResponseListViewset(GenericViewSet, ListModelMixin):
-    queryset = models.Response.objects.all()
+    queryset = models.Response.objects.prefetch_related(
+        'answers', 'answers__question', 'user').all()
     serializer_class = serializers.ResponseListSerializer
 
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        return models.Response.objects.all()
+    def list(self, request, *args, **kwargs):
+        queryset = self.queryset
+
+        fr = request.query_params.get("from", None)
+        if (fr):
+            queryset = queryset.filter(
+                created__gte=datetime.strptime(fr, '%Y-%m-%dT%H:%M:%S'))
+
+        to = request.query_params.get("to", None)
+        if (to):
+            queryset = queryset.filter(
+                created__lte=datetime.strptime(to, '%Y-%m-%dT%H:%M:%S'))
+
+        lsts = request.query_params.get("lists", None)
+        if lsts:
+            lists = [int(x) for x in lsts.split(',')]
+            queryset = queryset.filter(survey__in=lists)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.paginator.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class SurveyViewset(GenericViewSet, RetrieveModelMixin):
@@ -33,8 +54,8 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
 
 class ResponseViewset(GenericViewSet, CreateModelMixin,
                       RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
-    answers = models.Answer.objects.all()
-    queryset = models.Response.objects.all()
+    queryset = models.Response.objects.prefetch_related(
+        'answers', 'answers__question').all()
     serializer_class = serializers.ResponseSerializer
 
     def perform_create(self, serializer):
@@ -43,14 +64,10 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
     def perform_update(self, serializer):
         serializer.update(user=self.request.user)
 
-    def get_queryset(self):
-        """
-        This view should return a list of all the purchases
-        for the currently authenticated user.
-        """
-        return models.Response.objects.all()
 
 # Report viewsets
+
+
 class ReportListViewset(GenericViewSet, ListModelMixin,
                         CreateModelMixin, DestroyModelMixin):
     queryset = models.Report.objects.prefetch_related('checklists').all()

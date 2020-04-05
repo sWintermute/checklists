@@ -39,16 +39,32 @@ class ReportSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'date_from', 'date_to', 'checklists')
 
 
-class ResponseListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Response
-        fields = ('id', 'created', 'updated', 'survey')
-
-
 class AnswerSerializer(serializers.ModelSerializer):
+    question_text = serializers.SerializerMethodField()
+
+    def get_question_text(self, obj):
+        return obj.question.text
+
     class Meta:
         model = models.Answer
-        fields = ('id', 'question', 'body')
+        fields = ('id', 'question', 'question_text', 'body')
+
+
+class ResponseListSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+    user_text = serializers.SerializerMethodField()
+
+    def get_user_text(self, obj):
+        email = obj.user.email
+        if obj.user.first_name and obj.user.last_name:
+            res = f"{obj.user.first_name[0]}. {obj.user.last_name} <{email}>"
+        else:
+            res = email
+        return res
+
+    class Meta:
+        model = models.Response
+        fields = ('id', 'created', 'survey', 'answers', 'user_text')
 
 
 class Base64ImageField(serializers.ImageField):
@@ -90,10 +106,20 @@ class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
 class ResponseSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
     photo = AttachmentSerializer(many=True, required=False)
+    user_text = serializers.SerializerMethodField()
+
+    def get_user_text(self, obj):
+        email = obj.user.email
+        if obj.user.first_name and obj.user.last_name:
+            res = f"{obj.user.first_name[0]}. {obj.user.last_name} <{email}>"
+        else:
+            res = email
+        return res
 
     class Meta:
         model = models.Response
-        fields = ('id', 'created', 'updated', 'survey', "answers", 'photo')
+        fields = ('id', 'created', 'updated', 'survey',
+                  "answers", 'photo', 'user_text')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers')

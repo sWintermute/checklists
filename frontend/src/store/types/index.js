@@ -26,5 +26,8 @@ export default {
   // User
   PROFILE: 'PROFILE',
   LOGIN: 'LOGIN',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+
+  FETCH_MAP: 'FETCH_MAP',
+  CREATE_EXCEL: 'CREATE_EXCEL'
 }

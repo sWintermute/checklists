@@ -1,5 +1,6 @@
 export default {
     filledList: {},
     filledLists: [],
-    address: []
+    address: [],
+    excel: []
 };

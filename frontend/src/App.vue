@@ -99,7 +99,7 @@ export default {
         method: false
       },
       {
-        title: 'Ответы на чеклисты',
+        title: 'Ответы',
         path: '/responses',
         method: false
       },
