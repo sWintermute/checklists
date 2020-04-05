@@ -44,34 +44,52 @@ export default {
       const wb = XLSX.utils.book_new()
       const currentChecklist = this.state.checklists.lists.filter((item) => {
         return item.id === excelData.checklists
-      }).pop()
-      const headers = [
-        'Номер ответа',
-        'Дата создания',
-        'Почта'
-      ]
+      })[0]
+      const headers = {
+        'Номер ответа': [],
+        'Дата создания': [],
+        'Почта': []
+      }
       const rows = []
       for (const response of responses) {
-        const { id, created, answers } = response
-        const questionRow = []
-        const answerRow = []
+        const { id, created, answers, user_text } = response
+        let answersHeadersList = ['Номер ответа', 'Дата создания', 'Почта']
+
+        headers['Номер ответа'].push(id)
+        headers['Дата создания'].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"))
+        headers['Почта'].push(user_text)
 
         for (let { question_text, body } of answers) {
-          (~headers.indexOf(question_text))
-            ? answerRow.push(body)
-            : headers.push(question_text) && answerRow.push(body)
+          answersHeadersList.push(question_text)
+
+          Array.isArray(headers[question_text])
+          ? headers[question_text].push(body)
+          : headers[question_text] = [body]
         }
 
-        rows.push([
-          id,
-          format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"),
-          `${response.user_text}`,
-          ...answerRow
-        ])
-
+        for (let header of Object.keys(headers)) {
+          if (!answersHeadersList.includes(header)) {
+            Array.isArray(headers[header])
+            ? headers[header].push('')
+            : headers[header] = ['']
+          }
+        }
       }
-      rows.unshift(headers)
-      console.log(rows)
+      rows.unshift(Object.keys(headers))
+
+      headers['Статус'].unshift('')
+      headers['ИНН'].unshift('', '', '')
+
+      let foo = Object.values(headers)[0]
+
+      for (let i = 0; i < foo.length; i++) {
+        let item = []
+        for (let header of Object.keys(headers)) {
+          headers[header][i] ? item.push(headers[header][i]) : item.push('')
+        }
+        rows.push(item)
+      }
+
       const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })
       XLSX.utils.book_append_sheet(wb, wsData, 'test')
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
