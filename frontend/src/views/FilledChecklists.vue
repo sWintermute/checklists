@@ -79,7 +79,6 @@
                 tr(v-for="(item, i) in items" :key="i")
                   td {{ item.id }}
                   td(class="text-xs-right") {{ item.created | date }}
-                  td(class="text-xs-right") {{ item.updated | date }}
                   td(v-text="test(item.survey)")
 </template>
 
