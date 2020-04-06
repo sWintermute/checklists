@@ -98,7 +98,7 @@ export default {
       }
 
       const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })
-      XLSX.utils.book_append_sheet(wb, wsData, 'test')
+      XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
       download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
       store.commit('SET_LOADING_STATUS', false)
