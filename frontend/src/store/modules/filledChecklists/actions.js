@@ -78,23 +78,27 @@ export default {
           }
         }
       }
-      rows.unshift(Object.keys(headers))
 
-      headers['Статус'].unshift('')
-      headers['ИНН'].unshift('', '', '')
+      rows.unshift(Object.keys(headers))
 
       let foo = Object.values(headers)[0]
 
       for (let i = 0; i < foo.length; i++) {
         let item = []
         for (let header of Object.keys(headers)) {
+          if (headers[header].length < foo.length) {
+            let bar = foo.length - headers[header].length
+            for (let j = 0; j < bar; j++) {
+              headers[header].unshift('')
+            }
+          }
           headers[header][i] ? item.push(headers[header][i]) : item.push('')
         }
         rows.push(item)
       }
 
       const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true })
-      XLSX.utils.book_append_sheet(wb, wsData, 'test')
+      XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
       download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
       store.commit('SET_LOADING_STATUS', false)

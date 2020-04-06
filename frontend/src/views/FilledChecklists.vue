@@ -164,9 +164,6 @@ export default {
     dateFormatted () {
       return this.formatDate(new Date().toISOString().substr(0, 10))
     },
-    formTitle () {
-      return (this.editedIndex === -1) ? 'Новый отчет' : 'Редактировать отчет'
-    },
     computedDateFormatted () {
       return this.formatDate(this.date)
     }
@@ -202,10 +199,6 @@ export default {
     },
     close () {
       this.dialog = false
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
     },
     sendReport () {
       this.CREATE_EXCEL({ excelData: this.editedItem })
