@@ -78,16 +78,20 @@ export default {
           }
         }
       }
-      rows.unshift(Object.keys(headers))
 
-      headers['Статус'].unshift('')
-      headers['ИНН'].unshift('', '', '')
+      rows.unshift(Object.keys(headers))
 
       let foo = Object.values(headers)[0]
 
       for (let i = 0; i < foo.length; i++) {
         let item = []
         for (let header of Object.keys(headers)) {
+          if (headers[header].length < foo.length) {
+            let bar = foo.length - headers[header].length
+            for (let j = 0; j < bar; j++) {
+              headers[header].unshift('')
+            }
+          }
           headers[header][i] ? item.push(headers[header][i]) : item.push('')
         }
         rows.push(item)
