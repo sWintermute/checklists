@@ -58,7 +58,11 @@ services:
     env_file: .env
     user: ${CURRENT_UID}
     image: node:12.14.1-alpine3.10
-    command: npm run serve
+    command: > 
+      sh -c " \
+        npm i && \
+        npm run serve \
+      "
     volumes:
       - ./frontend:/app
     working_dir: /app

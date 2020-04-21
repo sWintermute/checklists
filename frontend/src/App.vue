@@ -1,136 +1,52 @@
 <template lang="pug">
-    v-app(id="inspire")
-        div
-            v-navigation-drawer(
-              app
-              v-model="drawer"
-              v-if="isLoggedIn"
-              disable-resize-watcher
-            )
-              v-list
-                v-list-item(
-                  v-for="(menu, i) in menus"
-                  :key="i"
-                )
-                  v-list-item-content
-                    v-btn(
-                      v-if="menu.title === 'Выйти'"
-                      @click='LOGOUT'
-                      text
-                      :to="menu.path"
-                    ) {{menu.title}}
-                    v-btn(
-                      v-else
-                      text
-                      :to="menu.path"
-                    ) {{menu.title}}
-            v-app-bar(
-              app
-            )
-                v-app-bar-nav-icon(
-                  v-if="isLoggedIn"
-                  @click="drawer = !drawer"
-                  class="hidden-md-and-up"
-                )
-                v-spacer(
-                  class="hidden-md-and-up"
-                  v-if="isLoggedIn"
-                )
-                v-img(
-                  src="/static/blue-tick2.png"
-                  max-width="22px"
-                  max-height="22px"
-                )
-                router-link(
-                  to="/"
-                  tag="a"
-                  style="text-decoration: none;"
-                )
-                    v-toolbar-title(
-                      class="mx-2 headline primary--text"
-                    ) Checklists
-                v-spacer(
-                  class="hidden-sm-and-down"
-                )
-                v-toolbar-items(
-                  v-if="isLoggedIn"
-                )
-                    v-btn(
-                      text
-                      class="hidden-sm-and-down"
-                      v-for="(menu, i) in menus"
-                      :key="i"
-                      :to="menu.path"
-                      @click="menu.method && LOGOUT()"
-                    ) {{ menu.title }}
-        v-content
-            router-view
-            loading(
-              :active.sync="loading"
-              :can-cancel="true"
-              is-full-page
-            )
+  v-app
+    v-app-bar(app color="primary" dark)
+      div(class="d-flex align-center")
+        v-img(
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        )
+
+        v-img(
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        )
+
+      v-spacer
+
+      v-btn(
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      )
+        span(class="mr-2") Latest Release
+        v-icon fas fa-external-link-alt
+
+    v-content
+      HelloWorld
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import HelloWorld from "./components/HelloWorld.vue";
 
-// Import component
-import Loading from 'vue-loading-overlay'
-// Import stylesheet
-import 'vue-loading-overlay/dist/vue-loading.css'
+export default Vue.extend({
+  name: "App",
 
-import { mapGetters, mapActions, mapState } from 'vuex'
-import types from '@/store/types'
-
-export default {
-  name: 'App',
   components: {
-    Loading
+    HelloWorld
   },
+
   data: () => ({
-    onCancel: false,
-    drawer: false,
-    clipped: false,
-    menus: [
-      {
-        title: 'Чеклисты',
-        path: '/',
-        icon: '',
-        method: false
-      },
-      {
-        title: 'Ответы',
-        path: '/responses',
-        method: false
-      },
-      {
-        title: 'Отчеты',
-        path: '/reports',
-        method: false
-      },
-      {
-        title: 'Профиль',
-        path: '/profile',
-        method: false
-      },
-      {
-        title: 'Карта (BETA)',
-        path: '/map',
-        method: false
-      },
-      {
-        title: 'Выйти',
-        path: '/logout',
-        method: true
-      }
-    ]
-  }),
-  computed: {
-    ...mapState(['auth_token', 'loading']),
-    ...mapGetters(['isLoggedIn'])
-  },
-  methods: {
-    ...mapActions([types.LOGOUT])
-  }
-}
+    //
+  })
+});
 </script>
