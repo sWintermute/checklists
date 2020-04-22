@@ -10,6 +10,7 @@ djoser = "==2.0.3"
 psycopg2-binary = "==2.8.5"
 django-environ = "==0.4.5"
 pillow = "==7.1.1"
+django-import-export = "*"
 
 [dev-packages]
 drf-yasg = "==1.17.1"
@@ -19,7 +20,6 @@ flake8 = "*"
 rope = "*"
 mypy = "*"
 ptvsd = "*"
-
 
 [requires]
 python_version = "3.7"

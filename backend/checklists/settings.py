@@ -26,6 +26,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'import_export',
 ]
 
 if DEBUG:
@@ -105,16 +106,20 @@ AUTH_USER_MODEL = 'user_profile.UserProfile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -150,25 +155,25 @@ CHOICES_SEPARATOR = ';'
 
 APPEND_SLASH = True
 
-DJOSER  = {
-        'SERIALIZERS': {
-            'activation': 'djoser.serializers.ActivationSerializer',
-            'password_reset': 'djoser.serializers.SendEmailResetSerializer',
-            'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
-            'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
-            'set_password': 'djoser.serializers.SetPasswordSerializer',
-            'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
-            'set_username': 'djoser.serializers.SetUsernameSerializer',
-            'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
-            'username_reset': 'djoser.serializers.SendEmailResetSerializer',
-            'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
-            'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
-            'user_create': 'djoser.serializers.UserCreateSerializer',
-            'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
-            'user_delete': 'djoser.serializers.UserDeleteSerializer',
-            'user': 'lists.serializers.UserSerializer',
-            'current_user': 'lists.serializers.UserSerializer',
-            'token': 'djoser.serializers.TokenSerializer',
-            'token_create': 'djoser.serializers.TokenCreateSerializer',
+DJOSER = {
+    'SERIALIZERS': {
+        'activation': 'djoser.serializers.ActivationSerializer',
+        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype': 'djoser.serializers.PasswordResetConfirmRetypeSerializer',
+        'set_password': 'djoser.serializers.SetPasswordSerializer',
+        'set_password_retype': 'djoser.serializers.SetPasswordRetypeSerializer',
+        'set_username': 'djoser.serializers.SetUsernameSerializer',
+        'set_username_retype': 'djoser.serializers.SetUsernameRetypeSerializer',
+        'username_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'username_reset_confirm': 'djoser.serializers.UsernameResetConfirmSerializer',
+        'username_reset_confirm_retype': 'djoser.serializers.UsernameResetConfirmRetypeSerializer',
+        'user_create': 'djoser.serializers.UserCreateSerializer',
+        'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+        'user': 'lists.serializers.UserSerializer',
+        'current_user': 'lists.serializers.UserSerializer',
+        'token': 'djoser.serializers.TokenSerializer',
+        'token_create': 'djoser.serializers.TokenCreateSerializer',
     },
 }

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
 from .models import Response, Survey, Question, Answer, Report, Attachment
+from import_export.admin import ImportExportModelAdmin
 
 
 class QuestionInline(admin.TabularInline):
@@ -17,7 +18,7 @@ class AttachmentInline(GenericTabularInline):
 
 
 @admin.register(Survey)
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(ImportExportModelAdmin):
     list_display = ("name",)
     inlines = [QuestionInline]
 
@@ -30,7 +31,7 @@ class AnswerBaseInline(admin.StackedInline):
 
 
 @admin.register(Response)
-class ResponseAdmin(admin.ModelAdmin):
+class ResponseAdmin(ImportExportModelAdmin):
     list_display = ("id", "survey", "created", "user")
     list_filter = ("survey", "created")
     date_hierarchy = "created"
@@ -39,7 +40,7 @@ class ResponseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
+class ReportAdmin(ImportExportModelAdmin):
     list_display = ("name", "date_from", "date_to")
     filter_horizontal = ("checklists",)
 
