@@ -1,13 +1,21 @@
 import os
-import environ
+from os import environ
 
-env = environ.Env()
+
+def get_env(key, default=None):
+    val = environ.get(key, default)
+    if val == 'True':
+        val = True
+    elif val == 'False':
+        val = False
+    return val
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = env.bool('DEBUG')
+DEBUG = get_env('DEBUG')
 
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = get_env('SECRET_KEY')
 
 ALLOWED_HOSTS = ["*"]
 
@@ -94,11 +102,11 @@ WSGI_APPLICATION = 'checklists.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env.str('POSTGRES_DB'),
-        'USER': env.str('POSTGRES_USER'),
-        'PASSWORD': env.str('POSTGRES_PASSWORD'),
-        'HOST': env.str('POSTGRES_HOST'),
-        'PORT': env.str('POSTGRES_PORT'),
+        'NAME': get_env('POSTGRES_DB'),
+        'USER': get_env('POSTGRES_USER'),
+        'PASSWORD': get_env('POSTGRES_PASSWORD'),
+        'HOST': get_env('POSTGRES_HOST'),
+        'PORT': get_env('POSTGRES_PORT'),
     }
 }
 
