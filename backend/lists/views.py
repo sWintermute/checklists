@@ -1,5 +1,5 @@
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, \
-    CreateModelMixin, UpdateModelMixin,     DestroyModelMixin
+    CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -80,3 +80,25 @@ class ReportViewset(GenericViewSet, RetrieveModelMixin):
     serializer_class = serializers.ReportGetEntitySerializer
     authentication_classes = ()
     permission_classes = (AllowAny,)
+
+
+class MapReportViewset(GenericViewSet, ListModelMixin):
+    authentication_classes = ()
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.MapNodeSerializer
+
+    def list(self, request, *args, **kwargs):
+        """
+        Return a list of all users.
+        """
+        #  Паспорт дома ДЗД
+        #  Адрес
+
+        resps = [x for x in models.Response.objects.filter(
+            survey__name="Паспорт дома ДЗД")]
+
+        answers = [x for x in models.Answer.objects
+                   .filter(response__in=resps, question__text="Адрес")]
+
+        res = []
+        return Response(res)

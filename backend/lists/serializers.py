@@ -144,7 +144,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'first_name', 'last_name', 'position')
 
 
+class MapNodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MapNode
+        fields = ('name', 'lat', 'lon', 'response')
+
 # Begin report generation
+
+
 class ReportQuestionSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         self.responses = kwargs.pop('responses', None)
