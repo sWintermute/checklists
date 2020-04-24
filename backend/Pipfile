@@ -10,9 +10,9 @@ djoser = "==2.0.3"
 psycopg2-binary = "==2.8.5"
 pillow = "==7.1.1"
 django-import-export = "==2.0.2"
+drf-yasg = "==1.17.1"
 
 [dev-packages]
-drf-yasg = "==1.17.1"
 django-silk = "*"
 autopep8 = "*"
 flake8 = "*"
