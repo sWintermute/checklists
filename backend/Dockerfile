@@ -1,4 +1,4 @@
-FROM alpine:3.11.5 AS build
+FROM alpine:3.11.6 AS build
 ARG DEBUG
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /app &&\
@@ -17,7 +17,7 @@ RUN if [[ "$DEBUG" == "TRUE" ]] || [[ "$DEBUG" == "True" ]] || [[ "$DEBUG" == "1
   echo "Install only PROD packages"; \
   pip3 install --disable-pip-version-check --no-cache-dir gunicorn meinheld; \
   pipenv install --system --deploy --ignore-pipfile; \
-  pip3 uninstall pipenv virtualenv virtualenv-clone certifi pip -y; \
+  pip3 uninstall pipenv virtualenv virtualenv-clone pip -y; \
   fi && \
   apk --purge del .build-deps  && \
   rm -rf /root/.cache /root/.local \

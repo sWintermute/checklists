@@ -10,5 +10,8 @@ export default {
     },
     SET_EXCEL (state, payload) {
         state.excel = payload
+    },
+    SET_MAP (state, payload) {
+        state.address = payload
     }
 }
