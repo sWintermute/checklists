@@ -111,7 +111,7 @@ export default {
     state.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const response = await ApiService.get('api/v1/maps/')
+      const response = await ApiService.get('api/v1/maps')
       state.commit('SET_FILLED_LISTS', response["data"])
       // for (let currentValue of this.state.filledChecklists.filledLists) {
       //   // Получение заполненных чеклистов по id чеклиста
