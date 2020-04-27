@@ -112,7 +112,7 @@ export default {
     ApiService.setHeader()
     try {
       const response = await ApiService.get('api/v1/maps')
-      state.commit('SET_FILLED_LISTS', response["data"])
+      state.commit('SET_MAP', response["data"])
       // for (let currentValue of this.state.filledChecklists.filledLists) {
       //   // Получение заполненных чеклистов по id чеклиста
       //   const foo = await ApiService.get(`api/v1/response/${currentValue.id}`)
