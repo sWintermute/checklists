@@ -28,7 +28,7 @@
               l-tile-layer(
                 :url="url"
               )
-              l-marker(v-for="(item, i) in address" :lat-lng="item")
+              l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]")
 </template>
 
 <script>
@@ -82,12 +82,13 @@ export default {
   },
   created () {
     this.FETCH_CHECKLISTS()
-    this.FETCH_FILLED_CHECKLISTS()
+    this.FETCH_MAP()
   },
   methods: {
     ...mapActions([
       types.FETCH_MAP,
-      types.FETCH_CHECKLISTS
+      types.FETCH_CHECKLISTS,
+      types.FETCH_FILLED_CHECKLISTS
     ]),
     zoomUpdate (zoom) {
       this.currentZoom = zoom
