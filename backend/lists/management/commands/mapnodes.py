@@ -5,6 +5,7 @@ from django.utils import timezone
 from functools import lru_cache
 import requests
 import json
+import time
 
 
 class Command(BaseCommand):
@@ -13,6 +14,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         begin_time = timezone.now()
         self.stdout.write(self.style.SUCCESS(f'BEGIN ALL: {begin_time}'))
+        MapNode.objects.all().delete()
+        self.stdout.write(self.style.SUCCESS(f'Cleaned: {begin_time}'))
         bulk_mgr = BulkCreateManager(chunk_size=100)
 
         resps = [x for x in Response.objects.filter(
@@ -22,25 +25,23 @@ class Command(BaseCommand):
                    .filter(response__in=resps, question__text="Адрес")]
 
         for i, answer in enumerate(answers):
-            self.stdout.write(self.style.SUCCESS(
-                f'{i} {timezone.now()} BEGIN'))
+            req = json.dumps({"query": answer.body, "count": 1})
             self.stdout.write(self.style.SUCCESS(
                 f'{i} {timezone.now()} Send request'))
-            req = json.dumps({"query": answer.body, "count": 1})
+
             sugg = self.get_sugg(req)
             self.stdout.write(self.style.SUCCESS(
                 f'{i} {timezone.now()} Get response'))
-            self.stdout.write(self.style.SUCCESS(f'{i} {json.dumps(sugg)}'))
+
             bulk_mgr.add(MapNode(
-                name=sugg["name"],
-                lat=sugg["lat"],
-                lon=sugg["lon"],
+                name=sugg["suggestions"][0]["unrestricted_value"],
+                lat=sugg["suggestions"][0]["data"]["geo_lat"],
+                lon=sugg["suggestions"][0]["data"]["geo_lon"],
                 response=answer.response,
                 answer=answer
             ))
             self.stdout.write(self.style.SUCCESS(
                 f'{i} {timezone.now()} Object created'))
-            self.stdout.write(self.style.SUCCESS(f'{i} {timezone.now()} END'))
 
         bulk_mgr.done()
         end_time = timezone.now()
@@ -57,14 +58,6 @@ class Command(BaseCommand):
             'Authorization': 'Token 519fbd1afac8c2380f617046c95a6789a39fa021'
         }
 
-        res = requests.post(URL,
-                            headers=HEADERS,
-                            data=request_data,
-                            timeout=(1, 1)).json()
-
-        res = {
-            'name': res["suggestions"][0]["unrestricted_value"],
-            'lat': res["suggestions"][0]["data"]["geo_lat"],
-            'lon': res["suggestions"][0]["data"]["geo_lon"]
-        }
-        return res
+        return requests.post(URL,
+                             headers=HEADERS,
+                             data=request_data).json()
