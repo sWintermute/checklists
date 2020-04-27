@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
-from .models import Response, Survey, Question, Answer, Report, Attachment
+from .models import (Response, Survey, Question,
+                     Answer, Report, Attachment, MapNode)
+
 from import_export.admin import ImportExportModelAdmin
 
 
@@ -48,3 +50,8 @@ class ReportAdmin(ImportExportModelAdmin):
 @admin.register(Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ("name", 'description', 'timestamp', 'file')
+
+
+@admin.register(MapNode)
+class MapNodeAdmin(admin.ModelAdmin):
+    pass
