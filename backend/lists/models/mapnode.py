@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from .response import Response
+from .answer import Answer
 
 
 class MapNode(models.Model):
@@ -10,7 +11,14 @@ class MapNode(models.Model):
     response = models.ForeignKey(
         Response,
         on_delete=models.CASCADE,
-        verbose_name="Ответ",
+        verbose_name="Ответ на чеклист",
+        related_name="mapnodes",
+    )
+
+    answer = models.ForeignKey(
+        Answer,
+        on_delete=models.CASCADE,
+        verbose_name="Ответ на вопрос",
         related_name="mapnodes",
     )
 

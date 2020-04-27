@@ -147,7 +147,7 @@ class UserSerializer(serializers.ModelSerializer):
 class MapNodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.MapNode
-        fields = ('name', 'lat', 'lon', 'response')
+        fields = ('name', 'lat', 'lon', 'response', 'answer')
 
 # Begin report generation
 

@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from user_profile import models as umodels
 from . import models, serializers
 from datetime import datetime
 
@@ -82,23 +81,8 @@ class ReportViewset(GenericViewSet, RetrieveModelMixin):
     permission_classes = (AllowAny,)
 
 
-class MapReportViewset(GenericViewSet, ListModelMixin):
+class MapNodeViewset(GenericViewSet, ListModelMixin):
     authentication_classes = ()
     permission_classes = (AllowAny,)
     serializer_class = serializers.MapNodeSerializer
-
-    def list(self, request, *args, **kwargs):
-        """
-        Return a list of all users.
-        """
-        #  Паспорт дома ДЗД
-        #  Адрес
-
-        resps = [x for x in models.Response.objects.filter(
-            survey__name="Паспорт дома ДЗД")]
-
-        answers = [x for x in models.Answer.objects
-                   .filter(response__in=resps, question__text="Адрес")]
-
-        res = []
-        return Response(res)
+    queryset = models.MapNode.objects.all()
