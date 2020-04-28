@@ -11,6 +11,8 @@ psycopg2-binary = "==2.8.5"
 pillow = "==7.1.2"
 django-import-export = "==2.0.2"
 drf-yasg = "==1.17.1"
+django-q = "==1.2.1"
+django-q-email = "==5.0.1"
 
 [dev-packages]
 django-silk = "*"

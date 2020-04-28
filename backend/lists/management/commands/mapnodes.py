@@ -5,7 +5,6 @@ from django.utils import timezone
 from functools import lru_cache
 import requests
 import json
-import time
 
 
 class Command(BaseCommand):

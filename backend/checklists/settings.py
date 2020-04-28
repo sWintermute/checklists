@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'import_export',
+    'django_q'
 ]
 
 if DEBUG:
@@ -185,3 +186,22 @@ DJOSER = {
         'token_create': 'djoser.serializers.TokenCreateSerializer',
     },
 }
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 2,
+    'retry': 360,
+    'timeout': 300,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
+
+EMAIL_BACKEND = 'django_q_email.backends.DjangoQBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = get_env('EMAIL_USER')
+EMAIL_HOST_PASSWORD = get_env('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = get_env('EMAIL_USER')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
