@@ -5,6 +5,7 @@ from django.utils import timezone
 from functools import lru_cache
 import requests
 import json
+from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -32,15 +33,19 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(
                 f'{i} {timezone.now()} Get response'))
 
-            bulk_mgr.add(MapNode(
-                name=sugg["suggestions"][0]["unrestricted_value"],
-                lat=sugg["suggestions"][0]["data"]["geo_lat"],
-                lon=sugg["suggestions"][0]["data"]["geo_lon"],
-                response=answer.response,
-                answer=answer
-            ))
-            self.stdout.write(self.style.SUCCESS(
-                f'{i} {timezone.now()} Object created'))
+            try:
+                bulk_mgr.add(MapNode(
+                    name=sugg["suggestions"][0]["unrestricted_value"],
+                    lat=sugg["suggestions"][0]["data"]["geo_lat"],
+                    lon=sugg["suggestions"][0]["data"]["geo_lon"],
+                    response=answer.response,
+                    answer=answer
+                ))
+                self.stdout.write(self.style.SUCCESS(
+                    f'{i} {timezone.now()} Object created'))
+            except:
+                self.stdout.write(self.style.SUCCESS(
+                    f'{i} {sugg}'))
 
         bulk_mgr.done()
         end_time = timezone.now()
@@ -54,7 +59,7 @@ class Command(BaseCommand):
         HEADERS = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Token 519fbd1afac8c2380f617046c95a6789a39fa021'
+            'Authorization': f'Token {settings.DADATA_KEY}'
         }
 
         return requests.post(URL,
