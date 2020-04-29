@@ -64,7 +64,8 @@ if DEBUG:
 
 LOCAL_APPS = [
     'user_profile.apps.UserProfileConfig',
-    'lists'
+    'lists',
+    'notifications',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

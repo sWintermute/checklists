@@ -1,14 +1,7 @@
-from django.core.mail import send_mail
 from django.conf import settings
 import requests
 import json
 from . import models
-
-
-def send_email(title, message, dest_email):
-    return send_mail(title, message,
-                     settings.DEFAULT_FROM_EMAIL,
-                     [dest_email])
 
 
 def create_mapnode(answer):
