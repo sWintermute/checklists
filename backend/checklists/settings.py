@@ -35,7 +35,8 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'import_export',
-    'django_q'
+    'django_q',
+    'post_office',
 ]
 
 if DEBUG:
@@ -97,6 +98,22 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'post_office.template.backends.post_office.PostOfficeTemplates',
+        'APP_DIRS': True,
+        'DIRS': [],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
+            ]
+        }
+    }
 ]
 
 WSGI_APPLICATION = 'checklists.wsgi.application'
@@ -198,7 +215,7 @@ Q_CLUSTER = {
     'orm': 'default'
 }
 
-EMAIL_BACKEND = 'django_q_email.backends.DjangoQBackend'
+EMAIL_BACKEND = 'post_office.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = '587'
 EMAIL_HOST_USER = get_env('EMAIL_USER')
@@ -206,5 +223,13 @@ EMAIL_HOST_PASSWORD = get_env('EMAIL_PASSWORD')
 DEFAULT_FROM_EMAIL = get_env('EMAIL_USER')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+POST_OFFICE = {
+    'DEFAULT_PRIORITY': 'now',
+    'TEMPLATE_ENGINE': 'post_office',
+    'BACKENDS': {
+        'default': 'django_q_email.backends.DjangoQBackend',
+    }
+}
 
 DADATA_KEY = get_env('VUE_APP_DADATA_KEY')

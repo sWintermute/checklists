@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1400e4bb4d7e1030a0ad98d6821ca54bc9ed43508048f16c0e12a3b2bd4f48ed"
+            "sha256": "a50bb65661965422e122fa9c50b86c52c60feb5293ea46b5cff025d3c4509faf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -94,6 +94,13 @@
             ],
             "version": "==2.1.1"
         },
+        "django-post-office": {
+            "hashes": [
+                "sha256:a93ab4c65d5dbf3118a6c0f95d6e833dded1ed44ca5bec7053f01d5bac468a9f"
+            ],
+            "index": "pypi",
+            "version": "==3.4.0"
+        },
         "django-q": {
             "hashes": [
                 "sha256:2c96e950db3c1034f77a9c5904150407fbc4fbfb15ecc175619e2ee82e91a61e",
@@ -180,6 +187,13 @@
                 "sha256:f0a4641d3cf955324a89c04f3d94663aa4d638abe8f733ecd3582848e1c37035"
             ],
             "version": "==2.11.2"
+        },
+        "jsonfield": {
+            "hashes": [
+                "sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a",
+                "sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed"
+            ],
+            "version": "==3.1.0"
         },
         "markuppy": {
             "hashes": [
@@ -326,10 +340,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d",
-                "sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"
+                "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed",
+                "sha256:c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"
             ],
-            "version": "==2019.3"
+            "version": "==2020.1"
         },
         "pyyaml": {
             "hashes": [
@@ -655,10 +669,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d",
-                "sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"
+                "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed",
+                "sha256:c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"
             ],
-            "version": "==2019.3"
+            "version": "==2020.1"
         },
         "requests": {
             "hashes": [

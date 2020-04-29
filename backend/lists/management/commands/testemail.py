@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
+from post_office import mail
 from django.conf import settings
 
 
@@ -11,7 +11,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         dest_email = options["email"]
-        send_mail("Test email from checklists",
-                  "Test email from checklists",
-                  settings.DEFAULT_FROM_EMAIL,
-                  [dest_email])
+        mail.send(
+            dest_email,
+            settings.DEFAULT_FROM_EMAIL,
+            subject="Test email from checklists",
+            message="Hi there!",
+            html_message="Hi <strong>there</strong>!",
+        )

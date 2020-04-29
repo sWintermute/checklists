@@ -1,8 +1,12 @@
 from django.conf import settings
-from django.core.mail import send_mail
+from post_office import mail
 
 
-def send_email(title, message, dest_email):
-    return send_mail(title, message,
-                     settings.DEFAULT_FROM_EMAIL,
-                     [dest_email])
+def send_email(dest_email, title, message, html_message):
+    return mail.send(
+        dest_email,
+        settings.DEFAULT_FROM_EMAIL,
+        subject=title,
+        message=message,
+        html_message=html_message,
+    )
