@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 ))
                 self.stdout.write(self.style.SUCCESS(
                     f'{i} {timezone.now()} Object created'))
-            except:
+            except Exception:
                 self.stdout.write(self.style.SUCCESS(
                     f'{i} {sugg}'))
 

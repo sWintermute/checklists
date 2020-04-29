@@ -71,7 +71,8 @@ class Question(models.Model):
     choices = models.TextField(
         "Варианты ответа", blank=True, null=True, help_text=CHOICES_HELP_TEXT
     )
-    key_choices = models.TextField("Варианты ответа для попадания в отчет", blank=True, null=True)
+    key_choices = models.TextField(
+        "Варианты ответа для попадания в отчет", blank=True, null=True)
 
     class Meta(object):
         verbose_name = "Вопрос"
