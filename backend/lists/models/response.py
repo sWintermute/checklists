@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.contenttypes import fields
 
 from .attachment import Attachment
 from .survey import Survey
+from django_q.tasks import async_task
+from notifications import tasks
+
 
 try:
     from django.conf import settings
@@ -49,3 +50,28 @@ class Response(models.Model):
         msg = "Response to {} by {}".format(self.survey, self.user)
         msg += " on {}".format(self.created)
         return msg
+
+    def save(self,
+             force_insert=False,
+             force_update=False,
+             using=None,
+             update_fields=None):
+
+        res = super().save(force_insert=force_insert,
+                           force_update=force_update,
+                           using=using,
+                           update_fields=update_fields)
+        from .answer import Answer
+        from .question import Question
+        answers = [x for x in Answer.objects
+                   .filter(response=self)
+                   .only('body', 'question_id', 'response_id')
+                   ]
+
+        questions = [x for x in Question.objects
+                     .filter(survey=self.survey).order_by()
+                     ]
+
+        tasks.basic_report(self, answers, questions)
+        # async_task(notifications.tasks.basic.basic_report, self)
+        return res
