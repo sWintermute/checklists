@@ -161,6 +161,17 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
         super(ReportQuestionSerializer, self).__init__(*args, **kwargs)
 
     notes = serializers.SerializerMethodField()
+    answer = serializers.SerializerMethodField()
+
+    def get_answer(self, obj):
+        dict_response_answers = defaultdict(list)
+        for x in self.answers:
+            dict_response_answers[x.response_id].append(x)
+        for response in self.responses:
+            response_answers = dict_response_answers[response.id]
+            for answer in [x for x in response_answers
+                           if x.question_id is obj.id]:
+                return answer.body
 
     def get_notes(self, obj):
         key_choices = obj.key_choices.split(";")
@@ -191,7 +202,8 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'choices', 'key_choices', 'notes')
+        fields = ('id', 'text', 'order', 'choices',
+                  'key_choices', 'notes', 'answer')
 
 
 class ReportSurveySerializer(serializers.ModelSerializer):
