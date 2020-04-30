@@ -9,7 +9,7 @@
             "host": "172.25.0.5",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}",
+                    "localRoot": "${workspaceFolder}/backend",
                     "remoteRoot": "."
                 }
             ]
