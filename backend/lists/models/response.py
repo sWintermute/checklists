@@ -72,6 +72,7 @@ class Response(models.Model):
                      .filter(survey=self.survey).order_by()
                      ]
 
+        # TODO: fix async
         tasks.basic_report(self, answers, questions)
-        # async_task(notifications.tasks.basic.basic_report, self)
+        # async_task(tasks.basic_report, self, answers, questions)
         return res
