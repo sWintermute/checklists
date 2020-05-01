@@ -137,6 +137,17 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         return response
 
+    def validate(self, attrs):
+        in_questions_count = len(
+            [x for x in attrs['survey'].questions.all() if x.required is True])
+
+        in_response_count = len(
+            [x for x in attrs["answers"] if x.question.required is True])
+        if in_questions_count != in_response_count:
+            raise serializers.ValidationError(
+                "Не все обязательные поля заполнены")
+        return super().validate(attrs)
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
