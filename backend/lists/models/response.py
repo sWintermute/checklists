@@ -61,18 +61,6 @@ class Response(models.Model):
                            force_update=force_update,
                            using=using,
                            update_fields=update_fields)
-        from .answer import Answer
-        from .question import Question
-        answers = [x for x in Answer.objects
-                   .filter(response=self)
-                   .only('body', 'question_id', 'response_id')
-                   ]
 
-        questions = [x for x in Question.objects
-                     .filter(survey=self.survey).order_by()
-                     ]
-
-        # TODO: fix async
-        tasks.basic_report(self, answers, questions)
-        # async_task(tasks.basic_report, self, answers, questions)
+        async_task(tasks.basic_report, self)
         return res

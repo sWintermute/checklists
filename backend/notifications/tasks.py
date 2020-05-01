@@ -13,7 +13,7 @@ def get_user_text(obj):
     return res
 
 
-def basic_report(response, answers, questions):
+def basic_report(response):
     from .models import Subscription
     subscriptions = Subscription.objects.filter(
         checklists__in=[response.survey])
@@ -25,6 +25,17 @@ def basic_report(response, answers, questions):
 
     if not dests:
         return
+
+    from lists.models import Answer
+    from lists.models import Question
+    answers = [x for x in Answer.objects
+               .filter(response=response)
+               .only('body', 'question_id', 'response_id')
+               ]
+
+    questions = [x for x in Question.objects
+                 .filter(survey=response.survey).order_by()
+                 ]
 
     from lists import serializers
     report = serializers.ReportSurveySerializer([response.survey],

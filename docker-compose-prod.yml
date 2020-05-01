@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   backend:
@@ -60,6 +60,7 @@ services:
     user: ${CURRENT_UID}
     volumes:
       - ./backend:/app/
+      - ./static:/app/static
     restart: on-failure
     entrypoint: python3
     command: ./manage.py qcluster
@@ -77,13 +78,12 @@ networks:
       config:
         - subnet: 172.25.0.0/16
 
-
 volumes:
   checklists_db_data:
     external:
       name: checklists_db_data
   checklists_db_backups:
-    external:   
+    external:
       name: checklists_db_backups
   checklists_media:
     external:
