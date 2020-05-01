@@ -5,34 +5,35 @@ import download from 'downloadjs'
 import XLSX from 'xlsx'
 
 export default {
-  async [types.FETCH_FILLED_CHECKLIST](state, { id }) {
+  async [types.FETCH_FILLED_CHECKLIST] (state, { id }) {
     state.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
       const response = await ApiService.get(`api/v1/response/${id}`)
-      state.commit('SET_FILLED_LIST', response["data"])
+      state.commit('SET_FILLED_LIST', response.data)
       state.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       state.commit('SET_LOADING_STATUS', false)
       console.log(error.response)
     }
   },
-  async [types.FETCH_FILLED_CHECKLISTS](state) {
+  async [types.FETCH_FILLED_CHECKLISTS] (state) {
     try {
       state.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const response = (await Promise.all([
-        ApiService.get('api/v1/responses'),
+        ApiService.get('api/v1/responses/?page=1'),
         await new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
-      state.commit('SET_FILLED_LISTS', response["data"])
+      console.log(response.data.results)
+      state.commit('SET_FILLED_LISTS', response.data.results)
       state.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       state.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   },
-  async [types.CREATE_EXCEL](store, { excelData }) {
+  async [types.CREATE_EXCEL] (store, { excelData }) {
     try {
       store.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
@@ -113,34 +114,6 @@ export default {
     try {
       const response = await ApiService.get('api/v1/maps')
       state.commit('SET_MAP', response["data"])
-      // for (let currentValue of this.state.filledChecklists.filledLists) {
-      //   // Получение заполненных чеклистов по id чеклиста
-      //   const foo = await ApiService.get(`api/v1/response/${currentValue.id}`)
-      //   // Получение обьекта с адресом из answer заполненного чеклиста
-      //   const bar = await foo["data"].answers.filter(item => item.question === 1)[0]
-      //   console.log(this.state.filledChecklists.filledLists)
-      //   let lat, lon
-      //   if (bar) {
-      //     // Подстановка токена для dadata
-      //     ApiService.setHeader(process.env.VUE_APP_DADATA_KEY)
-      //     // Запрос на получение lat && lon от dadata
-      //     try {
-      //       const address = await ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-      //         count: 1,
-      //         query: "Кемеровская область - Кузбасс," + bar["body"],
-      //         locations_boost: [{ kladr_id: "4200001200000" }]
-      //       })
-
-      //       lat = address["data"]["suggestions"][0]["data"]["geo_lat"]
-      //       lon = address["data"]["suggestions"][0]["data"]["geo_lon"]
-
-      //       state.commit('SET_ADDRESS', [lat, lon])
-      //     } catch {
-      //       console.log("Error")
-      //     }
-      //     console.log(this.state.filledChecklists.address)
-      //   }
-      // }
       state.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       state.commit('SET_LOADING_STATUS', false)

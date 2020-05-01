@@ -75,8 +75,7 @@
                             v-btn(color="blue darken-1" text @click="sendReport") Создать
             template(v-slot:body="{ items }")
               tbody
-                //- router-link(v-for="(item, i) in items" :key="i" tag="tr" :to="'response/' + item.id + '/'")
-                tr(v-for="(item, i) in items" :key="i")
+                router-link(v-for="(item, i) in items" :key="i" tag="tr" :to="'response/' + item.id + '/'")
                   td {{ item.id }}
                   td(class="text-xs-right") {{ item.created | date }}
                   td(v-text="test(item.survey)")

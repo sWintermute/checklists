@@ -17,7 +17,7 @@ const ApiService = {
     Vue.axios.defaults.headers.common.Authorization = null
   },
   get (resource, id = '', payload) {
-    return Vue.axios.get(`${resource}/${id ? id + '/' : ''}`, payload || {})
+    return Vue.axios.get(`${resource}${id ? '/' + id + '/' : ''}`, payload || {})
   },
   post (resource, params) {
     return Vue.axios.post(`${resource}/`, params)
