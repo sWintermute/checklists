@@ -61,17 +61,9 @@ class Response(models.Model):
                            force_update=force_update,
                            using=using,
                            update_fields=update_fields)
-        from .answer import Answer
-        from .question import Question
-        answers = [x for x in Answer.objects
-                   .filter(response=self)
-                   .only('body', 'question_id', 'response_id')
-                   ]
 
-        questions = [x for x in Question.objects
-                     .filter(survey=self.survey).order_by()
-                     ]
-
-        tasks.basic_report(self, answers, questions)
-        # async_task(notifications.tasks.basic.basic_report, self)
+        # TODO: refact
+        # For debug support: sync run
+        # tasks.basic_report(self)
+        async_task(tasks.basic_report, self)
         return res

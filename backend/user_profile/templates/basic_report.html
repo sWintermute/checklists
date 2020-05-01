@@ -1,0 +1,73 @@
+{% load post_office %}
+<header>
+    <table>
+        <tr>
+            <td>
+                <img src="{% inline_image '/app/static/blue-tick2.png' %}" height="42" width="42" />
+            </td>
+            <td>
+                Checklists
+            </td>
+            <td>
+                Создан: {{created}}
+            </td>
+            <td>
+                Обновлен: {{updated}}
+            </td>
+            <td>
+                Линк с {{response_id}} для просмотра/редактирования
+            </td>
+        </tr>
+    </table>
+</header>
+
+<main>
+    <table border="1">
+        <caption>
+            <h2>Чеклист "{{name}}" от {{created}} - {{user}}</h2>
+        </caption>
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Вопрос</th>
+                <th>Варианты</th>
+                <th>Ответ</th>
+                <th>Замечания</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td> {{ question.order }}</td>
+                <td> {{ question.text }}</td>
+                <td> {{ question.choices }}</td>
+                <td>
+                    {%  if question.choices %}
+                    {{ question.answer }}
+                    {% endif %}
+                </td>
+                <td>{% if question.notes %}
+                    {% for note in question.notes %}
+                    {% for key in note.keys %}
+                    {{ key.name }}: {{ key.answer }}<br>
+                    {% endfor %}
+                    {% endfor %}
+                    {% elif not question.choices %}
+                    {{ question.answer }}
+                    {% else %}
+                    ---
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+
+<footer>
+    <table>
+        <tr>
+            <td>ООО "УК "ЛэндФинанс"</td>
+        </tr>
+    </table>
+</footer>

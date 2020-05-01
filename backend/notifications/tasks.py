@@ -1,32 +1,71 @@
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from post_office import mail
-from rest_framework.renderers import JSONRenderer
+from django.template.loader import get_template
+import pytz
 
 
-def send_email(dest_email, title, message, html_message):
-    return mail.send(
-        dest_email,
-        settings.DEFAULT_FROM_EMAIL,
-        subject=title,
-        message=message,
-        html_message=html_message,
-    )
+def get_user_text(obj):
+    email = obj.user.email
+    if obj.user.first_name and obj.user.last_name:
+        res = f"{obj.user.first_name[0]}. {obj.user.last_name} <{email}>"
+    else:
+        res = email
+    return res
 
 
-def basic_report(response, answers, questions):
+def basic_report(response):
+    from .models import Subscription
+    subscriptions = Subscription.objects.filter(
+        checklists__in=[response.survey])
+
+    dests = set()
+    for subscription in subscriptions:
+        for user in subscription.users.all():
+            dests.add(user.email)
+
+    if not dests:
+        return
+
+    from lists.models import Answer
+    from lists.models import Question
+    answers = [x for x in Answer.objects
+               .filter(response=response)
+               .only('body', 'question_id', 'response_id')
+               ]
+
+    questions = [x for x in Question.objects
+                 .filter(survey=response.survey).order_by()
+                 ]
+
     from lists import serializers
     report = serializers.ReportSurveySerializer([response.survey],
                                                 responses=[response],
                                                 answers=answers,
                                                 questions=questions,
-                                                many=True).data
-    fl = False
-    for question in report[0]["questions"]:
-        if question["notes"] is None or question["notes"] is []:
-            fl = True
+                                                many=True).data[0]
+    report["created"] = response.created
+    report["updated"] = response.updated
+    report["user"] = get_user_text(response)
+    report["response_id"] = response.id
+
+    fl = True
+    for question in report["questions"]:
+        if question["notes"] is not None and question["notes"] is not []:
+            fl = False
 
     if fl:
-        send_email()
+        return
 
-    json = JSONRenderer().render(report)
-    print(json)
+    tz = pytz.timezone('Asia/Novokuznetsk')
+    created = report["created"].astimezone(tz).strftime("%d.%m.%Y %H:%M")
+    for dest in dests:
+        subject = f'Чеклист "{report["name"]}" от {created} - {report["user"]}'
+        body = "Plain text body"
+        email_message = EmailMultiAlternatives(subject, body,
+                                               settings.DEFAULT_FROM_EMAIL,
+                                               [dest])
+        template = get_template('basic_report.html', using='post_office')
+        html = template.render(report)
+        email_message.attach_alternative(html, 'text/html')
+        template.attach_related(email_message)
+        email_message.send()
