@@ -62,5 +62,8 @@ class Response(models.Model):
                            using=using,
                            update_fields=update_fields)
 
+        # TODO: refact
+        # For debug support: sync run
+        # tasks.basic_report(self)
         async_task(tasks.basic_report, self)
         return res

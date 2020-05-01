@@ -46,6 +46,7 @@ def basic_report(response):
     report["created"] = response.created
     report["updated"] = response.updated
     report["user"] = get_user_text(response)
+    report["response_id"] = response.id
 
     fl = True
     for question in report["questions"]:
