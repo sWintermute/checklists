@@ -57,7 +57,7 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
 class ResponseViewset(GenericViewSet, CreateModelMixin,
                       RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = models.Response.objects.prefetch_related(
-        'answers', 'answers__question').all()
+        'answers', 'answers__question', 'survey').all()
     serializer_class = serializers.ResponseSerializer
 
     def perform_create(self, serializer):
