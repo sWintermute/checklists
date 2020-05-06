@@ -61,7 +61,6 @@
                                             v-model="answers[question.id]"
                                             label="Введите текст..."
                                         )
-
                     v-card-actions(class="justify-center px-6")
                         v-btn(class="ma-2" tile outlined color="primary") Очистить
                         v-btn(tile color="primary" @click="sendChecklist") Отправить

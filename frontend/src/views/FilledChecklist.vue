@@ -18,7 +18,7 @@
                         dark
                         flat
                     )
-                        v-toolbar-title {{ filledList.id }}
+                        v-toolbar-title Ответ {{ filledList.id }}
                     v-card-text(class="px-6 pt-6 pb-0")
                       v-form
                         v-container
@@ -32,9 +32,9 @@
                                 :label="answer.question_text"
                                 :value="answer.body"
                               )
-                    v-card-actions(class="justify-center px-6")
-                      v-btn(class="ma-2" tile outlined color="primary") Очистить
-                      v-btn(tile color="primary" @click="") Отправить
+                    v-card-actions
+                      v-spacer
+                      v-btn(tile color="primary" @click="UPDATE_FILLED_CHECKLIST") Сохранить
 </template>
 
 <script>
@@ -67,7 +67,10 @@ export default {
     })
   },
   methods: {
-    ...mapActions([types.FETCH_FILLED_CHECKLIST])
+    ...mapActions([
+      types.FETCH_FILLED_CHECKLIST,
+      types.UPDATE_FILLED_CHECKLIST,
+    ]),
   }
 }
 </script>

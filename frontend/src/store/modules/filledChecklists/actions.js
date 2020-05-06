@@ -25,7 +25,6 @@ export default {
         ApiService.get('api/v1/responses/?page=1'),
         await new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
-      console.log(response.data.results)
       state.commit('SET_FILLED_LISTS', response.data.results)
       state.commit('SET_LOADING_STATUS', false)
     } catch (error) {
@@ -120,5 +119,20 @@ export default {
       console.log(error.response)
     }
   },
-  async [types.CREATE_FILLED_CHECKLISTS]({ commit }) { }
+  async [types.UPDATE_FILLED_CHECKLIST]({ commit, state }) {
+    commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
+    try {
+      const { id, survey, answers } = state.filledList
+      const response = await ApiService.put('api/v1/response', id, {
+        survey,
+        answers
+      })
+      // state.commit('SET_FILLED_LIST', response["data"])
+      commit('SET_LOADING_STATUS', false)
+    } catch (error) {
+      commit('SET_LOADING_STATUS', false)
+      console.log(error)
+    }
+  }
 }
