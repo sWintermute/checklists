@@ -24,7 +24,11 @@ export default {
         });
       }
       for (const [key, value] of Object.entries(state.answers)) {
-        state.list.answers.push({ question: key, body: value });
+        state.list.questions.forEach((question) => {
+          if (question.id == key) {
+            state.list.answers.push({ question, body: value });
+          }
+        })
       }
       ApiService.setHeader();
       const response = await ApiService.post('/api/v1/response', state.list);
@@ -37,12 +41,10 @@ export default {
     } catch (error) {
       Vue.$toast.open({
         message: [
-          'Невозможно создать чеклист',
-          'Статус: ' + error.response.status,
+          'Невозможно создать чеклист'
         ].join('.'),
         type: 'error',
       });
-      console.log(error.response);
       commit('SET_LOADING_STATUS', false);
       router.push('/');
     }
