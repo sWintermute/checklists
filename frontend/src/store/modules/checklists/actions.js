@@ -3,12 +3,9 @@ import router from '@/router';
 import ApiService from '@/services/api.js';
 
 export default {
-  async SEND_CHECKLIST (
-    { commit, state },
-    { fileList, userProfile, listId },
-  ) {
+  async SEND_CHECKLIST ({ commit, state }, { fileList, userProfile, listId }) {
     try {
-      commit('SET_LOADING_STATUS', true);
+      this.commit('SET_LOADING_STATUS', true);
       state.list.id = parseInt(listId);
       state.list.created = new Date();
       state.list.updated = new Date();
@@ -32,7 +29,7 @@ export default {
         message: 'Чеклист успешно создан!',
         type: 'success',
       });
-      commit('SET_LOADING_STATUS', false);
+      this.commit('SET_LOADING_STATUS', false);
     } catch (error) {
       Vue.$toast.open({
         message: [
@@ -42,22 +39,23 @@ export default {
         type: 'error',
       });
       console.log(error.response);
-      commit('SET_LOADING_STATUS', false);
+      this.commit('SET_LOADING_STATUS', false);
       router.push('/');
     }
   },
   FETCH_CHECKLIST ({ commit }, listId) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING_STATUS', true);
+      this.commit('SET_LOADING_STATUS', true);
       ApiService.setHeader();
       ApiService.get('api/v1/lists', listId)
         .then(response => {
           const list = response.data;
           commit('SET_LIST', list);
-          commit('SET_LOADING_STATUS', false);
+          this.commit('SET_LOADING_STATUS', false);
           resolve(response);
         })
         .catch(error => {
+          this.commit('SET_LOADING_STATUS', false);
           console.log(error.response);
           reject(error);
         });
@@ -65,16 +63,17 @@ export default {
   },
   FETCH_CHECKLISTS ({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING_STATUS', true);
+      this.commit('SET_LOADING_STATUS', true);
       ApiService.setHeader();
       ApiService.get('api/v1/lists')
         .then(response => {
           const lists = response.data;
           commit('SET_LISTS', lists);
-          commit('SET_LOADING_STATUS', false);
+          this.commit('SET_LOADING_STATUS', false);
           resolve(response);
         })
         .catch(error => {
+          this.commit('SET_LOADING_STATUS', false);
           console.log(error.response);
           reject(error);
         });
@@ -90,13 +89,13 @@ export default {
           query: search,
         },
       )
-        .then(res => {
-          commit('SET_ENTRIES', res.data.suggestions);
-          resolve(res);
+        .then(response => {
+          commit('SET_ENTRIES', response.data.suggestions);
+          resolve(response);
         })
-        .catch(err => {
-          console.log(err);
-          reject(err);
+        .catch(error => {
+          console.log(error);
+          reject(error);
         });
     });
   },

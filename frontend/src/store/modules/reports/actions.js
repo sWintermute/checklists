@@ -3,12 +3,12 @@ import ApiService from '@/services/api.js'
 export default {
   FETCH_REPORT ({ commit }, reportId) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.get('api/v1/report', reportId)
         .then(response => {
           const report = response.data
           commit('SET_REPORT', report)
-          commit('SET_LOADING_STATUS', false)
+          this.commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
           console.log(error.response)
@@ -18,13 +18,13 @@ export default {
   },
   FETCH_REPORTS ({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       ApiService.get('api/v1/reports')
         .then(response => {
           const reports = response.data
           commit('SET_REPORTS', reports)
-          commit('SET_LOADING_STATUS', false)
+          this.commit('SET_LOADING_STATUS', false)
           resolve(response)
         }).catch(error => {
           console.log(error.response)
@@ -35,11 +35,11 @@ export default {
   CREATE_REPORT ({ commit, dispatch }, report) {
     return new Promise((resolve, reject) => {
       ApiService.setHeader();
-      commit('SET_LOADING_STATUS', true);
+      this.commit('SET_LOADING_STATUS', true);
       ApiService.post("api/v1/reports", report)
         .then(response => {
-          commit('SET_LOADING_STATUS', false);
-          dispatch('FETCH_REPORTS')
+          dispatch('FETCH_REPORTS');
+          this.commit('SET_LOADING_STATUS', false);
           resolve(response);
         }).catch(error => {
           console.log(error);

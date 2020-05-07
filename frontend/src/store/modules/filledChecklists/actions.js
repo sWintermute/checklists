@@ -12,28 +12,28 @@ export default {
       state.commit('SET_FILLED_LIST', response.data)
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error.response)
     }
   },
   async FETCH_FILLED_CHECKLISTS (state) {
     try {
-      state.commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const response = (await Promise.all([
         ApiService.get('api/v1/responses/?page=1'),
         await new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
       state.commit('SET_FILLED_LISTS', response.data.results)
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   },
   async CREATE_EXCEL (store, { excelData }) {
     try {
-      store.commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const { data: responses } = await ApiService.get('api/v1/responses', '', {
         params: {
@@ -100,26 +100,26 @@ export default {
       XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
       download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
-      store.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      store.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   },
   async FETCH_MAP (state) {
-    state.commit('SET_LOADING_STATUS', true)
+    this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
       const response = await ApiService.get('api/v1/maps')
       state.commit('SET_MAP', response["data"])
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error.response)
     }
   },
   async UPDATE_FILLED_CHECKLIST ({ commit, state }) {
-    commit('SET_LOADING_STATUS', true)
+    this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
       const { id, survey, answers } = state.filledList
@@ -128,9 +128,9 @@ export default {
         answers
       })
       // state.commit('SET_FILLED_LIST', response["data"])
-      commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   }

@@ -6,14 +6,15 @@ import tokenService from '@/services/tokenService.js'
 export default {
   PROFILE ({ commit }) {
     return new Promise((resolve, reject) => {
-      commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       return ApiService.get('api/users/me')
         .then(({ data }) => {
           commit('SET_USER', data)
-          commit('SET_LOADING_STATUS', false)
+          this.commit('SET_LOADING_STATUS', false)
           resolve(data)
         }).catch(error => {
+          this.commit('SET_LOADING_STATUS', false)
           console.log(error.response)
           reject(error)
         })
@@ -22,7 +23,7 @@ export default {
   LOGIN ({ commit }, user) {
     return new Promise((resolve, reject) => {
       ApiService.removeHeader()
-      commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.post('api/auth/token/login', user)
         .then((response) => {
           tokenService.saveToken(response.data["auth_token"])
@@ -42,14 +43,14 @@ export default {
           reject(error)
         })
         .finally(() => {
-          commit('SET_LOADING_STATUS', false)
+          this.commit('SET_LOADING_STATUS', false)
         })
     })
   },
   LOGOUT ({ commit }) {
     return new Promise((resolve, reject) => {
       ApiService.setHeader()
-      commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.post('api/auth/token/logout')
         .then((response) => {
           ApiService.removeHeader()
@@ -61,7 +62,7 @@ export default {
           reject(error)
         })
         .finally(() => {
-          commit('SET_LOADING_STATUS', false)
+          this.commit('SET_LOADING_STATUS', false)
           tokenService.destroyToken()
         })
     })

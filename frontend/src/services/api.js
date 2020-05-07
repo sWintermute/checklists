@@ -17,13 +17,13 @@ const ApiService = {
     Vue.axios.defaults.headers.common.Authorization = null
   },
   get (resource, id = '', payload) {
-    return Vue.axios.get(`${resource}${id ? '/' + id + '/' : ''}`, payload || {})
+    return Vue.axios.get(`${resource}/${id ? `${ id }/` : ''}`, payload || {})
   },
   post (resource, params) {
     return Vue.axios.post(`${resource}/`, params)
   },
   delete (resource, id = '') {
-    return Vue.axios.delete(`${resource}/${id ? id + '/' : ''}`)
+    return Vue.axios.delete(`${resource}/${id ? `${ id }/` : ''}`)
   },
   put (resource, id = '', payload) {
     return Vue.axios.put(`${resource}/${id ? `${ id }/` : ''}`, payload)
