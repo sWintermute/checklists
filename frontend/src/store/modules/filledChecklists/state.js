@@ -1,6 +1,7 @@
 export default () => ({
     filledList: {
-        answers: []
+        answers: [],
+        photo: []
     },
     filledLists: [],
     address: [],

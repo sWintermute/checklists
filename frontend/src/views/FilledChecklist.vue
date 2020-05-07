@@ -28,9 +28,39 @@
                               v-for="(answer, i) in answers"
                               :key="i"
                             )
-                              v-text-field(
-                                :label="answer.question_text"
-                                v-model="answer.body"
+                              template(v-if="answer.question.type === 'address-autocomplete'")
+                                autocomplete(
+                                  :id="answer.question.id"
+                                  :title="answer.question.text"
+                                )
+                              template(v-else-if="answer.question.type === 'textarea'")
+                                v-textarea(
+                                  solo
+                                  :label="answer.question.text"
+                                  class="mt-3"
+                                  v-model="answer.body"
+                                )
+                              template(v-else-if="answer.question.type === 'radio'")
+                                header {{ answer.question.text }}
+                                v-radio-group(v-model="answer.body")
+                                  v-radio(
+                                    v-for="n in answer.question.choices.split(';')"
+                                    :key="n"
+                                    :label="n"
+                                    :value="n"
+                                  )
+                              template(v-else)
+                                v-text-field(
+                                  v-model="answer.body"
+                                  :label="answer.question.text"
+                                )
+                            v-col(
+                              cols="12"
+                            )
+                              uploader(
+                                v-model="photo"
+                                title="Загрузите фото"
+                                :autoUpload="false"
                               )
                     v-card-actions
                       v-spacer
@@ -38,14 +68,24 @@
 </template>
 
 <script>
-import { createHelpers } from "vuex-map-fields";
+import { createHelpers } from "vuex-map-fields"
 import { mapState, mapActions } from 'vuex'
-import { mapMultiRowFields } from 'vuex-map-fields';
+import { mapMultiRowFields, mapFields } from 'vuex-map-fields'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import Uploader from '@/components/checklist/Uploader.vue'
+import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 
 export default {
   name: 'FilledChecklist',
+  components: {
+    Uploader,
+    ValidationObserver,
+    ValidationProvider,
+    autocomplete
+  },
   data: () => ({}),
   computed: {
+    ...mapFields(`filledChecklists`, { photo: 'filledList.photo' }),
     ...mapMultiRowFields(`filledChecklists`, { answers: 'filledList.answers' }),
     ...mapState({
       filledList: state => state.filledChecklists.filledList

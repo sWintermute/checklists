@@ -8,7 +8,7 @@ export default {
     this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const response = await ApiService.get(`api/v1/response/${id}`)
+      const response = await ApiService.get(`api/v1/response`, id)
       state.commit('SET_FILLED_LIST', response.data)
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
@@ -21,10 +21,10 @@ export default {
       this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const response = (await Promise.all([
-        ApiService.get('api/v1/responses/?page=1'),
+        ApiService.get('api/v1/responses'),
         await new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
-      state.commit('SET_FILLED_LISTS', response.data.results)
+      state.commit('SET_FILLED_LISTS', response.data)
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       this.commit('SET_LOADING_STATUS', false)
@@ -122,10 +122,11 @@ export default {
     this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const { id, survey, answers } = state.filledList
+      const { id, survey, answers, photo } = state.filledList
       const response = await ApiService.put('api/v1/response', id, {
         survey,
-        answers
+        answers,
+        photo
       })
       // state.commit('SET_FILLED_LIST', response["data"])
       this.commit('SET_LOADING_STATUS', false)

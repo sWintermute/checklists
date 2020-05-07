@@ -88,19 +88,7 @@ export default {
       FETCH_MAP: 'filledChecklists/FETCH_MAP',
       FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
       FETCH_FILLED_CHECKLISTS: 'filledChecklists/FETCH_FILLED_CHECKLISTS'
-    }),
-    zoomUpdate (zoom) {
-      this.currentZoom = zoom
-    },
-    centerUpdate (center) {
-      this.currentCenter = center
-    },
-    showLongText () {
-      this.showParagraph = !this.showParagraph
-    },
-    innerClick () {
-      alert('Click!')
-    }
+    })
   }
 }
 </script>
