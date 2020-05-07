@@ -17,11 +17,10 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
     queryset = models.Response.objects.prefetch_related(
         'answers', 'answers__question', 'user').all()
     serializer_class = serializers.ResponseListSerializer
+    pagination_class = PageNumberPagination
+    page_size = 50
 
     def list(self, request, *args, **kwargs):
-        self.pagination_class = PageNumberPagination
-        self.page_size = 50
-        self.pagination_class.page_size = 50
         queryset = self.queryset
 
         fr = request.query_params.get("from", None)
