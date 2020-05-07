@@ -60,8 +60,8 @@ class ResponseViewset(GenericViewSet, CreateModelMixin,
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    def perform_update(self, serializer):
-        serializer.update(user=self.request.user)
+    # def perform_update(self, serializer):
+    #     serializer.update(user=self.request.user)
 
 
 # Report viewsets
