@@ -50,10 +50,8 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import types from '@/store/types'
 import { format } from 'date-fns'
 
-// import Vue from 'vue'
 import download from 'downloadjs'
 import JsonExcel from 'vue-json-excel'
 import XLSX from 'xlsx'
@@ -91,13 +89,17 @@ export default {
     ...mapState({
       report: state => state.reports.report
     }),
-    ...mapGetters(['isLoading'])
+    ...mapGetters({
+      isLoading: 'isLoading'
+    })
   },
   created () {
     this.FETCH_REPORT(this.$route.params.id)
   },
   methods: {
-    ...mapActions([types.FETCH_REPORT])
+    ...mapActions({
+      FETCH_REPORT: 'reports/FETCH_REPORT'
+    })
   }
 }
 </script>

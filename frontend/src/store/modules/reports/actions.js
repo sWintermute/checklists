@@ -1,8 +1,7 @@
 import ApiService from '@/services/api.js'
-import types from '@/store/types'
 
 export default {
-  [types.FETCH_REPORT] ({ commit }, reportId) {
+  FETCH_REPORT ({ commit }, reportId) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true)
       ApiService.get('api/v1/report', reportId)
@@ -17,7 +16,7 @@ export default {
         })
     })
   },
-  [types.FETCH_REPORTS] ({ commit }) {
+  FETCH_REPORTS ({ commit }) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
@@ -33,14 +32,14 @@ export default {
         })
       })
   },
-  [types.CREATE_REPORT]({ commit, dispatch }, report) {
+  CREATE_REPORT ({ commit, dispatch }, report) {
     return new Promise((resolve, reject) => {
       ApiService.setHeader();
       commit('SET_LOADING_STATUS', true);
       ApiService.post("api/v1/reports", report)
         .then(response => {
           commit('SET_LOADING_STATUS', false);
-          dispatch(types.FETCH_REPORTS)
+          dispatch('FETCH_REPORTS')
           resolve(response);
         }).catch(error => {
           console.log(error);
@@ -48,11 +47,11 @@ export default {
         })
     })
   },
-  async [types.REMOVE_REPORT] ({ dispatch }, reportId) {
+  async REMOVE_REPORT ({ dispatch }, reportId) {
     ApiService.setHeader()
     try {
       await ApiService.delete('api/v1/reports', reportId)
-      await dispatch(types.FETCH_REPORTS)
+      await dispatch('FETCH_REPORTS')
     } catch {}
   }
 }

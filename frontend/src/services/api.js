@@ -26,7 +26,6 @@ const ApiService = {
     return Vue.axios.delete(`${resource}/${id ? id + '/' : ''}`)
   },
   put (resource, id = '', payload) {
-    console.log(Vue.axios, 123)
     return Vue.axios.put(`${resource}/${id ? `${ id }/` : ''}`, payload)
   }
 }

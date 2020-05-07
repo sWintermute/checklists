@@ -41,7 +41,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import types from '@/store/types'
+
 import { mdiAccountCircle } from '@mdi/js'
 
 export default {
@@ -50,13 +50,17 @@ export default {
     mdiAccountCircle
   }),
   computed: {
-    ...mapGetters(['userProfile'])
+    ...mapGetters({
+        userProfile: 'user/userProfile'
+    })
   },
   created () {
     this.PROFILE()
   },
   methods: {
-    ...mapActions([types.PROFILE])
+    ...mapActions({
+        PROFILE: 'user/PROFILE'
+    })
   }
 }
 </script>

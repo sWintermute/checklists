@@ -98,14 +98,14 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { format } from 'date-fns'
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
+
 import {
   mdiDelete,
   mdiPencil
 } from '@mdi/js'
 
 export default {
-  name: 'Checklists',
+  name: 'FilledChecklists',
   components: {
     ValidationObserver,
     ValidationProvider
@@ -175,7 +175,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions([types.FETCH_FILLED_CHECKLISTS, types.FETCH_CHECKLISTS, types.CREATE_EXCEL]),
+    ...mapActions({
+      FETCH_FILLED_CHECKLISTS: 'filledChecklists/FETCH_FILLED_CHECKLISTS',
+      FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
+      CREATE_EXCEL: 'filledChecklists/CREATE_EXCEL'
+    }),
     toggle () {
       this.$nextTick(() => {
         if (this.selectedAllChecklists) {

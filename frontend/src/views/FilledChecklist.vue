@@ -25,12 +25,12 @@
                           v-row
                             v-col(
                               cols="12"
-                              v-for="(answer, i) in filledList.answers"
+                              v-for="(answer, i) in answers"
                               :key="i"
                             )
                               v-text-field(
                                 :label="answer.question_text"
-                                :value="answer.body"
+                                v-model="answer.body"
                               )
                     v-card-actions
                       v-spacer
@@ -38,28 +38,30 @@
 </template>
 
 <script>
+import { createHelpers } from "vuex-map-fields";
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
+import { mapMultiRowFields } from 'vuex-map-fields';
 
 export default {
-  name: 'Checklists',
-  data: () => ({
-    headers: [
-      {
-        text: 'ID',
-        align: 'left',
-        value: 'id'
-      },
-      {
-        text: 'Name',
-        value: 'name'
-      }
-    ]
-  }),
+  name: 'FilledChecklist',
+  data: () => ({}),
   computed: {
+    ...mapMultiRowFields(`filledChecklists`, { answers: 'filledList.answers' }),
     ...mapState({
       filledList: state => state.filledChecklists.filledList
-    })
+    }),
+    // filledList: {
+    //   get () {
+    //     return this.$store.state.filledChecklists.filledList
+    //   },
+    //   set (value) { console.log(this.$store) }
+    // },
+    // answers: {
+    //   get () {
+    //     return this.$store.state.filledChecklists.filledList.answers
+    //   },
+    //   set (value) { console.log(this.$store) }
+    // }
   },
   created () {
     this.FETCH_FILLED_CHECKLIST({
@@ -67,10 +69,10 @@ export default {
     })
   },
   methods: {
-    ...mapActions([
-      types.FETCH_FILLED_CHECKLIST,
-      types.UPDATE_FILLED_CHECKLIST,
-    ]),
+    ...mapActions({
+      FETCH_FILLED_CHECKLIST: 'filledChecklists/FETCH_FILLED_CHECKLIST',
+      UPDATE_FILLED_CHECKLIST: 'filledChecklists/UPDATE_FILLED_CHECKLIST',
+    }),
   }
 }
 </script>

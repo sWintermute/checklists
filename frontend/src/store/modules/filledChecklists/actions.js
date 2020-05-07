@@ -1,23 +1,22 @@
 import ApiService from '@/services/api.js'
-import types from '@/store/types'
 import { format } from 'date-fns'
 import download from 'downloadjs'
 import XLSX from 'xlsx'
 
 export default {
-  async [types.FETCH_FILLED_CHECKLIST] (state, { id }) {
-    state.commit('SET_LOADING_STATUS', true)
+  async FETCH_FILLED_CHECKLIST (state, { id }) {
+    this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
       const response = await ApiService.get(`api/v1/response/${id}`)
       state.commit('SET_FILLED_LIST', response.data)
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       state.commit('SET_LOADING_STATUS', false)
       console.log(error.response)
     }
   },
-  async [types.FETCH_FILLED_CHECKLISTS] (state) {
+  async FETCH_FILLED_CHECKLISTS (state) {
     try {
       state.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
@@ -32,7 +31,7 @@ export default {
       console.log(error)
     }
   },
-  async [types.CREATE_EXCEL] (store, { excelData }) {
+  async CREATE_EXCEL (store, { excelData }) {
     try {
       store.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
@@ -107,7 +106,7 @@ export default {
       console.log(error)
     }
   },
-  async [types.FETCH_MAP](state) {
+  async FETCH_MAP (state) {
     state.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
@@ -119,7 +118,7 @@ export default {
       console.log(error.response)
     }
   },
-  async [types.UPDATE_FILLED_CHECKLIST]({ commit, state }) {
+  async UPDATE_FILLED_CHECKLIST ({ commit, state }) {
     commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {

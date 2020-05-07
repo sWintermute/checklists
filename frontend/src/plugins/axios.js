@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import store from '@/store'
 import router from '@/router'
-import types from '@/store/types'
 import ApiService from '@/services/api'
 
 ApiService.init()

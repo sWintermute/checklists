@@ -36,7 +36,6 @@ import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet'
 import { latLng } from 'leaflet'
 
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
 
 export default {
   name: 'Checklists',
@@ -85,11 +84,11 @@ export default {
     this.FETCH_MAP()
   },
   methods: {
-    ...mapActions([
-      types.FETCH_MAP,
-      types.FETCH_CHECKLISTS,
-      types.FETCH_FILLED_CHECKLISTS
-    ]),
+    ...mapActions({
+      FETCH_MAP: 'filledChecklists/FETCH_MAP',
+      FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
+      FETCH_FILLED_CHECKLISTS: 'filledChecklists/FETCH_FILLED_CHECKLISTS'
+    }),
     zoomUpdate (zoom) {
       this.currentZoom = zoom
     },

@@ -130,7 +130,7 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { format } from 'date-fns'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import types from '@/store/types'
+
 import {
   mdiAccount,
   mdiDelete,
@@ -182,7 +182,9 @@ export default {
       reports: state => state.reports.reports,
       lists: state => state.checklists.lists
     }),
-    ...mapGetters(['namesLists']),
+    ...mapGetters({
+      namesLists: 'checklists/namesLists'
+    }),
     selectedAllChecklists () {
       return this.editedItem.checklists.length === this.lists.length
     },
@@ -226,12 +228,12 @@ export default {
     this.FETCH_CHECKLISTS()
   },
   methods: {
-    ...mapActions([
-      types.FETCH_REPORTS,
-      types.CREATE_REPORT,
-      types.FETCH_CHECKLISTS,
-      types.REMOVE_REPORT
-    ]),
+    ...mapActions({
+      FETCH_REPORTS: 'reports/FETCH_REPORTS',
+      CREATE_REPORT: 'reports/CREATE_REPORT',
+      FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
+      REMOVE_REPORT: 'reports/REMOVE_REPORT'
+    }),
     sendReport () {
       this.CREATE_REPORT(this.editedItem)
       this.close()

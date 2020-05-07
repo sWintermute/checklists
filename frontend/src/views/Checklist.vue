@@ -69,7 +69,6 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
 
 import Uploader from '@/components/checklist/Uploader.vue'
 import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
@@ -99,7 +98,10 @@ export default {
     this.FETCH_CHECKLIST(this.$route.params.id)
   },
   methods: {
-    ...mapActions([types.FETCH_CHECKLIST, types.SEND_CHECKLIST]),
+    ...mapActions({
+        FETCH_CHECKLIST: 'checklists/FETCH_CHECKLIST',
+        SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
+    }),
     sendChecklist () {
       this.$store.commit('SET_ANSWERS', this.answers)
       this.SEND_CHECKLIST({

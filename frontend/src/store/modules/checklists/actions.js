@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import router from '@/router';
 import ApiService from '@/services/api.js';
-import types from '@/store/types';
 
 export default {
-  async [types.SEND_CHECKLIST](
+  async SEND_CHECKLIST (
     { commit, state },
     { fileList, userProfile, listId },
   ) {
@@ -47,7 +46,7 @@ export default {
       router.push('/');
     }
   },
-  [types.FETCH_CHECKLIST]({ commit }, listId) {
+  FETCH_CHECKLIST ({ commit }, listId) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true);
       ApiService.setHeader();
@@ -64,7 +63,7 @@ export default {
         });
     });
   },
-  [types.FETCH_CHECKLISTS]({ commit }) {
+  FETCH_CHECKLISTS ({ commit }) {
     return new Promise((resolve, reject) => {
       commit('SET_LOADING_STATUS', true);
       ApiService.setHeader();
@@ -81,7 +80,7 @@ export default {
         });
     });
   },
-  [types.CHECKLIST_AUTOCOMPLETE_FIELD]({ commit }, { search, count }) {
+  CHECKLIST_AUTOCOMPLETE_FIELD ({ commit }, { search, count }) {
     return new Promise((resolve, reject) => {
       ApiService.setHeader('519fbd1afac8c2380f617046c95a6789a39fa021');
       ApiService.post(

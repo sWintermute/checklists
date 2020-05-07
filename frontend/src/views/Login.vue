@@ -48,8 +48,11 @@
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapActions } from 'vuex'
-import types from '@/store/types'
-import { mdiEmail, mdiLock } from '@mdi/js'
+
+import {
+  mdiEmail,
+  mdiLock
+} from '@mdi/js'
 
 export default {
   name: 'Login',
@@ -65,9 +68,11 @@ export default {
   }),
   computed: {},
   methods: {
-    ...mapActions([types.LOGIN]),
+    ...mapActions({
+      LOGIN: 'user/LOGIN'
+    }),
     onSubmit () {
-      this[types.LOGIN]({
+      this.LOGIN({
         email: this.email,
         password: this.password
       })
