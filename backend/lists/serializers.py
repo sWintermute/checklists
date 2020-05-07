@@ -40,14 +40,12 @@ class ReportSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    question_text = serializers.SerializerMethodField()
-
-    def get_question_text(self, obj):
-        return obj.question.text
+    question = QuestionSerializer()
 
     class Meta:
         model = models.Answer
-        fields = ('id', 'question', 'question_text', 'body')
+        depth = 1
+        fields = ('id', 'question', 'body')
 
 
 class ResponseListSerializer(serializers.ModelSerializer):
@@ -142,10 +140,18 @@ class ResponseSerializer(serializers.ModelSerializer):
             [x for x in attrs['survey'].questions.all() if x.required is True])
 
         in_response_count = len(
-            [x for x in attrs["answers"] if x.question.required is True])
-        if in_questions_count != in_response_count:
+            [x for x in attrs['answers'] if x['question']['required'] is True])
+
+        if attrs.get('photo', None) or attrs['photo'] is []:
+            in_response_count += 1
+
+        if in_questions_count > in_response_count:
             raise serializers.ValidationError(
                 "Не все обязательные поля заполнены")
+
+        attrs['answers'] = self.initial_data['answers']
+        for x in attrs['answers']:
+            x['question'] = models.Question(**x['question'])
         return super().validate(attrs)
 
 

@@ -1,11 +1,11 @@
-from datetime import datetime
-from . import models, serializers
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, \
     CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.pagination import PageNumberPagination
+
+from . import models, serializers
+from datetime import datetime
 
 
 class SurveyListViewset(GenericViewSet, ListModelMixin):
@@ -19,9 +19,6 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
     serializer_class = serializers.ResponseListSerializer
 
     def list(self, request, *args, **kwargs):
-        self.pagination_class = PageNumberPagination
-        self.page_size = 50
-        self.pagination_class.page_size = 50
         queryset = self.queryset
 
         fr = request.query_params.get("from", None)
@@ -57,7 +54,7 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
 class ResponseViewset(GenericViewSet, CreateModelMixin,
                       RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = models.Response.objects.prefetch_related(
-        'answers', 'answers__question').all()
+        'answers', 'answers__question', 'survey').all()
     serializer_class = serializers.ResponseSerializer
 
     def perform_create(self, serializer):
