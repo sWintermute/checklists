@@ -169,24 +169,24 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         return instance
 
-    # def validate(self, attrs):
-    #     in_questions_count = len(
-    #         [x for x in attrs['survey'].questions.all() if x.required is True])
+    def validate(self, attrs):
+        in_questions_count = len(
+            [x for x in attrs['survey'].questions.all() if x.required is True])
 
-    #     in_response_count = len(
-    #         [x for x in attrs['answers'] if x['question']['required'] is True])
+        in_response_count = len(
+            [x for x in attrs['answers'] if x['question']['required'] is True])
 
-    #     if (not attrs.get('photo', None)) and (attrs['photo'] is not []):
-    #         in_response_count += 1
+        if (not attrs.get('photo', None)) and (attrs['photo'] is not []):
+            in_response_count += 1
 
-    #     if in_questions_count > in_response_count:
-    #         raise serializers.ValidationError(
-    #             "Не все обязательные поля заполнены")
+        if in_questions_count > in_response_count:
+            raise serializers.ValidationError(
+                "Не все обязательные поля заполнены")
 
-    #     attrs['answers'] = self.initial_data['answers']
-    #     for x in attrs['answers']:
-    #         x['question'] = models.Question(**x['question'])
-    #     return super().validate(attrs)
+        attrs['answers'] = self.initial_data['answers']
+        for x in attrs['answers']:
+            x['question'] = models.Question(**x['question'])
+        return super().validate(attrs)
 
 
 class UserSerializer(serializers.ModelSerializer):
