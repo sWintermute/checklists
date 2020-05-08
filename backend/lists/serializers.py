@@ -11,6 +11,8 @@ from user_profile import models as umodels
 
 from . import models
 from django.utils import timezone
+from django.conf import settings
+import os
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -70,18 +72,26 @@ class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
         if isinstance(data, str):
-            if 'data:' in data and ';base64,' in data:
+            if 'http://' in data:
+                complete_file_name = data.split('/')[-1]
+                path = os.path.join(settings.MEDIA_ROOT,
+                                    'files',
+                                    complete_file_name)
+                with open(path, "rb") as imageFile:
+                    decoded_file = imageFile.read()
+            elif 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
 
-            try:
-                decoded_file = base64.b64decode(data)
-            except TypeError:
-                self.fail('invalid_image')
+                try:
+                    decoded_file = base64.b64decode(data)
+                except TypeError:
+                    self.fail('invalid_image')
 
-            file_name = str(uuid.uuid4())[:12]
-            file_extension = self.get_file_extension(file_name, decoded_file)
+                file_name = str(uuid.uuid4())[:12]
+                file_extension = self.get_file_extension(
+                    file_name, decoded_file)
 
-            complete_file_name = "%s.%s" % (file_name, file_extension,)
+                complete_file_name = f"{file_name}.{file_extension}"
 
             data = ContentFile(decoded_file, name=complete_file_name)
 
@@ -148,7 +158,14 @@ class ResponseSerializer(serializers.ModelSerializer):
             ans.updated = timezone.now()
             ans.save()
 
-        # photos = validated_data.get('photo', instance.photo)
+        instance.photo.all().delete()
+
+        photos = validated_data.get('photo', [])
+        content_type = ContentType.objects.get(model='response',
+                                               app_label='lists')
+        for photo in photos:
+            models.Attachment.objects.create(
+                object_id=instance.id, content_type=content_type, **photo)
 
         return instance
 
