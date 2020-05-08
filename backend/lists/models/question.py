@@ -42,6 +42,7 @@ class Question(models.Model):
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
     AUTOCOMPLETE_ADDRESS = 'address-autocomplete'
+    PHONE_NUMBER = 'address-autocomplete'
 
     QUESTION_TYPES = (
         (TEXT, "Многострочный текст"),
@@ -52,6 +53,7 @@ class Question(models.Model):
         (SELECT_IMAGE, "Изображение"),
         (INTEGER, "Целое"),
         (AUTOCOMPLETE_ADDRESS, "Адрес (с автодополнением)"),
+        (PHONE_NUMBER, "Номер телефона"),
     )
 
     text = models.TextField("Текст")
