@@ -106,16 +106,34 @@ export default {
       console.log(error)
     }
   },
-  async FETCH_MAP (state) {
+  async FETCH_MAP ({ commit }) {
     this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const response = await ApiService.get('api/v1/maps')
-      state.commit('SET_MAP', response["data"])
+      const { data } = await ApiService.get('api/v1/maps')
+      const handler = {
+        get: function(target, name) {
+          return target.hasOwnProperty(name) ? target[name] : [];
+        }
+      };
+      const proxyPoints = new Proxy({}, handler);
+
+      for (let point of data) {
+        let key = `${point.lat}-${point.lon}`
+        proxyPoints[key] = proxyPoints[key].concat(point)
+      }
+      const points = Object.assign({}, proxyPoints)
+
+      const test = Object.keys(points).map((i) => {
+        const [ lat, lon ] = i.split('-')
+        return { lat, lon, points: points[i] }
+      })
+
+      commit('SET_MAP', test)
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       this.commit('SET_LOADING_STATUS', false)
-      console.log(error.response)
+      console.log(error)
     }
   },
   async UPDATE_FILLED_CHECKLIST ({ commit, state }) {

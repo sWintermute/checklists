@@ -29,6 +29,11 @@
                 :url="url"
               )
               l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]")
+                l-popup(style="margin:0;")
+                  v-list(max-height="400px" dense class="overflow-y-auto")
+                    v-subheader Ответы
+                    v-list-item-group
+                      v-list-item(v-for="point in item.points" v-text="point.name" :to="`/response/${point.response}`")
 </template>
 
 <script>
@@ -92,3 +97,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.leaflet-popup-content {
+  margin: 0;
+  background: blue;
+}
+</style>
