@@ -1,67 +1,154 @@
 {% load post_office %}
-<header>
-    <table>
-        <tr>
-            <td>
-                <img src="{% inline_image '/app/static/blue-tick2.png' %}" height="42" width="42" />
-            </td>
-            <td>
-                Checklists
-            </td>
-            <td>
-                Создан: {{created}}
-            </td>
-            <td>
-                Обновлен: {{updated}}
-            </td>
-            <td>
-                Линк с {{response_id}} для просмотра/редактирования
-            </td>
-        </tr>
-    </table>
-</header>
 
 <main>
-    <table border="1">
-        <caption>
-            <h2>Чеклист "{{name}}" от {{created}} - {{user}}</h2>
-        </caption>
-        <thead>
-            <tr>
-                <th>№ п/п</th>
-                <th>Вопрос</th>
-                <th>Варианты</th>
-                <th>Ответ</th>
-                <th>Замечания</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for question in questions %}
-                <tr>
-                    <td> {{ question.order }}</td>
-                    <td> {{ question.text }}</td>
-                    <td> {{ question.choices }}</td>
-                    <td>
-                        {%  if question.choices %}
-                            {{ question.answer }}
-                        {% endif %}
-                    </td>
-                    <td>{% if question.notes %}
-                            {% for note in question.notes %}
-                                {% for key in note.keys %}
-                                    {{ key.name }}: {{ key.answer }}<br>
+    <div style="width:100%;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;padding:0;Margin:0"> 
+        <div style="background-color:#f6f6f6"> 
+          
+         <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top"> 
+           <tbody><tr height="0" style="border-collapse:collapse"> 
+            <td style="padding:0;Margin:0"> 
+             <table cellpadding="0" cellspacing="0" border="0" align="center" width="600" style="border-collapse:collapse;border-spacing:0px"> 
+               <tbody><tr style="border-collapse:collapse"> 
+                <td cellpadding="0" cellspacing="0" border="0" height="0" style="padding:0;Margin:0;line-height:1px;min-width:600px"><img src="https://ci3.googleusercontent.com/proxy/mEwrBLRqRs4U3ih0k5bwvexxwbixRuiyxCpDdvF5a6Gs8XIJMxed2-RgcT-zgcGjse9m9272dPTp9X6kSFXHCyMJNFtQN6eivXkDbCfNPHk=s0-d-e1-ft#https://esputnik.com/repository/applications/images/blank.gif" width="600" height="1" style="display:block;border:0;outline:none;text-decoration:none;max-height:0px;min-height:0px;min-width:600px;width:600px" alt=""></td> 
+               </tr> 
+             </tbody></table></td> 
+           </tr> 
+           <tr style="border-collapse:collapse"> 
+            <td class="m_3462579300207088190st-br" valign="top" style="padding:0;Margin:0"> 
+             <table cellpadding="0" cellspacing="0" class="m_3462579300207088190es-header" align="center" style="border-collapse:collapse;border-spacing:0px;table-layout:fixed!important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top"> 
+               <tbody><tr style="border-collapse:collapse"> 
+                <td align="center" style="padding:0;Margin:0;background-color:transparent" bgcolor="transparent"> 
+                  
+                 <div> 
+                  <table bgcolor="transparent" class="m_3462579300207088190es-header-body" align="center" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse;border-spacing:0px;background-color:transparent"> 
+                    <tbody><tr style="border-collapse:collapse"> 
+                     <td align="left" bgcolor="#efefef" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;border-radius:10px 10px 0px 0px;background-color:#efefef"> 
+                       
+                      <table cellpadding="0" cellspacing="0" align="left" class="m_3462579300207088190es-left" style="border-collapse:collapse;border-spacing:0px;float:left"> 
+                        <tbody><tr style="border-collapse:collapse"> 
+                         <td width="88" class="m_3462579300207088190es-m-p20b" align="center" valign="top" style="padding:0;Margin:0"> 
+                          <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                            <tbody><tr style="border-collapse:collapse"> 
+                             <td align="center" class="m_3462579300207088190es-m-txt-c" style="padding:0;Margin:0;font-size:0px"><a href="https://stripo.email" style="font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;font-size:14px;text-decoration:underline;color:#1376c8" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://stripo.email&amp;source=gmail&amp;ust=1589266817402000&amp;usg=AFQjCNHYmyuoOWPwHUYdsO2RRh_GuKYh0g"><img src="https://ci6.googleusercontent.com/proxy/ppAJgf2LAI-YzbdiGmfHUw7ZyCTIdeHXjSToBPUGVkAUTw8wkTOcOn3rg4e2XftGREZg0wseg8MXhwprP1DLGofETnqm0FQLz_nFzCEhqzgSb-tKMswyn6LTv2EpcS82oARPllmWMTS7Vn97VKx4EeQLmFZHdyfv8Mj9Q9-22KnD=s0-d-e1-ft#https://ifhjrj.stripocdn.email/content/guids/89997712-e985-46a8-88fc-48c07d7cf842/images/57181589174386121.png" alt="online редактор писем нового поколения" style="display:block;border:0;outline:none;text-decoration:none;width:56px;height:52.2667px" title="online редактор писем нового поколения" width="88"></a></td> 
+                            </tr> 
+                          </tbody></table></td> 
+                        </tr> 
+                      </tbody></table> 
+                       
+                      <table cellpadding="0" cellspacing="0" class="m_3462579300207088190es-right" align="right" style="border-collapse:collapse;border-spacing:0px;float:right"> 
+                        <tbody><tr style="border-collapse:collapse"> 
+                         <td width="512" align="left" style="padding:0;Margin:0"> 
+                          <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                            <tbody><tr style="border-collapse:collapse"> 
+                             <td align="left" style="padding:5px;Margin:0"><p style="Margin:0;font-size:28px;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;line-height:42px;color:#333333"><strong><span zeum4c0="PR_1_0" data-ddnwab="PR_1_0" data-wpkgv="true">Checklists</span></strong></p></td> 
+                            </tr> 
+                          </tbody></table></td> 
+                        </tr> 
+                      </tbody></table> 
+                      </td> 
+                    </tr> 
+                  </tbody></table> 
+                 </div> 
+                 </td> 
+               </tr> 
+             </tbody></table> 
+             <table cellpadding="0" cellspacing="0" class="m_3462579300207088190es-content" align="center" style="border-collapse:collapse;border-spacing:0px;table-layout:fixed!important;width:100%"> 
+               <tbody><tr style="border-collapse:collapse"> 
+                <td align="center" bgcolor="transparent" style="padding:0;Margin:0;background-color:transparent"> 
+                 <table bgcolor="transparent" align="center" cellpadding="0" cellspacing="0" width="600" style="border-collapse:collapse;border-spacing:0px;background-color:transparent"> 
+                   <tbody><tr style="border-collapse:collapse"> 
+                    <td align="left" style="Margin:0;padding-top:30px;padding-bottom:30px;padding-left:30px;padding-right:30px;border-radius:0;background-color:#ffffff" bgcolor="#ffffff"> 
+                     <table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border-spacing:0px"> 
+                       <tbody><tr style="border-collapse:collapse"> 
+                        <td width="540" align="center" valign="top" style="padding:0;Margin:0"> 
+                         <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                           <tbody><tr style="border-collapse:collapse"> 
+                            <td align="center" style="padding:0;Margin:0"><h1 style="Margin:0;line-height:36px;font-family:tahoma,verdana,segoe,sans-serif;font-size:30px;font-style:normal;font-weight:bold;color:#212121">БДД</h1></td> 
+                           </tr> 
+                           <tr style="border-collapse:collapse"> 
+                            <td align="left" style="padding:0;Margin:0;padding-top:20px"><p style="Margin:0;font-size:16px;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;line-height:16px;color:#131313">Создан: {{created}}</p></td> 
+                           </tr> 
+                           <tr style="border-collapse:collapse"> 
+                            <td align="left" style="padding:0;Margin:0;padding-top:20px;padding-bottom:20px"><p style="Margin:0;font-size:16px;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;line-height:16px;color:#131313"><span zeum4c0="PR_2_0" data-ddnwab="PR_2_0" data-wpkgv="true">Обновлен</span>: {{updated}}</p></td> 
+                           </tr> 
+                         </tbody></table></td> 
+                       </tr> 
+                       <tr style="border-collapse:collapse"> 
+                        <td width="540" align="center" valign="top" style="padding:0;Margin:0"> 
+                         <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                           <tbody><tr style="border-collapse:collapse"> 
+                            <td align="center" bgcolor="#0b5394" style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px"><h2 style="Margin:0;line-height:29px;font-family:tahoma,verdana,segoe,sans-serif;font-size:24px;font-style:normal;font-weight:bold;color:#ffffff">Ответ №{{response_id}}</h2></td> 
+                           </tr> 
+                           <tr style="border-collapse:collapse"> 
+                            <td style="padding:0;Margin:0"> 
+                             <table cellpadding="0" cellspacing="0" width="100%" class="m_3462579300207088190es-menu" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                              <thead> 
+                               <tr style="border-collapse:collapse"> 
+                                <th style="padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px">Вопрос</th> 
+                                <th style="padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px">Ответ</th> 
+                                <th style="padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px">Замечания</th> 
+                               </tr> 
+                              </thead> 
+                               <tbody>
+                                {% for question in questions %}
+                                  <tr style="border-collapse:collapse">
+                                    <td>{{ question.text }}</td>
+                                    <td>
+                                      {%  if question.choices %}
+                                        {{ question.answer }}
+                                      {% endif %}
+                                    </td>
+                                    <td align="center" valign="top" style="Margin:0;padding-left:5px;padding-right:5px;padding-top:10px;padding-bottom:10px;border:0">
+                                      <span>
+                                        {% if question.notes %}
+                                          {% for note in question.notes %}
+                                            {% for key in note.keys %}
+                                              {{ key.name }}: {{ key.answer }}<br>
+                                            {% endfor %}
+                                          {% endfor %}
+                                        {% elif not question.choices %}
+                                          {{ question.answer }}
+                                        {% else %}
+                                          ---
+                                        {% endif %}
+                                      </span>
+                                    </td>
+                                  </tr>
                                 {% endfor %}
-                            {% endfor %}
-                        {% elif not question.choices %}
-                            {{ question.answer }}
-                        {% else %}
-                            ---
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                             </tbody></table></td> 
+                           </tr>
+                         </tbody></table></td> 
+                       </tr> 
+                       <tr style="border-collapse:collapse"> 
+                        <td width="540" align="center" valign="top" style="padding:0;Margin:0"> 
+                         <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                           <tbody><tr style="border-collapse:collapse"> 
+                            <td align="right" style="padding:0;Margin:0;padding-top:10px"><span class="m_3462579300207088190es-button-border m_3462579300207088190es-button-border-2" style="border-style:solid;border-color:#2cb543;background:#0b5394;border-width:0px;display:inline-block;border-radius:18px;width:auto"><a href="http://checklist.landfinance.ru/response/{{ response_id }}" class="m_3462579300207088190es-button m_3462579300207088190es-button-1" style="text-decoration:none;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;font-size:16px;color:#ffffff;border-style:solid;border-color:#0b5394;border-width:10px 20px 10px 20px;display:inline-block;background:#0b5394;border-radius:18px;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center" target="_blank">ПРОСМОТРЕТЬ</a></span></td> 
+                           </tr> 
+                         </tbody></table></td> 
+                       </tr> 
+                     </tbody></table></td> 
+                   </tr> 
+                   <tr style="border-collapse:collapse"> 
+                    <td style="Margin:0;padding-top:10px;padding-bottom:10px;padding-left:30px;padding-right:30px;border-radius:0px 0px 10px 10px;background-color:#efefef" align="left" bgcolor="#efefef"> 
+                     <table cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse;border-spacing:0px"> 
+                       <tbody><tr style="border-collapse:collapse"> 
+                        <td width="540" align="center" style="padding:0;Margin:0"> 
+                         <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="border-collapse:collapse;border-spacing:0px"> 
+                           <tbody><tr style="border-collapse:collapse"> 
+                            <td align="right" style="padding:0;Margin:0"><p style="Margin:0;font-size:12px;font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;line-height:18px;color:#131313">ООО "УК "<span zeum4c0="PR_4_0" data-ddnwab="PR_4_0" data-wpkgv="true">ЛэндФинанс</span>"</p></td> 
+                           </tr> 
+                         </tbody></table></td> 
+                       </tr> 
+                     </tbody></table></td> 
+                   </tr> 
+                 </tbody></table></td> 
+               </tr> 
+             </tbody></table></td> 
+           </tr> 
+         </tbody></table> 
+        </div>  
+       </div>
 </main>
 
 <footer>
