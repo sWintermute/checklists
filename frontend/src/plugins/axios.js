@@ -15,7 +15,7 @@ Vue.axios.interceptors.response.use(function (response) {
     store.commit('SET_LOADING_STATUS', false)
     router.replace('/login')
   } else {
-    router.go(-1)
+    router.go('/')
   }
   return Promise.reject(error)
 })

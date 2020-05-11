@@ -136,7 +136,7 @@ export default {
       console.log(error)
     }
   },
-  async UPDATE_FILLED_CHECKLIST ({ commit, state }) {
+  async UPDATE_FILLED_CHECKLIST ({ commit, dispatch, state }) {
     this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
@@ -146,7 +146,7 @@ export default {
         answers,
         photo
       })
-      // state.commit('SET_FILLED_LIST', response["data"])
+      await dispatch('FETCH_FILLED_CHECKLIST', { id })
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       this.commit('SET_LOADING_STATUS', false)
@@ -158,8 +158,7 @@ export default {
     ApiService.setHeader()
     try {
       await ApiService.delete('api/v1/response', responseId)
-      // state.commit('SET_FILLED_LIST', response["data"])
-      dispatch('FETCH_FILLED_CHECKLISTS')
+      await dispatch('FETCH_FILLED_CHECKLISTS')
       this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       this.commit('SET_LOADING_STATUS', false)

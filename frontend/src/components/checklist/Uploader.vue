@@ -18,7 +18,7 @@
             'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
           }"
           :style="{
-            backgroundImage: `url(${item.url})`
+            backgroundImage: `url(${item.url || item.file})`
           }"
           @click="handleFileClick($event, item, index)"
         >
@@ -221,7 +221,7 @@ export default {
       this.showPreviewer()
       this.$nextTick(() => {
         const previewerImg = document.getElementById('previewerImg')
-        previewerImg.style.backgroundImage = `url(${item.url})`
+        previewerImg.style.backgroundImage = `url(${item.url || item.file})`
         this.currentIndex = index
       })
     },
