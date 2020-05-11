@@ -10,6 +10,9 @@ from rest_framework import serializers
 from user_profile import models as umodels
 
 from . import models
+from django.utils import timezone
+from django.conf import settings
+import os
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -69,18 +72,26 @@ class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
         if isinstance(data, str):
-            if 'data:' in data and ';base64,' in data:
+            if 'http://' in data:
+                complete_file_name = data.split('/')[-1]
+                path = os.path.join(settings.MEDIA_ROOT,
+                                    'files',
+                                    complete_file_name)
+                with open(path, "rb") as imageFile:
+                    decoded_file = imageFile.read()
+            elif 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
 
-            try:
-                decoded_file = base64.b64decode(data)
-            except TypeError:
-                self.fail('invalid_image')
+                try:
+                    decoded_file = base64.b64decode(data)
+                except TypeError:
+                    self.fail('invalid_image')
 
-            file_name = str(uuid.uuid4())[:12]
-            file_extension = self.get_file_extension(file_name, decoded_file)
+                file_name = str(uuid.uuid4())[:12]
+                file_extension = self.get_file_extension(
+                    file_name, decoded_file)
 
-            complete_file_name = "%s.%s" % (file_name, file_extension,)
+                complete_file_name = f"{file_name}.{file_extension}"
 
             data = ContentFile(decoded_file, name=complete_file_name)
 
@@ -135,17 +146,40 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         return response
 
+    def update(self, instance, validated_data):
+        instance.created = validated_data.get('created', instance.created)
+        instance.updated = validated_data.get('updated', instance.updated)
+        instance.survey = validated_data.get('survey', instance.survey)
+
+        answers = self.initial_data['answers']
+        for answer in answers:
+            ans = models.Answer.objects.get(id=answer['id'])
+            ans.body = answer['body']
+            ans.updated = timezone.now()
+            ans.save()
+
+        instance.photo.all().delete()
+
+        photos = validated_data.get('photo', [])
+        content_type = ContentType.objects.get(model='response',
+                                               app_label='lists')
+        for photo in photos:
+            models.Attachment.objects.create(
+                object_id=instance.id, content_type=content_type, **photo)
+
+        return instance
+
     def validate(self, attrs):
-        in_questions_count = len(
+        in_survey_count = len(
             [x for x in attrs['survey'].questions.all() if x.required is True])
 
         in_response_count = len(
             [x for x in attrs['answers'] if x['question']['required'] is True])
 
-        if attrs.get('photo', None) or attrs['photo'] is []:
+        if attrs['photo'] is not []:
             in_response_count += 1
 
-        if in_questions_count > in_response_count:
+        if in_response_count < in_survey_count:
             raise serializers.ValidationError(
                 "Не все обязательные поля заполнены")
 

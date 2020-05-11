@@ -35,7 +35,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
 
 export default {
   name: 'Checklists',
@@ -53,13 +52,17 @@ export default {
     ]
   }),
   computed: {
-    ...mapState({lists: state => state.checklists.lists})
+    ...mapState({
+      lists: state => state.checklists.lists
+    })
   },
   created () {
     this.FETCH_CHECKLISTS()
   },
   methods: {
-    ...mapActions([types.FETCH_CHECKLISTS])
+    ...mapActions({
+      FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS'
+    })
   }
 }
 </script>

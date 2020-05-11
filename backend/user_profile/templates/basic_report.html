@@ -37,28 +37,28 @@
         </thead>
         <tbody>
             {% for question in questions %}
-            <tr>
-                <td> {{ question.order }}</td>
-                <td> {{ question.text }}</td>
-                <td> {{ question.choices }}</td>
-                <td>
-                    {%  if question.choices %}
-                    {{ question.answer }}
-                    {% endif %}
-                </td>
-                <td>{% if question.notes %}
-                    {% for note in question.notes %}
-                    {% for key in note.keys %}
-                    {{ key.name }}: {{ key.answer }}<br>
-                    {% endfor %}
-                    {% endfor %}
-                    {% elif not question.choices %}
-                    {{ question.answer }}
-                    {% else %}
-                    ---
-                    {% endif %}
-                </td>
-            </tr>
+                <tr>
+                    <td> {{ question.order }}</td>
+                    <td> {{ question.text }}</td>
+                    <td> {{ question.choices }}</td>
+                    <td>
+                        {%  if question.choices %}
+                            {{ question.answer }}
+                        {% endif %}
+                    </td>
+                    <td>{% if question.notes %}
+                            {% for note in question.notes %}
+                                {% for key in note.keys %}
+                                    {{ key.name }}: {{ key.answer }}<br>
+                                {% endfor %}
+                            {% endfor %}
+                        {% elif not question.choices %}
+                            {{ question.answer }}
+                        {% else %}
+                            ---
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
