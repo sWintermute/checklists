@@ -19,8 +19,9 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
     serializer_class = serializers.ResponseListSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.queryset
-
+        queryset = models.Response.objects \
+            .prefetch_related('answers', 'answers__question', 'user') \
+            .all()
         fr = request.query_params.get("from", None)
         if (fr):
             queryset = queryset.filter(
