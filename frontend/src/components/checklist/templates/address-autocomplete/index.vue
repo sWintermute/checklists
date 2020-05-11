@@ -79,7 +79,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('SET_TEST', this.id)
+    this.$store.commit('checklists/SET_TEST', this.id)
   },
   methods: {
     ...mapActions({

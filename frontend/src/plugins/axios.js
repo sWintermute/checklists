@@ -12,7 +12,7 @@ Vue.axios.interceptors.response.use(function (response) {
 }, function (error) {
   console.log({ error })
   if (error.response.status === 401) {
-    this.commit('SET_LOADING_STATUS', false)
+    store.commit('SET_LOADING_STATUS', false)
     router.replace('/login')
   } else {
     router.go(-1)
