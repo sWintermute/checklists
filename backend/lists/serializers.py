@@ -170,16 +170,16 @@ class ResponseSerializer(serializers.ModelSerializer):
         return instance
 
     def validate(self, attrs):
-        in_questions_count = len(
+        in_survey_count = len(
             [x for x in attrs['survey'].questions.all() if x.required is True])
 
         in_response_count = len(
             [x for x in attrs['answers'] if x['question']['required'] is True])
 
-        if (not attrs.get('photo', None)) and (attrs['photo'] is not []):
+        if attrs['photo'] is not []:
             in_response_count += 1
 
-        if in_questions_count > in_response_count:
+        if in_response_count < in_survey_count:
             raise serializers.ValidationError(
                 "Не все обязательные поля заполнены")
 
