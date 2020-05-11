@@ -1,18 +1,20 @@
 import base64
 import imghdr
+import os
 import uuid
 from collections import defaultdict
 
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
+from django.utils import timezone
+from django_q.tasks import async_task
 from rest_framework import serializers
 
+from notifications import tasks
 from user_profile import models as umodels
 
 from . import models
-from django.utils import timezone
-from django.conf import settings
-import os
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -166,7 +168,7 @@ class ResponseSerializer(serializers.ModelSerializer):
         for photo in photos:
             models.Attachment.objects.create(
                 object_id=instance.id, content_type=content_type, **photo)
-
+        async_task(tasks.basic_report, instance)
         return instance
 
     def validate(self, attrs):
