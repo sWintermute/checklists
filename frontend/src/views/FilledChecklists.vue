@@ -85,13 +85,15 @@
                       icon
                       fab
                     )
-                      v-icon()
-                        | {{ mdiPencil }}
-                    v-icon(
-                      small
+                      v-icon {{ mdiPencil }}
+                    v-btn(
+                      @click="DELETE_FILLED_CHECKLIST({ responseId: item.id })"
                       class="ml-2"
+                      x-small
+                      icon
+                      fab
                     )
-                      | {{ mdiDelete }}
+                      v-icon {{ mdiDelete }}
 </template>
 
 <script>
@@ -177,6 +179,7 @@ export default {
   methods: {
     ...mapActions({
       FETCH_FILLED_CHECKLISTS: 'filledChecklists/FETCH_FILLED_CHECKLISTS',
+      DELETE_FILLED_CHECKLIST: 'filledChecklists/DELETE_FILLED_CHECKLIST',
       FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
       CREATE_EXCEL: 'filledChecklists/CREATE_EXCEL'
     }),

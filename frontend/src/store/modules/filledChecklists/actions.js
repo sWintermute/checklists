@@ -152,5 +152,18 @@ export default {
       this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
+  },
+  async DELETE_FILLED_CHECKLIST ({ commit, dispatch, state }, { responseId }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
+    try {
+      await ApiService.delete('api/v1/response', responseId)
+      // state.commit('SET_FILLED_LIST', response["data"])
+      dispatch('FETCH_FILLED_CHECKLISTS')
+      this.commit('SET_LOADING_STATUS', false)
+    } catch (error) {
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
+    }
   }
 }
