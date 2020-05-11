@@ -20,50 +20,61 @@
                     )
                         v-toolbar-title {{ list.name }}
                     v-card-text(class="px-6 pt-6 pb-0")
-                            v-form
+                        ValidationObserver(ref="observer" v-slot="{ passes }" tag="div")
+                            v-form(@submit.prevent="passes(sendChecklist)" id="check-login-form")
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'address-autocomplete'")
-                                        autocomplete(
-                                            :id="question.id"
-                                            :title="question.text"
-                                        )
+                                        ValidationProvider(rules="required" v-slot="{ errors }")
+                                            autocomplete(
+                                                :id="question.id"
+                                                :title="question.text"
+                                            )
                                     template(v-else-if="question.type === 'textarea'")
-                                        header {{ question.text }}
-                                        v-textarea(
-                                            solo
-                                            label="Оставьте замечания..."
-                                            class="mt-3"
-                                            v-model="answers[question.id]"
-                                        )
+                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
+                                            header {{ question.text }}
+                                            v-textarea(
+                                                solo
+                                                label="Оставьте замечания..."
+                                                class="mt-3"
+                                                v-model="answers[question.id]"
+                                                :error-messages="errors"
+                                            )
                                     template(v-else-if="question.type === 'radio'")
                                         header {{ question.text }}
-                                        v-radio-group(v-model="answers[question.id]")
-                                            v-radio(
-                                                v-for="n in question.choices.split(';')"
-                                                :key="n"
-                                                :label="n"
-                                                :value="n"
-                                            )
-                                    template(v-else-if="question.type === 'select-multiple'")
-                                        header {{ question.text }}
-                                        v-checkbox(v-model="answers[question.id]" label="John" value="John")
-                                        v-checkbox(v-model="answers[question.id]" label="John2" value="John2")
-                                        v-checkbox(v-model="answers[question.id]" label="John3" value="John3")
+                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
+                                            v-radio-group(v-model="answers[question.id]" :error-messages="errors")
+                                                v-radio(
+                                                    v-for="n in question.choices.split(';')"
+                                                    :key="n"
+                                                    :label="n"
+                                                    :value="n"
+                                                )
                                     template(v-else-if="question.type === 'select-image'")
-                                        uploader(
-                                            v-model="fileList"
-                                            title="Загрузите фото"
-                                            :autoUpload="false"
-                                        )
+                                        ValidationProvider(rules="required" v-slot="{ errors }")
+                                            uploader(
+                                                v-model="fileList"
+                                                title="Загрузите фото"
+                                                :autoUpload="false"
+                                            )
+                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                                div.v-messages__wrapper
+                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
                                     template(v-else)
-                                        header {{ question.text }}
-                                        v-text-field(
-                                            v-model="answers[question.id]"
-                                            label="Введите текст..."
-                                        )
-                    v-card-actions(class="justify-center px-6")
-                        v-btn(class="ma-2" tile outlined color="primary") Очистить
-                        v-btn(tile color="primary" @click="sendChecklist") Отправить
+                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
+                                            header {{ question.text }}
+                                            v-text-field(
+                                                v-model="answers[question.id]"
+                                                label="Введите текст..."
+                                                :error-messages="errors"
+                                            )
+                    v-card-actions(class="justify-center pa-6")
+                        v-spacer
+                        v-btn(
+                            tile
+                            type="submit"
+                            color="primary"
+                            form="check-login-form"
+                        ) Отправить
 </template>
 
 <script>
@@ -103,7 +114,7 @@ export default {
         SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
     }),
     sendChecklist () {
-      this.$store.commit('SET_ANSWERS', this.answers)
+      this.$store.commit('checklists/SET_ANSWERS', this.answers)
       this.SEND_CHECKLIST({
         fileList: this.fileList,
         userProfile: this.userProfile,
