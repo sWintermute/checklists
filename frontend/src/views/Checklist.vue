@@ -24,15 +24,11 @@
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
                                         header {{ question.text }}
-                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ valid, errors }")
-                                            vue-phone-number-input(
-                                                v-model="answers[question.id]"
-                                                default-country-code="RU"
-                                                :translations="translations"
-                                            )
-                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
-                                                div.v-messages__wrapper
-                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                        vue-phone-number-input(
+                                            v-model="answers[question.id]"
+                                            default-country-code="RU"
+                                            :translations="translations"
+                                        )
                                     template(v-else-if="question.type === 'address-autocomplete'")
                                         ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
                                             autocomplete(
