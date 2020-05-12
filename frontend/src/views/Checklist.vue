@@ -23,8 +23,20 @@
                         ValidationObserver(ref="observer" v-slot="{ passes }" tag="div")
                             v-form(@submit.prevent="passes(sendChecklist)" id="check-login-form")
                                 div(v-for="(question, i) in list.questions" :key="i")
-                                    template(v-if="question.type === 'address-autocomplete'")
-                                        ValidationProvider(rules="required" v-slot="{ errors }")
+                                    template(v-if="question.type === 'phone-number'")
+                                        header {{ question.text }}
+                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ valid, errors }")
+                                            vue-phone-number-input(
+                                                v-model="answers[question.id]"
+                                                default-country-code="RU"
+                                                :translations="translations"
+                                                :state="errors[0] ? false : (valid ? true : null)"
+                                            )
+                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                                div.v-messages__wrapper
+                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                    template(v-else-if="question.type === 'address-autocomplete'")
+                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
                                             autocomplete(
                                                 :id="question.id"
                                                 :title="question.text"
@@ -78,6 +90,9 @@
 </template>
 
 <script>
+import VuePhoneNumberInput from 'vue-phone-number-input';
+import 'vue-phone-number-input/dist/vue-phone-number-input.css';
+
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapState, mapActions } from 'vuex'
 
@@ -90,14 +105,21 @@ export default {
     Uploader,
     ValidationObserver,
     ValidationProvider,
-    autocomplete
+    autocomplete,
+    VuePhoneNumberInput
   },
   data: () => ({
     test: [],
     fileList: [],
     answers: {},
     choices: {},
-    toggleChecked: false
+    toggleChecked: false,
+    translations: {
+        countrySelectorLabel: 'Код страны',
+        countrySelectorError: 'Выберите код страны',
+        phoneNumberLabel: 'Номер телефона',
+        example: 'Пример :'
+    }
   }),
   computed: {
     ...mapState({
