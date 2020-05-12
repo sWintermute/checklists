@@ -20,8 +20,7 @@
                     )
                         v-toolbar-title {{ list.name }}
                     v-card-text(class="px-6 pt-6 pb-0")
-                        ValidationObserver(ref="observer" v-slot="{ handleSubmit }" tag="div")
-                            v-form(@submit.prevent="handleSubmit(sendChecklist)" id="check-login-form")
+                        ValidationObserver(ref="observer" v-slot="{ handleSubmit }" id="check-login-form" tag="v-form" @submit.prevent="handleSubmit(sendChecklist)")
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
                                         header {{ question.text }}
