@@ -20,7 +20,8 @@
                     )
                         v-toolbar-title {{ list.name }}
                     v-card-text(class="px-6 pt-6 pb-0")
-                        ValidationObserver(ref="observer" id="check-login-form" tag="form" @submit.prevent="sendChecklist")
+                        ValidationObserver(ref="observer" v-slot="{ handleSubmit }" tag="div")
+                            v-form(@submit.prevent="handleSubmit(sendChecklist)" id="check-login-form")
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
                                         header {{ question.text }}
@@ -103,9 +104,11 @@ export default {
     VuePhoneNumberInput
   },
   data: () => ({
+    test: [],
     fileList: [],
     answers: {},
     choices: {},
+    toggleChecked: false,
     translations: {
         countrySelectorLabel: 'Код страны',
         countrySelectorError: 'Выберите код страны',
@@ -128,28 +131,12 @@ export default {
         SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
     }),
     sendChecklist () {
-        this.$refs.observer.validate().then(success => {
-            if (!success) {
-                return;
-            }
-
-            this.$store.commit('checklists/SET_ANSWERS', this.answers)
-            this.SEND_CHECKLIST({
-                fileList: this.fileList,
-                userProfile: this.userProfile,
-                listId: this.$route.params.id
-            })
-
-            // Resetting Values
-            this.fileList = []
-            this.answers = {}
-            this.choices = {}
-
-            // Wait until the models are updated in the UI
-            this.$nextTick(() => {
-                this.$refs.observer.reset();
-            });
-        });
+      this.$store.commit('checklists/SET_ANSWERS', this.answers)
+      this.SEND_CHECKLIST({
+        fileList: this.fileList,
+        userProfile: this.userProfile,
+        listId: this.$route.params.id
+      })
     }
   }
 }
