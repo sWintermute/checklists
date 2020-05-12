@@ -90,18 +90,6 @@ export default {
     ...mapState({
       filledList: state => state.filledChecklists.filledList
     }),
-    // filledList: {
-    //   get () {
-    //     return this.$store.state.filledChecklists.filledList
-    //   },
-    //   set (value) { console.log(this.$store) }
-    // },
-    // answers: {
-    //   get () {
-    //     return this.$store.state.filledChecklists.filledList.answers
-    //   },
-    //   set (value) { console.log(this.$store) }
-    // }
   },
   created () {
     this.FETCH_FILLED_CHECKLIST({
