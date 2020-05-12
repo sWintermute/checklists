@@ -25,17 +25,34 @@
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
                                         header {{ question.text }}
-                                        vue-phone-number-input(
-                                            v-model="answers[question.id]"
-                                            default-country-code="RU"
-                                            :translations="translations"
-                                        )
-                                    template(v-else-if="question.type === 'address-autocomplete'")
                                         ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
-                                            autocomplete(
-                                                :id="question.id"
-                                                :title="question.text"
+                                            vue-phone-number-input(
+                                                v-model="answers[question.id]"
+                                                default-country-code="RU"
+                                                :translations="translations"
+                                                :error="!!errors[0]"
+                                                class="mb-4"
                                             )
+                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                                div.v-messages__wrapper
+                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                    template(v-else-if="question.type === 'address-autocomplete'")
+                                            header {{ question.text }}
+                                            ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
+                                              v-autocomplete(
+                                                  v-model="autocomplete"
+                                                  :items="entries"
+                                                  :search-input.sync="search"
+                                                  :error-messages="errors"
+                                                  color="white"
+                                                  item-text="value"
+                                                  item-value="value"
+                                                  placeholder="Введите адрес..."
+                                                  return-object
+                                                  dense
+                                                  full-width
+                                              )
+                                              span {{ autocomplete }}
                                     template(v-else-if="question.type === 'textarea'")
                                         ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
                                             header {{ question.text }}
@@ -104,7 +121,8 @@ export default {
     VuePhoneNumberInput
   },
   data: () => ({
-    test: [],
+    autocomplete: null,
+    search: null,
     fileList: [],
     answers: {},
     choices: {},
@@ -118,9 +136,15 @@ export default {
   }),
   computed: {
     ...mapState({
+      entries: state => state.checklists.entries,
       list: state => state.checklists.list,
       userProfile: state => state.user.userProfile
     })
+  },
+  watch: {
+    search (value) {
+      this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
+    }
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
@@ -128,8 +152,15 @@ export default {
   methods: {
     ...mapActions({
         FETCH_CHECKLIST: 'checklists/FETCH_CHECKLIST',
-        SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
+        SEND_CHECKLIST: 'checklists/SEND_CHECKLIST',
+        CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
     }),
+    autocompleteItems () {
+      return this.entries.map((entry) => {
+        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
+        return Object.assign({}, entry, { value })
+      })
+    },
     sendChecklist () {
       this.$store.commit('checklists/SET_ANSWERS', this.answers)
       this.SEND_CHECKLIST({
