@@ -20,7 +20,7 @@
                     )
                         v-toolbar-title {{ list.name }}
                     v-card-text(class="px-6 pt-6 pb-0")
-                        ValidationObserver(ref="observer" v-slot="{ handleSubmit }" id="check-login-form" tag="v-form" @submit.prevent="handleSubmit(sendChecklist)")
+                        ValidationObserver(ref="observer" id="check-login-form" tag="form" @submit.prevent="sendChecklist")
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
                                         header {{ question.text }}
@@ -29,7 +29,6 @@
                                                 v-model="answers[question.id]"
                                                 default-country-code="RU"
                                                 :translations="translations"
-                                                :state="errors[0] ? false : (valid ? true : null)"
                                             )
                                             div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
                                                 div.v-messages__wrapper
@@ -108,11 +107,9 @@ export default {
     VuePhoneNumberInput
   },
   data: () => ({
-    test: [],
     fileList: [],
     answers: {},
     choices: {},
-    toggleChecked: false,
     translations: {
         countrySelectorLabel: 'Код страны',
         countrySelectorError: 'Выберите код страны',
@@ -135,12 +132,28 @@ export default {
         SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
     }),
     sendChecklist () {
-      this.$store.commit('checklists/SET_ANSWERS', this.answers)
-      this.SEND_CHECKLIST({
-        fileList: this.fileList,
-        userProfile: this.userProfile,
-        listId: this.$route.params.id
-      })
+        this.$refs.observer.validate().then(success => {
+            if (!success) {
+                return;
+            }
+
+            this.$store.commit('checklists/SET_ANSWERS', this.answers)
+            this.SEND_CHECKLIST({
+                fileList: this.fileList,
+                userProfile: this.userProfile,
+                listId: this.$route.params.id
+            })
+
+            // Resetting Values
+            this.fileList = []
+            this.answers = {}
+            this.choices = {}
+
+            // Wait until the models are updated in the UI
+            this.$nextTick(() => {
+                this.$refs.observer.reset();
+            });
+        });
     }
   }
 }
