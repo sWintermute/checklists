@@ -42,7 +42,7 @@ class Question(models.Model):
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
     AUTOCOMPLETE_ADDRESS = 'address-autocomplete'
-    PHONE_NUMBER = 'address-autocomplete'
+    PHONE_NUMBER = 'phone-number'
 
     QUESTION_TYPES = (
         (TEXT, "Многострочный текст"),
