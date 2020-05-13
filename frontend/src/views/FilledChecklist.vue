@@ -41,7 +41,6 @@
                                       color="white"
                                       item-text="value"
                                       item-value="value"
-                                      return-object
                                       dense
                                       full-width
                                     )
