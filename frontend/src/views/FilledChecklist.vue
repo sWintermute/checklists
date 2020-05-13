@@ -35,7 +35,7 @@
                                     v-autocomplete(
                                       v-model="answer.body"
                                       :label="answer.body || `Введите адрес...`"
-                                      :items="entries"
+                                      :items="items"
                                       :search-input.sync="search"
                                       :error-messages="errors"
                                       color="white"
@@ -90,15 +90,13 @@ import { mapState, mapActions } from 'vuex'
 import { mapMultiRowFields, mapFields } from 'vuex-map-fields'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import Uploader from '@/components/checklist/Uploader.vue'
-import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 
 export default {
   name: 'FilledChecklist',
   components: {
     Uploader,
     ValidationObserver,
-    ValidationProvider,
-    autocomplete
+    ValidationProvider
   },
   data: () => ({
     search: null,
@@ -110,6 +108,15 @@ export default {
       entries: state => state.checklists.entries,
       filledList: state => state.filledChecklists.filledList
     }),
+    items () {
+      if (!this.entries.length) return []
+      return this.entries.map((entry) => {
+        console.log(entry)
+        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
+        
+        return Object.assign({}, entry, { value })
+      })
+    }
   },
   watch: {
     search (value) {

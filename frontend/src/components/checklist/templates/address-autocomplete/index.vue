@@ -51,6 +51,7 @@ export default {
       })
     },
     items () {
+      if (!this.entries.length) return []
       return this.entries.map((entry) => {
         const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
         return Object.assign({}, entry, { value })

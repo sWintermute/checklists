@@ -87,7 +87,7 @@ export default {
         ]
       })
         .then(response => {
-          commit('SET_ENTRIES', response.data.suggestions.map(suggestion => suggestion.value));
+          commit('SET_ENTRIES', response.data.suggestions);
           resolve(response);
         })
         .catch(error => {
