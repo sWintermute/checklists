@@ -79,7 +79,7 @@ class Question(models.Model):
     class Meta(object):
         verbose_name = "Вопрос"
         verbose_name_plural = "Вопросы"
-        ordering = ("survey", "order")
+        # ordering = ("survey", "order")
 
     def save(self, *args, **kwargs):
         if self.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:
