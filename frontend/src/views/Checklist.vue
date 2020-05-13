@@ -40,8 +40,8 @@
                                             header {{ question.text }}
                                             ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
                                               v-autocomplete(
-                                                v-model="autocomplete"
-                                                :items="entries"
+                                                v-model="answers[question.id]"
+                                                :items="autocompleteItems"
                                                 :search-input.sync="search"
                                                 :error-messages="errors"
                                                 color="white"
@@ -138,12 +138,20 @@ export default {
       entries: state => state.checklists.entries,
       list: state => state.checklists.list,
       userProfile: state => state.user.userProfile
-    })
+    }),
+    autocompleteItems () {
+      if (!this.entries.length) return []
+      return this.entries.map((entry) => {
+        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
+        return Object.assign({}, entry, { value })
+      })
+    },
   },
   watch: {
     search (value) {
+      if (!value) return
       this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
-    }
+    },
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
@@ -154,12 +162,6 @@ export default {
         SEND_CHECKLIST: 'checklists/SEND_CHECKLIST',
         CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
     }),
-    autocompleteItems () {
-      return this.entries.map((entry) => {
-        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
-        return Object.assign({}, entry, { value })
-      })
-    },
     sendChecklist () {
       this.$store.commit('checklists/SET_ANSWERS', this.answers)
       this.SEND_CHECKLIST({
