@@ -48,7 +48,6 @@
                                                 item-text="value"
                                                 item-value="value"
                                                 placeholder="Введите адрес..."
-                                                return-object
                                                 dense
                                                 full-width
                                               )
