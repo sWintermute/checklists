@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   backend:
@@ -53,20 +53,23 @@ services:
         ipv4_address: 172.25.0.7
       default:
 
-#  postgres_backups:
-#    container_name: checklists_postgres_backups
-#    env_file: .env
-#    image: prodrigestivill/postgres-backup-local:11-alpine
-#    restart: always
-#    links:
-#      - postgres_db
-#    depends_on:
-#      - postgres_db
-#    volumes:
-#      - /tmp/backups/:/backups/
-#    networks:
-#      private_network:
-#        ipv4_address: 172.25.0.9
+  qcluster:
+    image: checklists_backend
+    container_name: checklists_qcluster
+    env_file: .env
+    user: ${CURRENT_UID}
+    volumes:
+      - ./backend:/app/
+      - ./static:/app/static
+    restart: on-failure
+    entrypoint: python3
+    command: ./manage.py qcluster
+    depends_on:
+      - backend
+      - postgres_db
+    networks:
+      private_network:
+        ipv4_address: 172.25.0.9
 
 networks:
   private_network:
@@ -75,13 +78,12 @@ networks:
       config:
         - subnet: 172.25.0.0/16
 
-
 volumes:
   checklists_db_data:
     external:
       name: checklists_db_data
   checklists_db_backups:
-    external:   
+    external:
       name: checklists_db_backups
   checklists_media:
     external:

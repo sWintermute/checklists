@@ -57,7 +57,7 @@ services:
     container_name: checklists_frontend_dev
     env_file: .env
     user: ${CURRENT_UID}
-    image: node:12.14.1-alpine3.10
+    image: node:14.2.0-alpine3.11
     command: npm run serve
     volumes:
       - ./frontend:/app
@@ -68,6 +68,24 @@ services:
     networks:
       private_network:
         ipv4_address: 172.25.0.8
+
+  qcluster:
+    image: checklists_backend
+    container_name: checklists_qcluster_dev
+    env_file: .env
+    user: ${CURRENT_UID}
+    volumes:
+      - ./backend:/app/
+      - ./static:/app/static
+    restart: on-failure
+    entrypoint: python3
+    command: ./manage.py qcluster
+    depends_on:
+      - backend
+      - postgres_db
+    networks:
+      private_network:
+        ipv4_address: 172.25.0.9
 
   # pgadmin:
   #   container_name: checklists_pgadmin_dev

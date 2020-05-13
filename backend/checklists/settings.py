@@ -35,6 +35,8 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'import_export',
+    'django_q',
+    'post_office',
 ]
 
 if DEBUG:
@@ -63,7 +65,8 @@ if DEBUG:
 
 LOCAL_APPS = [
     'user_profile.apps.UserProfileConfig',
-    'lists'
+    'lists',
+    'notifications',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -95,6 +98,22 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'post_office.template.backends.post_office.PostOfficeTemplates',
+        'APP_DIRS': True,
+        'DIRS': [],
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
+            ]
+        }
+    }
 ]
 
 WSGI_APPLICATION = 'checklists.wsgi.application'
@@ -185,3 +204,32 @@ DJOSER = {
         'token_create': 'djoser.serializers.TokenCreateSerializer',
     },
 }
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 2,
+    'retry': 360,
+    'timeout': 300,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
+}
+
+EMAIL_BACKEND = 'post_office.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = get_env('EMAIL_USER')
+EMAIL_HOST_PASSWORD = get_env('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = get_env('EMAIL_USER')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+POST_OFFICE = {
+    'DEFAULT_PRIORITY': 'now',
+    'TEMPLATE_ENGINE': 'post_office',
+    'BACKENDS': {
+        'default': 'django_q_email.backends.DjangoQBackend',
+    }
+}
+
+DADATA_KEY = get_env('VUE_APP_DADATA_KEY')

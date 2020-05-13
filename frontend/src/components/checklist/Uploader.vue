@@ -18,7 +18,7 @@
             'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
           }"
           :style="{
-            backgroundImage: `url(${item.url})`
+            backgroundImage: `url(${item.url || item.file})`
           }"
           @click="handleFileClick($event, item, index)"
         >
@@ -68,6 +68,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { handleFile, transformCoordinate, dataURItoBlob } from '@/utils/uploader.js'
 // compatibility for window.URL
@@ -221,7 +222,7 @@ export default {
       this.showPreviewer()
       this.$nextTick(() => {
         const previewerImg = document.getElementById('previewerImg')
-        previewerImg.style.backgroundImage = `url(${item.url})`
+        previewerImg.style.backgroundImage = `url(${item.url || item.file})`
         this.currentIndex = index
       })
     },
@@ -238,7 +239,6 @@ export default {
         this.$emit('on-change', fileList[currentIndex], fileList)
         fileList.splice(currentIndex, 1)
       }
-      console.log(this.$listeners)
       if (this.$listeners['on-delete']) {
         this.$emit('on-delete', delFn)
       } else {

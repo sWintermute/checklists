@@ -19,8 +19,9 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
     serializer_class = serializers.ResponseListSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.queryset
-
+        queryset = models.Response.objects \
+            .prefetch_related('answers', 'answers__question', 'user') \
+            .all()
         fr = request.query_params.get("from", None)
         if (fr):
             queryset = queryset.filter(
@@ -54,15 +55,11 @@ class SurveyViewset(GenericViewSet, RetrieveModelMixin):
 class ResponseViewset(GenericViewSet, CreateModelMixin,
                       RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = models.Response.objects.prefetch_related(
-        'answers', 'answers__question').all()
+        'answers', 'answers__question', 'survey').all()
     serializer_class = serializers.ResponseSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-    def perform_update(self, serializer):
-        serializer.update(user=self.request.user)
-
 
 # Report viewsets
 

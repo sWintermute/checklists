@@ -61,7 +61,7 @@
                       v-for="(menu, i) in menus"
                       :key="i"
                       :to="menu.path"
-                      @click="menu.method && LOGOUT()"
+                      @click="menu.method && LOGOUT"
                     ) {{ menu.title }}
         v-content
             router-view
@@ -80,7 +80,6 @@ import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 import { mapGetters, mapActions, mapState } from 'vuex'
-import types from '@/store/types'
 
 export default {
   name: 'App',
@@ -126,11 +125,15 @@ export default {
     ]
   }),
   computed: {
-    ...mapState(['auth_token', 'loading']),
-    ...mapGetters(['isLoggedIn'])
+    ...mapState(['loading']),
+    ...mapGetters({
+      isLoggedIn: 'user/isLoggedIn',
+    })
   },
   methods: {
-    ...mapActions([types.LOGOUT])
+    ...mapActions({
+      LOGOUT: 'user/LOGOUT'
+    })
   }
 }
 </script>

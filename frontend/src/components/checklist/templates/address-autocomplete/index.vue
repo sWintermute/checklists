@@ -22,7 +22,6 @@
 import ApiService from '@/services/api.js'
 import tokenService from '@/services/tokenService.js'
 import axios from 'axios'
-import types from '@/store/types'
 import { mapState, mapActions, commit } from 'vuex'
 
 export default {
@@ -52,6 +51,7 @@ export default {
       })
     },
     items () {
+      if (!this.entries.length) return []
       return this.entries.map((entry) => {
         const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
         return Object.assign({}, entry, { value })
@@ -83,7 +83,9 @@ export default {
     this.$store.commit('SET_TEST', this.id)
   },
   methods: {
-    ...mapActions([types.CHECKLIST_AUTOCOMPLETE_FIELD]),
+    ...mapActions({
+      CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
+    }),
     tesrt () {
       this.$store.commit('SET_AUTOCOMPLETE', this.autocomplete)
     }

@@ -1,12 +1,17 @@
 import base64
 import imghdr
+import os
 import uuid
 from collections import defaultdict
 
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.base import ContentFile
+from django.utils import timezone
+from django_q.tasks import async_task
 from rest_framework import serializers
 
+from notifications import tasks
 from user_profile import models as umodels
 
 from . import models
@@ -40,14 +45,12 @@ class ReportSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    question_text = serializers.SerializerMethodField()
-
-    def get_question_text(self, obj):
-        return obj.question.text
+    question = QuestionSerializer()
 
     class Meta:
         model = models.Answer
-        fields = ('id', 'question', 'question_text', 'body')
+        depth = 1
+        fields = ('id', 'question', 'body')
 
 
 class ResponseListSerializer(serializers.ModelSerializer):
@@ -71,18 +74,26 @@ class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
         if isinstance(data, str):
-            if 'data:' in data and ';base64,' in data:
+            if ('http://' in data) or ('https://' in data):
+                complete_file_name = data.split('/')[-1]
+                path = os.path.join(settings.MEDIA_ROOT,
+                                    'files',
+                                    complete_file_name)
+                with open(path, "rb") as imageFile:
+                    decoded_file = imageFile.read()
+            elif 'data:' in data and ';base64,' in data:
                 header, data = data.split(';base64,')
 
-            try:
-                decoded_file = base64.b64decode(data)
-            except TypeError:
-                self.fail('invalid_image')
+                try:
+                    decoded_file = base64.b64decode(data)
+                except TypeError:
+                    self.fail('invalid_image')
 
-            file_name = str(uuid.uuid4())[:12]
-            file_extension = self.get_file_extension(file_name, decoded_file)
+                file_name = str(uuid.uuid4())[:12]
+                file_extension = self.get_file_extension(
+                    file_name, decoded_file)
 
-            complete_file_name = "%s.%s" % (file_name, file_extension,)
+                complete_file_name = f"{file_name}.{file_extension}"
 
             data = ContentFile(decoded_file, name=complete_file_name)
 
@@ -137,6 +148,48 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         return response
 
+    def update(self, instance, validated_data):
+        instance.created = validated_data.get('created', instance.created)
+        instance.updated = validated_data.get('updated', instance.updated)
+        instance.survey = validated_data.get('survey', instance.survey)
+
+        answers = self.initial_data['answers']
+        for answer in answers:
+            ans = models.Answer.objects.get(id=answer['id'])
+            ans.body = answer['body']
+            ans.updated = timezone.now()
+            ans.save()
+
+        instance.photo.all().delete()
+
+        photos = validated_data.get('photo', [])
+        content_type = ContentType.objects.get(model='response',
+                                               app_label='lists')
+        for photo in photos:
+            models.Attachment.objects.create(
+                object_id=instance.id, content_type=content_type, **photo)
+        async_task(tasks.basic_report, instance)
+        return instance
+
+    def validate(self, attrs):
+        in_survey_count = len(
+            [x for x in attrs['survey'].questions.all() if x.required is True])
+
+        in_response_count = len(
+            [x for x in attrs['answers'] if x['question']['required'] is True])
+
+        if attrs['photo'] is not []:
+            in_response_count += 1
+
+        if in_response_count < in_survey_count:
+            raise serializers.ValidationError(
+                "Не все обязательные поля заполнены")
+
+        attrs['answers'] = self.initial_data['answers']
+        for x in attrs['answers']:
+            x['question'] = models.Question(**x['question'])
+        return super().validate(attrs)
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -161,6 +214,17 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
         super(ReportQuestionSerializer, self).__init__(*args, **kwargs)
 
     notes = serializers.SerializerMethodField()
+    answer = serializers.SerializerMethodField()
+
+    def get_answer(self, obj):
+        dict_response_answers = defaultdict(list)
+        for x in self.answers:
+            dict_response_answers[x.response_id].append(x)
+        for response in self.responses:
+            response_answers = dict_response_answers[response.id]
+            for answer in [x for x in response_answers
+                           if x.question_id is obj.id]:
+                return answer.body
 
     def get_notes(self, obj):
         key_choices = obj.key_choices.split(";")
@@ -191,7 +255,8 @@ class ReportQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = ('id', 'text', 'order', 'choices', 'key_choices', 'notes')
+        fields = ('id', 'text', 'order', 'choices',
+                  'key_choices', 'notes', 'answer')
 
 
 class ReportSurveySerializer(serializers.ModelSerializer):

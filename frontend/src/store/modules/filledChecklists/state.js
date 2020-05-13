@@ -1,6 +1,9 @@
-export default {
-    filledList: {},
+export default () => ({
+    filledList: {
+        answers: [],
+        photo: []
+    },
     filledLists: [],
     address: [],
     excel: [],
-};
+});

@@ -42,6 +42,7 @@ class Question(models.Model):
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
     AUTOCOMPLETE_ADDRESS = 'address-autocomplete'
+    PHONE_NUMBER = 'phone-number'
 
     QUESTION_TYPES = (
         (TEXT, "Многострочный текст"),
@@ -52,6 +53,7 @@ class Question(models.Model):
         (SELECT_IMAGE, "Изображение"),
         (INTEGER, "Целое"),
         (AUTOCOMPLETE_ADDRESS, "Адрес (с автодополнением)"),
+        (PHONE_NUMBER, "Номер телефона"),
     )
 
     text = models.TextField("Текст")
@@ -71,7 +73,8 @@ class Question(models.Model):
     choices = models.TextField(
         "Варианты ответа", blank=True, null=True, help_text=CHOICES_HELP_TEXT
     )
-    key_choices = models.TextField("Варианты ответа для попадания в отчет", blank=True, null=True)
+    key_choices = models.TextField(
+        "Варианты ответа для попадания в отчет", blank=True, null=True)
 
     class Meta(object):
         verbose_name = "Вопрос"

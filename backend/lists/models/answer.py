@@ -6,6 +6,9 @@ from django.db import models
 from .question import Question
 from .response import Response
 
+from django_q.tasks import async_task
+from ..tasks import update_mapnode
+
 
 class Answer(models.Model):
     question = models.ForeignKey(
@@ -69,3 +72,18 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"{self.__class__.__name__} to '{self.question}'"
+
+    def save(self, force_insert=False,
+             force_update=False,
+             using=None,
+             update_fields=None):
+
+        res = super().save(force_insert=force_insert,
+                           force_update=force_update,
+                           using=using,
+                           update_fields=update_fields)
+
+        if self.question.type == Question.AUTOCOMPLETE_ADDRESS:
+            async_task(update_mapnode, self)
+
+        return res

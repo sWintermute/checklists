@@ -14,9 +14,6 @@ export default {
   SET_ENTRIES (state, payload) {
     state.entries = payload
   },
-  SET_TEST (state, payload) {
-    state.autocompleteId = payload
-  },
   SET_AUTOCOMPLETE (state, payload) {
     state.autocomplete = payload
   }

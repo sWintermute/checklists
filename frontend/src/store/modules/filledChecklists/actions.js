@@ -1,40 +1,39 @@
 import ApiService from '@/services/api.js'
-import types from '@/store/types'
 import { format } from 'date-fns'
 import download from 'downloadjs'
 import XLSX from 'xlsx'
 
 export default {
-  async [types.FETCH_FILLED_CHECKLIST](state, { id }) {
-    state.commit('SET_LOADING_STATUS', true)
+  async FETCH_FILLED_CHECKLIST (state, { id }) {
+    this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const response = await ApiService.get(`api/v1/response/${id}`)
-      state.commit('SET_FILLED_LIST', response["data"])
-      state.commit('SET_LOADING_STATUS', false)
+      const response = await ApiService.get(`api/v1/response`, id)
+      state.commit('SET_FILLED_LIST', response.data)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error.response)
     }
   },
-  async [types.FETCH_FILLED_CHECKLISTS](state) {
+  async FETCH_FILLED_CHECKLISTS (state) {
     try {
-      state.commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const response = (await Promise.all([
         ApiService.get('api/v1/responses'),
         await new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
-      state.commit('SET_FILLED_LISTS', response["data"])
-      state.commit('SET_LOADING_STATUS', false)
+      state.commit('SET_FILLED_LISTS', response.data)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   },
-  async [types.CREATE_EXCEL](store, { excelData }) {
+  async CREATE_EXCEL (store, { excelData }) {
     try {
-      store.commit('SET_LOADING_STATUS', true)
+      this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const { data: responses } = await ApiService.get('api/v1/responses', '', {
         params: {
@@ -101,51 +100,69 @@ export default {
       XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
       download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
-      store.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      store.commit('SET_LOADING_STATUS', false)
+      this.commit('SET_LOADING_STATUS', false)
       console.log(error)
     }
   },
-  async [types.FETCH_MAP](state) {
-    state.commit('SET_LOADING_STATUS', true)
+  async FETCH_MAP ({ commit }) {
+    this.commit('SET_LOADING_STATUS', true)
     ApiService.setHeader()
     try {
-      const response = await ApiService.get('api/v1/maps')
-      state.commit('SET_MAP', response["data"])
-      // for (let currentValue of this.state.filledChecklists.filledLists) {
-      //   // Получение заполненных чеклистов по id чеклиста
-      //   const foo = await ApiService.get(`api/v1/response/${currentValue.id}`)
-      //   // Получение обьекта с адресом из answer заполненного чеклиста
-      //   const bar = await foo["data"].answers.filter(item => item.question === 1)[0]
-      //   console.log(this.state.filledChecklists.filledLists)
-      //   let lat, lon
-      //   if (bar) {
-      //     // Подстановка токена для dadata
-      //     ApiService.setHeader(process.env.VUE_APP_DADATA_KEY)
-      //     // Запрос на получение lat && lon от dadata
-      //     try {
-      //       const address = await ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-      //         count: 1,
-      //         query: "Кемеровская область - Кузбасс," + bar["body"],
-      //         locations_boost: [{ kladr_id: "4200001200000" }]
-      //       })
+      const { data } = await ApiService.get('api/v1/maps')
+      const handler = {
+        get: function(target, name) {
+          return target.hasOwnProperty(name) ? target[name] : [];
+        }
+      };
+      const proxyPoints = new Proxy({}, handler);
 
-      //       lat = address["data"]["suggestions"][0]["data"]["geo_lat"]
-      //       lon = address["data"]["suggestions"][0]["data"]["geo_lon"]
+      for (let point of data) {
+        let key = `${point.lat}-${point.lon}`
+        proxyPoints[key] = proxyPoints[key].concat(point)
+      }
+      const points = Object.assign({}, proxyPoints)
 
-      //       state.commit('SET_ADDRESS', [lat, lon])
-      //     } catch {
-      //       console.log("Error")
-      //     }
-      //     console.log(this.state.filledChecklists.address)
-      //   }
-      // }
-      state.commit('SET_LOADING_STATUS', false)
+      const test = Object.keys(points).map((i) => {
+        const [ lat, lon ] = i.split('-')
+        return { lat, lon, points: points[i] }
+      })
+
+      commit('SET_MAP', test)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      state.commit('SET_LOADING_STATUS', false)
-      console.log(error.response)
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   },
-  async [types.CREATE_FILLED_CHECKLISTS]({ commit }) { }
+  async UPDATE_FILLED_CHECKLIST ({ commit, dispatch, state }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
+    try {
+      const { id, survey, answers, photo } = state.filledList
+      const response = await ApiService.put('api/v1/response', id, {
+        survey,
+        answers,
+        photo
+      })
+      await dispatch('FETCH_FILLED_CHECKLIST', { id })
+      this.commit('SET_LOADING_STATUS', false)
+    } catch (error) {
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
+    }
+  },
+  async DELETE_FILLED_CHECKLIST ({ commit, dispatch, state }, { responseId }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
+    try {
+      await ApiService.delete('api/v1/response', responseId)
+      await dispatch('FETCH_FILLED_CHECKLISTS')
+      this.commit('SET_LOADING_STATUS', false)
+    } catch (error) {
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
+    }
+  }
 }

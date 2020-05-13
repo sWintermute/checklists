@@ -8,7 +8,7 @@ import reports from './modules/reports'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  strict: true,
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     status: '',
     loading: false,

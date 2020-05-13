@@ -29,6 +29,11 @@
                 :url="url"
               )
               l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]")
+                l-popup(style="margin:0;")
+                  v-list(max-height="400px" dense class="overflow-y-auto")
+                    v-subheader Ответы
+                    v-list-item-group
+                      v-list-item(v-for="point in item.points" v-text="point.name" :to="`/response/${point.response}`")
 </template>
 
 <script>
@@ -36,7 +41,6 @@ import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet'
 import { latLng } from 'leaflet'
 
 import { mapState, mapActions } from 'vuex'
-import types from '@/store/types'
 
 export default {
   name: 'Checklists',
@@ -51,7 +55,7 @@ export default {
     return {
       zoom: 13,
       center: latLng(53.764315, 87.1142745),
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      url: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       withPopup: latLng(47.41322, -1.219482),
@@ -85,23 +89,18 @@ export default {
     this.FETCH_MAP()
   },
   methods: {
-    ...mapActions([
-      types.FETCH_MAP,
-      types.FETCH_CHECKLISTS,
-      types.FETCH_FILLED_CHECKLISTS
-    ]),
-    zoomUpdate (zoom) {
-      this.currentZoom = zoom
-    },
-    centerUpdate (center) {
-      this.currentCenter = center
-    },
-    showLongText () {
-      this.showParagraph = !this.showParagraph
-    },
-    innerClick () {
-      alert('Click!')
-    }
+    ...mapActions({
+      FETCH_MAP: 'filledChecklists/FETCH_MAP',
+      FETCH_CHECKLISTS: 'checklists/FETCH_CHECKLISTS',
+      FETCH_FILLED_CHECKLISTS: 'filledChecklists/FETCH_FILLED_CHECKLISTS'
+    })
   }
 }
 </script>
+
+<style scoped>
+.leaflet-popup-content {
+  margin: 0;
+  background: blue;
+}
+</style>
