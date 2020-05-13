@@ -86,9 +86,6 @@ export default {
   components: {
     Loading
   },
-  created () {
-    console.log(this)
-  },
   data: () => ({
     onCancel: false,
     drawer: false,

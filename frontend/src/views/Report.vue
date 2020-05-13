@@ -53,14 +53,10 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { format } from 'date-fns'
 
 import download from 'downloadjs'
-import JsonExcel from 'vue-json-excel'
 import XLSX from 'xlsx'
 
 export default {
   name: 'Report',
-  components: {
-    downloadExcel: JsonExcel
-  },
   data: () => ({
     qwe: null,
     json_fields: {

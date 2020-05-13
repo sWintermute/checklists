@@ -13,12 +13,6 @@ export default {
       state.list.user = userProfile.id;
       state.list.photo = fileList;
       state.list.answers = [];
-      if (state.autocomplete) {
-        state.list.answers.push({
-          question: state.autocompleteId,
-          body: state.autocomplete.value,
-        });
-      }
       for (const [key, value] of Object.entries(state.answers)) {
         state.list.questions.forEach((question) => {
           if (question.id == key) {
@@ -82,18 +76,18 @@ export default {
         });
     });
   },
-  CHECKLIST_AUTOCOMPLETE_FIELD ({ commit }, { search, count }) {
+  CHECKLIST_AUTOCOMPLETE_FIELD ({ commit }, { search }) {
     return new Promise((resolve, reject) => {
-      ApiService.setHeader('519fbd1afac8c2380f617046c95a6789a39fa021');
-      ApiService.post(
-        'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
-        {
-          count: count,
-          query: search,
-        },
-      )
+      ApiService.setHeader(process.env.VUE_APP_DADATA_KEY);
+      ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+        count: 5,
+        query: 'Кемеровская область - Кузбасс,' + search,
+        locations_boost: [
+          { kladr_id: '4200001200000' }
+        ]
+      })
         .then(response => {
-          commit('SET_ENTRIES', response.data.suggestions);
+          commit('SET_ENTRIES', response.data.suggestions.map(suggestion => suggestion.value));
           resolve(response);
         })
         .catch(error => {
