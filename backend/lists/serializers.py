@@ -74,7 +74,7 @@ class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
         if isinstance(data, str):
-            if 'http://' in data:
+            if ('http://' in data) or ('https://' in data):
                 complete_file_name = data.split('/')[-1]
                 path = os.path.join(settings.MEDIA_ROOT,
                                     'files',
