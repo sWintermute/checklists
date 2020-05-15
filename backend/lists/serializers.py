@@ -155,10 +155,19 @@ class ResponseSerializer(serializers.ModelSerializer):
 
         answers = self.initial_data['answers']
         for answer in answers:
-            ans = models.Answer.objects.get(id=answer['id'])
-            ans.body = answer['body']
-            ans.updated = timezone.now()
-            ans.save()
+            if answer.get('id', None):
+                ans = models.Answer.objects.get(id=answer['id'])
+                ans.body = answer['body']
+                ans.updated = timezone.now()
+                ans.save()
+            else:
+                models.Answer.objects.create(
+                    question=answer['question'],
+                    response=instance,
+                    body=answer["body"],
+                    created=timezone.now(),
+                    updated=timezone.now(),
+                )
 
         instance.photo.all().delete()
 
