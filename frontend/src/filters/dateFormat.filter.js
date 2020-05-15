@@ -1,8 +1,8 @@
-import moment from 'moment'
+import { format } from 'date-fns'
 
 export default (value) => {
     if (value) {
-        return moment(String(value)).format('MM/DD/YYYY hh:mm')
+        return format(new Date(value), `dd-MM-yyyy'T'hh:mm`)
     }
     return '(n/a)'
 }

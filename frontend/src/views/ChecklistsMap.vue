@@ -28,12 +28,12 @@
               l-tile-layer(
                 :url="url"
               )
-              l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]")
+              l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]" :key="i")
                 l-popup(style="margin:0;")
                   v-list(max-height="400px" dense class="overflow-y-auto")
                     v-subheader Ответы
                     v-list-item-group
-                      v-list-item(v-for="point in item.points" v-text="point.name" :to="`/response/${point.response}`")
+                      v-list-item(v-for="(point, i) in item.points" v-text="point.name" :to="`/response/${point.response}`" :key="i")
 </template>
 
 <script>

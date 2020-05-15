@@ -1,21 +1,21 @@
 <template lang="pug">
     div
-        header {{ title }}
-        v-autocomplete(
-            v-model="autocomplete"
-            :items="items"
-            :loading="isLoading"
-            :search-input.sync="search"
-            color="white"
-            item-text="value"
-            item-value="value"
-            placeholder="Введите адрес..."
-            return-object
-            cache-items
-            dense
-            full-width
-            @input="tesrt"
-        )
+      header {{ title }}
+      v-autocomplete(
+        v-model="autocomplete"
+        :items="items"
+        :loading="isLoading"
+        :search-input.sync="search"
+        color="white"
+        item-text="value"
+        item-value="value"
+        placeholder="Введите адрес..."
+        return-object
+        cache-items
+        dense
+        full-width
+        @input="tesrt"
+      )
 </template>
 
 <script>
