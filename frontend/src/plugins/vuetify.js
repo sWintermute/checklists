@@ -4,7 +4,7 @@ import zhHans from 'vuetify/es5/locale/ru'
 
 Vue.use(Vuetify)
 
-export default new Vuetify({
+const options = {
   icons: {
     iconfont: 'mdiSvg'
   },
@@ -12,4 +12,6 @@ export default new Vuetify({
     locales: { zhHans },
     current: 'zhHans'
   }
-})
+}
+
+export default new Vuetify(options)

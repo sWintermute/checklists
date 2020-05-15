@@ -60,19 +60,17 @@
                                       :label="n"
                                       :value="n"
                                     )
+                                template(v-else-if="answer.question.type === 'select-image'")
+                                  uploader(
+                                    v-model="answer.body"
+                                    title="Загрузите фото"
+                                    :autoUpload="false"
+                                  )
                                 template(v-else)
                                   v-text-field(
                                     v-model="answer.body"
                                     :label="answer.question.text"
                                   )
-                              v-col(
-                                cols="12"
-                              )
-                                uploader(
-                                  v-model="photo"
-                                  title="Загрузите фото"
-                                  :autoUpload="false"
-                                )
                     v-card-actions
                       v-spacer
                       v-btn(
