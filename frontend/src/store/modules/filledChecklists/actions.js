@@ -23,9 +23,13 @@ export default {
       let answers = {}
 
       for (let question of questions) {
-        answers[question.text] = {
-          body: "",
-          question
+        if (question.type === 'select-image') {
+          console.log(question)
+        } else {
+          answers[question.text] = {
+            body: "",
+            question
+          }
         }
       }
 
