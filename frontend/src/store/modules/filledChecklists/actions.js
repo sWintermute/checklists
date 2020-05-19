@@ -82,7 +82,7 @@ export default {
       const headers = {
         "Номер ответа": [],
         "Дата создания": [],
-        Почта: []
+        "Почта": []
       };
       const rows = [];
       for (const response of responses) {
@@ -94,13 +94,11 @@ export default {
         headers["Почта"].push(user_text);
 
         for (let { question, body } of answers) {
-          answersHeadersList.push(question.question_text);
-
-          console.log(question.question_text)
-
-          Array.isArray(headers[question.question_text])
-            ? headers[question.question_text].push(body)
-            : (headers[question.question_text] = [body]);
+          answersHeadersList.push(question.text);
+        
+          Array.isArray(headers[question.text])
+            ? headers[question.text].push(body)
+            : (headers[question.text] = [body]);
         }
 
         for (let header of Object.keys(headers)) {
