@@ -21,7 +21,7 @@ export default {
         })
       }
       ApiService.setHeader();
-      const response = await ApiService.post('/api/v1/response', state.list);
+      await ApiService.post('/api/v1/response', state.list);
       router.push('/');
       Vue.$toast.open({
         message: 'Чеклист успешно создан!',
@@ -46,7 +46,8 @@ export default {
       ApiService.setHeader();
       ApiService.get('api/v1/lists', listId)
         .then(response => {
-          const list = response.data;
+          let list = response.data;
+          list.questions = list.questions.sort((question, prevQuestion) => { if (question.order < prevQuestion.order) return -1 })
           commit('SET_LIST', list);
           this.commit('SET_LOADING_STATUS', false);
           resolve(response);

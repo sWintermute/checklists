@@ -56,7 +56,7 @@ export default {
           await new Promise(resolve => setTimeout(() => resolve(), 500))
         ])
       )[0];
-      state.commit("SET_FILLED_LISTS", response.data);
+      state.commit("SET_FILLED_LISTS", response.data.sort((answer, prevAnswer) => { if (answer.question.order < prevAnswer.question.order) return -1 }));
       this.commit("SET_LOADING_STATUS", false);
     } catch (error) {
       this.commit("SET_LOADING_STATUS", false);
@@ -93,12 +93,14 @@ export default {
         headers["Дата создания"].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"));
         headers["Почта"].push(user_text);
 
-        for (let { question_text, body } of answers) {
-          answersHeadersList.push(question_text);
+        for (let { question, body } of answers) {
+          answersHeadersList.push(question.question_text);
 
-          Array.isArray(headers[question_text])
-            ? headers[question_text].push(body)
-            : (headers[question_text] = [body]);
+          console.log(question.question_text)
+
+          Array.isArray(headers[question.question_text])
+            ? headers[question.question_text].push(body)
+            : (headers[question.question_text] = [body]);
         }
 
         for (let header of Object.keys(headers)) {
@@ -154,12 +156,12 @@ export default {
       }
       const points = Object.assign({}, proxyPoints);
 
-      const test = Object.keys(points).map(i => {
+      const mappedPoints = Object.keys(points).map(i => {
         const [lat, lon] = i.split("-");
         return { lat, lon, points: points[i] };
       });
 
-      commit("SET_MAP", test);
+      commit("SET_MAP", mappedPoints);
       this.commit("SET_LOADING_STATUS", false);
     } catch (error) {
       this.commit("SET_LOADING_STATUS", false);
@@ -171,12 +173,12 @@ export default {
     ApiService.setHeader();
     try {
       const { id, survey, answers, photo } = state.filledList;
-      const response = await ApiService.put("api/v1/response", id, {
+      await ApiService.put("api/v1/response", id, {
         survey,
         answers,
         photo
       });
-      await dispatch("FETCH_FILLED_CHECKLIST", { id });
+      dispatch("FETCH_FILLED_CHECKLIST", { id });
       this.commit("SET_LOADING_STATUS", false);
     } catch (error) {
       this.commit("SET_LOADING_STATUS", false);
