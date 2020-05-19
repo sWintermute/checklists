@@ -15,6 +15,7 @@
                     hide-default-header
                     hide-default-footer
                     class="elevation-1 mx-auto"
+                    sort-by="id"
                 )
                     template(v-slot:header)
                         thead

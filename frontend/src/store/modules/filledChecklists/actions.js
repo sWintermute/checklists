@@ -56,7 +56,7 @@ export default {
           await new Promise(resolve => setTimeout(() => resolve(), 500))
         ])
       )[0];
-      state.commit("SET_FILLED_LISTS", response.data.sort((answer, prevAnswer) => { if (answer.question.order < prevAnswer.question.order) return -1 }));
+      state.commit("SET_FILLED_LISTS", response.data);
       this.commit("SET_LOADING_STATUS", false);
     } catch (error) {
       this.commit("SET_LOADING_STATUS", false);

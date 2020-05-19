@@ -11,6 +11,7 @@
               :headers="headers"
               :items="filledLists"
               item-key="id"
+              sort-by="id"
           )
             template(v-slot:top)
               v-toolbar(flat color="white")
@@ -120,7 +121,7 @@ export default {
       { text: 'ID', align: 'left', value: 'id' },
       { text: 'Дата создания', value: 'created' },
       { text: 'Чеклист', value: 'survey' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Действия', value: 'actions', sortable: false },
     ],
     date: new Date().toISOString().substr(0, 10),
     dates: [],

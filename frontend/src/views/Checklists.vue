@@ -13,6 +13,7 @@
             :items-per-page="-1"
             item-key="id"
             hide-default-footer
+            sort-by="id"
           )
               template(
                 v-slot:body="{ items }"
