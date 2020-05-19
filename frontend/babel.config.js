@@ -6,6 +6,10 @@ module.exports = {
     '@babel/plugin-transform-runtime'
   ],
   env: {
+    development :{
+      sourceMaps: true,
+      retainLines: true
+    },
     test: {
       presets: [
         ['@babel/preset-env', {
