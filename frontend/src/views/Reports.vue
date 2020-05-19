@@ -11,6 +11,7 @@
             :headers="headers"
             :items="reports"
             :items-per-page="-1"
+            sort-by="id"
           )
               template(v-slot:top)
                   v-toolbar(flat color="white")
@@ -102,28 +103,28 @@
                   tr
                       td(style="width: 70px; text-align: center;") {{ item.id }}
                       td(class="text-xs-right")
-                          router-link(:to="'report/' + item.id" class="mx-2")
-                              | {{ item.name }}
+                        router-link(:to="'report/' + item.id" class="mx-2")
+                          | {{ item.name }}
                       td(class="text-xs-right") {{ item.date_from | date }} - {{ item.date_to | date }}
                       td
-                          v-row(
-                              align="center"
-                              justify="center"
-                          )
-                            v-col
-                              v-btn(
-                                color="error"
-                                class="custom-transform-class text-none"
-                                text
-                                tile
-                                @click="deleteItem(item)"
+                        v-row(
+                          align="center"
+                          justify="center"
+                        )
+                          v-col
+                            v-btn(
+                              color="error"
+                              class="custom-transform-class text-none"
+                              text
+                              tile
+                              @click="deleteItem(item)"
+                            )
+                              v-icon(
+                                class="mr-1 mb-1"
+                                small
                               )
-                                v-icon(
-                                  class="mr-1 mb-1"
-                                  small
-                                )
-                                  | {{ mdiDelete }}
-                                | Удалить отчет
+                                | {{ mdiDelete }}
+                              | Удалить отчет
 </template>
 
 <script>
