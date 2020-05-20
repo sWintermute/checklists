@@ -73,14 +73,22 @@
                                                 )
                                     template(v-else-if="question.type === 'select-image'")
                                         ValidationProvider(rules="required" v-slot="{ errors }")
-                                            uploader(
-                                              v-model="fileList"
-                                              title="Загрузите фото"
-                                              :autoUpload="false"
-                                            )
-                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
-                                                div.v-messages__wrapper
-                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                          uploader(
+                                            v-model="fileList"
+                                            title="Загрузите фото"
+                                            :autoUpload="false"
+                                          )
+                                          div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                            div.v-messages__wrapper
+                                              div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                    template(v-else-if="question.type === 'select'")
+                                      ValidationProvider(rules="required" v-slot="{ errors }")
+                                        v-select(
+                                          v-model="answers[question.id]"
+                                          :items="question.choices.split(';')",
+                                          label="Выберите вариант ответа"
+                                          :error-messages="errors"
+                                        )
                                     template(v-else)
                                         ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
                                             header {{ question.text }}
