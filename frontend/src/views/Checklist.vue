@@ -24,71 +24,83 @@
                             v-form(@submit.prevent="handleSubmit(sendChecklist)" id="check-login-form")
                                 div(v-for="(question, i) in list.questions" :key="i")
                                     template(v-if="question.type === 'phone-number'")
-                                        header {{ question.text }}
-                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
-                                            vue-phone-number-input(
-                                              v-model="answers[question.id]"
-                                              default-country-code="RU"
-                                              :translations="translations"
-                                              :error="!!errors[0]"
-                                              class="mb-4"
-                                            )
-                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
-                                              div.v-messages__wrapper
-                                                div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                      header {{ question.text }}
+                                      ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
+                                        vue-phone-number-input(
+                                          v-model="answers[question.id]"
+                                          default-country-code="RU"
+                                          :translations="translations"
+                                          :error="!!errors[0]"
+                                          class="mb-4"
+                                        )
+                                        div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                          div.v-messages__wrapper
+                                            div.v-messages__message.message-transition-enter-to {{ errors[0] }}
                                     template(v-else-if="question.type === 'address-autocomplete'")
-                                            header {{ question.text }}
-                                            ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
-                                              v-autocomplete(
-                                                v-model="answers[question.id]"
-                                                :items="autocompleteItems"
-                                                :search-input.sync="search"
-                                                :error-messages="errors"
-                                                color="white"
-                                                item-text="value"
-                                                item-value="value"
-                                                placeholder="Введите адрес..."
-                                                dense
-                                                full-width
-                                              )
+                                      header {{ question.text }}
+                                      ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
+                                        v-autocomplete(
+                                          v-model="answers[question.id]"
+                                          :items="autocompleteItems"
+                                          :search-input.sync="search"
+                                          :error-messages="errors"
+                                          color="white"
+                                          item-text="value"
+                                          item-value="value"
+                                          dense
+                                          full-width
+                                          hide-no-data
+                                          hide-selected
+                                          ref="myComboBox"
+                                        )
+                                          template(v-slot="label")
+                                            | {{search}}
                                     template(v-else-if="question.type === 'textarea'")
-                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
-                                            header {{ question.text }}
-                                            v-textarea(
-                                              solo
-                                              label="Оставьте замечания..."
-                                              class="mt-3"
-                                              v-model="answers[question.id]"
-                                              :error-messages="errors"
-                                            )
-                                    template(v-else-if="question.type === 'radio'")
+                                      ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }")
                                         header {{ question.text }}
-                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
-                                            v-radio-group(v-model="answers[question.id]" :error-messages="errors")
-                                                v-radio(
-                                                  v-for="n in question.choices.split(';')"
-                                                  :key="n"
-                                                  :label="n"
-                                                  :value="n"
-                                                )
+                                        v-textarea(
+                                          solo
+                                          label="Оставьте замечания..."
+                                          class="mt-3"
+                                          v-model="answers[question.id]"
+                                          :error-messages="errors"
+                                        )
+                                    template(v-else-if="question.type === 'radio'")
+                                      header {{ question.text }}
+                                      ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
+                                        v-radio-group(v-model="answers[question.id]" :error-messages="errors")
+                                          v-radio(
+                                            v-for="n in question.choices.split(';')"
+                                            :key="n"
+                                            :label="n"
+                                            :value="n"
+                                          )
                                     template(v-else-if="question.type === 'select-image'")
-                                        ValidationProvider(rules="required" v-slot="{ errors }")
-                                            uploader(
-                                              v-model="fileList"
-                                              title="Загрузите фото"
-                                              :autoUpload="false"
-                                            )
-                                            div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
-                                                div.v-messages__wrapper
-                                                    div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                      ValidationProvider(rules="required" v-slot="{ errors }")
+                                        uploader(
+                                          v-model="fileList"
+                                          title="Загрузите фото"
+                                          :autoUpload="false"
+                                        )
+                                        div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                          div.v-messages__wrapper
+                                            div.v-messages__message.message-transition-enter-to {{ errors[0] }}
+                                    template(v-else-if="question.type === 'select'")
+                                      ValidationProvider(rules="required" v-slot="{ errors }")
+                                        v-select(
+                                          v-model="answers[question.id]"
+                                          :items="question.choices.split(';')",
+                                          label="Выберите вариант ответа"
+                                          :error-messages="errors"
+                                        )
                                     template(v-else)
-                                        ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
-                                            header {{ question.text }}
-                                            v-text-field(
-                                              v-model="answers[question.id]"
-                                              label="Введите текст..."
-                                              :error-messages="errors"
-                                            )
+                                      ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
+                                        header {{ question.text }}
+                                        v-text-field(
+                                          v-model="answers[question.id]"
+                                          label="Введите текст..."
+                                          :error-messages="errors"
+                                        )
                     v-card-actions(class="justify-center pa-6")
                         v-spacer
                         v-btn(
@@ -141,13 +153,13 @@ export default {
     autocompleteItems () {
       if (!this.entries.length) return []
       return this.entries.map((entry) => {
-        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
+        const value = entry.data ? [entry.data.city, entry.data.street, entry.data.house].join(' ') : entry
         return Object.assign({}, entry, { value })
       })
     },
   },
   watch: {
-    search (value) {
+    search (value, prevValue) {
       if (!value) return
       this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
     },
