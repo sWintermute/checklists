@@ -47,24 +47,18 @@ export default {
         })
     })
   },
-  LOGOUT ({ commit }) {
-    return new Promise((resolve, reject) => {
+  async LOGOUT ({ commit }) {
+    try {
       ApiService.setHeader()
+      await ApiService.post('api/auth/token/logout')
       this.commit('SET_LOADING_STATUS', true)
-      ApiService.post('api/auth/token/logout')
-        .then((response) => {
-          ApiService.removeHeader()
-          commit('SET_LOGOUT')
-          resolve()
-        })
-        .catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-        .finally(() => {
-          this.commit('SET_LOADING_STATUS', false)
-          tokenService.destroyToken()
-        })
-    })
+      commit('SET_LOGOUT')
+      ApiService.removeHeader()
+      tokenService.destroyToken()
+      router.push('/login')
+      this.commit('SET_LOADING_STATUS', false)
+    } catch {
+      console.log(error)
+    }
   }
 }
