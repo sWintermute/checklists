@@ -82,13 +82,15 @@ export default {
       const headers = {
         "Номер ответа": [],
         "Дата создания": [],
-        "Почта": []
+        "Почта": [],
+        "Ссылка": []
       };
       const rows = [];
       for (const response of responses) {
         const { id, created, answers, user_text } = response;
         let answersHeadersList = ["Номер ответа", "Дата создания", "Почта"];
 
+        headers["Ссылка"].push(`http://checklist.landfinance.ru/response/${id}`);
         headers["Номер ответа"].push(id);
         headers["Дата создания"].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"));
         headers["Почта"].push(user_text);

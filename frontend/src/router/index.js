@@ -68,4 +68,17 @@ const router = new VueRouter({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+
+  const isLoggedIn = store.getters["user/isLoggedIn"];
+
+  if (isLoggedIn) {
+    if (to.path === '/login') {
+      next('/');
+    }
+  }
+
+  next();
+})
+
 export default router
