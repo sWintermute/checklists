@@ -27,7 +27,9 @@ Icon.Default.mergeOptions({
 Vue.config.productionTip = false
 
 Vue.use(VueLoading)
-Vue.use(VueToast)
+Vue.use(VueToast, {
+  position: 'top-right'
+})
 
 Vue.filter('date', DateFilter)
 
