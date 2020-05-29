@@ -93,6 +93,11 @@
                                           label="Выберите вариант ответа"
                                           :error-messages="errors"
                                         )
+                                    template(v-else-if="question.type === 'select-multiple'")
+                                      select-multiple(
+                                        v-model="answers[question.id]"
+                                        :headers="question.choices.split(';')"
+                                      )
                                     template(v-else)
                                       ValidationProvider(:rules="question.required ? 'required' : ''" v-slot="{ errors }" name="")
                                         header {{ question.text }}
@@ -120,6 +125,7 @@ import { mapState, mapActions } from 'vuex'
 
 import Uploader from '@/components/checklist/Uploader.vue'
 import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
+import selectMultiple from '@/components/checklist/templates/select-multiple'
 
 export default {
   name: 'Checklist',
@@ -128,7 +134,8 @@ export default {
     ValidationObserver,
     ValidationProvider,
     autocomplete,
-    VuePhoneNumberInput
+    VuePhoneNumberInput,
+    selectMultiple
   },
   data: () => ({
     autocomplete: null,

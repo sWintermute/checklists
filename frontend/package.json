@@ -24,7 +24,8 @@
     "vuex": "^3.4.0",
     "vuex-map-fields": "^1.4.0",
     "xlsx": "^0.16.0",
-    "yargs-parser": "^18.1.3"
+    "yargs-parser": "^18.1.3",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
