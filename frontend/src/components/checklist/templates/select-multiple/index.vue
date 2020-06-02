@@ -1,19 +1,22 @@
 <template lang="pug">
     div
       validation-provider(
-        v-for="(header, i) in headers"
-        :key="i"
         rules="required"
         v-slot="{ errors }"
       )
         v-checkbox(
-            v-model="internalValue"
-            multiple
-            :value="header"
-            :label="header"
-            :error-messages="errors"
-            hide-details
+          v-for="(header, i) in headers"
+          :key="i"
+          v-model="internalValue"
+          multiple
+          :value="header"
+          :label="header"
+          :error-messages="errors"
+          hide-details
         )
+        div.v-messages.theme--light.error--text.mt-2(v-if="errors[0]" role="alert")
+          div.v-messages__wrapper
+            div.v-messages__message.message-transition-enter-to {{ errors[0] }}
 </template>
 
 <script>
