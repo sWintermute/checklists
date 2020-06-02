@@ -76,63 +76,57 @@ export default {
       });
 
       const wb = XLSX.utils.book_new();
-      const currentChecklist = this.state.checklists.lists.filter(item => {
-        return item.id === excelData.checklists;
-      })[0];
-      const headers = {
+      const currentChecklist = this.state.checklists.lists.filter(item => item.id === excelData.checklists)[0];
+      const sortedResponses = {
+        "Ссылка": [],
         "Номер ответа": [],
         "Дата создания": [],
-        "Почта": [],
-        "Ссылка": []
-      };
-      const rows = [];
+        "Почта": []
+      }
+
       for (const response of responses) {
-        const { id, created, answers, user_text } = response;
-        let answersHeadersList = ["Номер ответа", "Дата создания", "Почта"];
-
-        headers["Ссылка"].push(`http://checklist.landfinance.ru/response/${id}`);
-        headers["Номер ответа"].push(id);
-        headers["Дата создания"].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"));
-        headers["Почта"].push(user_text);
-
+        const { id, created, answers, user_text } = response
         for (let { question, body } of answers) {
-          answersHeadersList.push(question.text);
+          let key = `${question.text}`
+          sortedResponses[key] = []
+        }
+        sortedResponses['Ссылка'].push(`http://checklist.landfinance.ru/response/${id}`)
+        sortedResponses['Номер ответа'].push(id)
+        sortedResponses['Дата создания'].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"))
+        sortedResponses['Почта'].push(user_text)
+      }
+
+      for (let index = 0; index < responses.length; index++) {
+        const { id, created, answers, user_text } = responses[index]
+        const answersHeadersList = ["Ссылка", "Номер ответа", "Дата создания", "Почта"]
         
-          Array.isArray(headers[question.text])
-            ? headers[question.text].push(body)
-            : (headers[question.text] = [body]);
-        }
-
-        for (let header of Object.keys(headers)) {
-          if (!answersHeadersList.includes(header)) {
-            Array.isArray(headers[header]) ? headers[header].push("") : (headers[header] = [""]);
+        for (let header of Object.keys(sortedResponses)) {
+          const test = answers.reduce(function(acc, answer) {
+            acc[answer.question.text] = answer.body
+            return acc
+          }, {})
+          if (!(answersHeadersList.includes(header))) {
+            sortedResponses[header][index] = test[header]
           }
         }
       }
 
-      rows.unshift(Object.keys(headers));
+      let rows = []
+      let sortedResponsesValues = Object.values(sortedResponses)[0]
 
-      let foo = Object.values(headers)[0];
-
-      for (let i = 0; i < foo.length; i++) {
-        let item = [];
-        for (let header of Object.keys(headers)) {
-          if (headers[header].length < foo.length) {
-            let bar = foo.length - headers[header].length;
-            for (let j = 0; j < bar; j++) {
-              headers[header].unshift("");
-            }
-          }
-          headers[header][i] ? item.push(headers[header][i]) : item.push("");
+      for (let i = 0; i < sortedResponsesValues.length; i++) {
+        let row = []
+        for (let header of Object.keys(sortedResponses)) {
+          row.push(sortedResponses[header][i])
         }
-        rows.push(item);
+        rows.push(row)
       }
 
-      const wsData = XLSX.utils.json_to_sheet(rows, { skipHeader: true });
-      XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`);
-      const str = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-      download(str, `${currentChecklist.name}.xlsx`, "application/vnd.ms-excel");
-      this.commit("SET_LOADING_STATUS", false);
+      const wsData = XLSX.utils.json_to_sheet([Object.keys(sortedResponses), ...rows], { skipHeader: true })
+      XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
+      const str = XLSX.write(wb, { bookType: "xlsx", type: "binary" })
+      download(str, `${currentChecklist.name}.xlsx`, "application/vnd.ms-excel")
+      this.commit("SET_LOADING_STATUS", false)
     } catch (error) {
       this.commit("SET_LOADING_STATUS", false);
       console.log(error);
@@ -149,13 +143,11 @@ export default {
         }
       };
       const proxyPoints = new Proxy({}, handler);
-
       for (let point of data) {
         let key = `${point.lat}-${point.lon}`;
         proxyPoints[key] = proxyPoints[key].concat(point);
       }
       const points = Object.assign({}, proxyPoints);
-
       const mappedPoints = Object.keys(points).map(i => {
         const [lat, lon] = i.split("-");
         return { lat, lon, points: points[i] };
