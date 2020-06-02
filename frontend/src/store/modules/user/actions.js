@@ -49,8 +49,6 @@ export default {
   },
   async LOGOUT ({ commit }) {
     try {
-      ApiService.setHeader()
-      await ApiService.post('api/auth/token/logout')
       this.commit('SET_LOADING_STATUS', true)
       commit('SET_LOGOUT')
       ApiService.removeHeader()

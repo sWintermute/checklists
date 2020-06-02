@@ -1,19 +1,19 @@
 <template lang="pug">
     div
-        validation-provider(
-            v-for="(header, i) in headers"
-            :key="i"
-            rules="required"
-            v-slot="{ errors }"
+      validation-provider(
+        v-for="(header, i) in headers"
+        :key="i"
+        rules="required"
+        v-slot="{ errors }"
+      )
+        v-checkbox(
+            v-model="internalValue"
+            multiple
+            :value="header"
+            :label="header"
+            :error-messages="errors"
+            hide-details
         )
-            v-checkbox(
-                v-model="internalValue"
-                multiple
-                :value="header"
-                :label="header"
-                :error-messages="errors"
-                hide-details
-            )
 </template>
 
 <script>

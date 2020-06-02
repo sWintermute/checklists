@@ -87,6 +87,7 @@
                                             div.v-messages__message.message-transition-enter-to {{ errors[0] }}
                                     template(v-else-if="question.type === 'select'")
                                       ValidationProvider(rules="required" v-slot="{ errors }")
+                                        header {{ question.text }}
                                         v-select(
                                           v-model="answers[question.id]"
                                           :items="question.choices.split(';')",
@@ -94,6 +95,7 @@
                                           :error-messages="errors"
                                         )
                                     template(v-else-if="question.type === 'select-multiple'")
+                                      header {{ question.text }}
                                       select-multiple(
                                         v-model="answers[question.id]"
                                         :headers="question.choices.split(';')"
