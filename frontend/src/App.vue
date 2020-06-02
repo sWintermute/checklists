@@ -18,7 +18,7 @@
             ) {{menu.title}}
         v-list-item
           v-list-item-content
-            v-btn(@click='LOGOUT') Выйти
+            v-btn(text @click='LOGOUT') Выйти
     v-app-bar(
       app
     )
@@ -49,10 +49,10 @@
       )
       v-toolbar-items(
         v-if="isLoggedIn"
+        class="hidden-sm-and-down"
       )
         v-btn(
           text
-          class="hidden-sm-and-down"
           v-for="(menu, i) in menus"
           :key="i"
           :to="menu.path"
