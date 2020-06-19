@@ -5,44 +5,35 @@ import XLSX from "xlsx";
 
 export default {
   async FETCH_FILLED_CHECKLIST({ commit }, { id }) {
-    this.commit("SET_LOADING_STATUS", true);
     ApiService.setHeader();
     try {
-      const { data } = (
-        await Promise.all([
+      const { data } = (await Promise.all([
           ApiService.get(`api/v1/response`, id),
           new Promise(resolve => setTimeout(() => resolve(), 500))
         ])
       )[0];
       await this.dispatch("checklists/FETCH_CHECKLIST", data.survey);
-      const { questions } = this.state.checklists.list;
-      const responseAnswers = data.answers
 
-      // [...questions, ...responseQuestions].filter(question => question.)
+      const { questions } = this.getters['checklists/currentList'];
+      const responseAnswers = [...data.answers]
+      const answers = {}
 
-      let answers = {}
-
-      for (let question of questions) {
-        if (question.type === 'select-image') {
-          console.log(question)
-        } else {
-          answers[question.text] = {
-            body: "",
-            question
+      for (const { question } of questions) {
+        if (question.type !== 'select-image') {
+          const answer = responseAnswers.find(answer => question.id === answer.question.id)
+          if (answer) {
+            answers[question.id] = {
+              body: answer.body,
+              question
+            }
           }
         }
       }
 
-      for (let answer of responseAnswers) {
-        answers[answer.question.text] = answer
-      }
+      const response = Object.assign({}, data, { answers: Object.keys(answers).map(id => answers[id]) })
 
-      commit("SET_FILLED_LIST", Object.assign({}, data, {
-        answers: Object.keys(answers).map(key => answers[key])
-      }));
-      this.commit("SET_LOADING_STATUS", false);
+      commit("SET_FILLED_LIST", response);
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
       console.log(error);
     }
   },

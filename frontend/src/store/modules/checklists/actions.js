@@ -3,31 +3,22 @@ import router from '@/router';
 import ApiService from '@/services/api.js';
 
 export default {
-  async SEND_CHECKLIST ({ commit, state }, { fileList, userProfile, listId }) {
+  async SEND_CHECKLIST ({ commit, state, getters }, { fileList: photo }) {
     try {
-      this.commit('SET_LOADING_STATUS', true);
-      state.list.id = parseInt(listId);
-      state.list.created = new Date();
-      state.list.updated = new Date();
-      state.list.survey = parseInt(listId);
-      state.list.user = userProfile.id;
-      state.list.photo = fileList;
-      state.list.answers = [];
-      for (const [key, value] of Object.entries(state.answers)) {
-        state.list.questions.forEach((question) => {
-          if (question.id == key) {
-            state.list.answers.push({ question, body: value });
-          }
-        })
+      const currentList = getters.currentList;
+      const list = {
+        survey: currentList.id,
+        answers: currentList.questions,
+        photo
       }
+
       ApiService.setHeader();
-      await ApiService.post('/api/v1/response', state.list);
+      await ApiService.post('/api/v1/response', list);
       router.push('/');
       Vue.$toast.open({
         message: 'Чеклист успешно создан!',
         type: 'success',
       });
-      this.commit('SET_LOADING_STATUS', false);
     } catch (error) {
       Vue.$toast.open({
         message: [
@@ -36,42 +27,36 @@ export default {
         type: 'error',
       });
       console.log(error.response);
-      this.commit('SET_LOADING_STATUS', false);
       router.push('/');
     }
   },
-  FETCH_CHECKLIST ({ commit }, listId) {
-    return new Promise((resolve, reject) => {
-      this.commit('SET_LOADING_STATUS', true);
+  async FETCH_CHECKLIST ({ commit }, listId) {
+    try {
       ApiService.setHeader();
-      ApiService.get('api/v1/lists', listId)
-        .then(response => {
-          let list = response.data;
-          list.questions = list.questions.sort((question, prevQuestion) => { if (question.order < prevQuestion.order) return -1 })
-          commit('SET_LIST', list);
-          this.commit('SET_LOADING_STATUS', false);
-          resolve(response);
-        })
-        .catch(error => {
-          this.commit('SET_LOADING_STATUS', false);
-          console.log(error.response);
-          reject(error);
-        });
-    });
+      const { data: list } = await ApiService.get('api/v1/lists', listId)
+      list.questions = list.questions
+                      .sort((question, prevQuestion) => {
+                        if (question.order < prevQuestion.order) return -1
+                      })
+                      .map(question => ({ question, body: '' }))
+      commit('SET_LIST', list);
+    } catch (error) {
+      console.log(error.response);
+    }
   },
   FETCH_CHECKLISTS ({ commit }) {
     return new Promise((resolve, reject) => {
-      this.commit('SET_LOADING_STATUS', true);
+      // this.commit('SET_LOADING_STATUS', true);
       ApiService.setHeader();
       ApiService.get('api/v1/lists')
         .then(response => {
           const lists = response.data;
           commit('SET_LISTS', lists);
-          this.commit('SET_LOADING_STATUS', false);
+          // this.commit('SET_LOADING_STATUS', false);
           resolve(response);
         })
         .catch(error => {
-          this.commit('SET_LOADING_STATUS', false);
+          // this.commit('SET_LOADING_STATUS', false);
           console.log(error.response);
           reject(error);
         });

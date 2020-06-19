@@ -1,4 +1,7 @@
+import { getField, updateField } from "vuex-map-fields";
+
 export default {
+  updateField,
   SET_ANSWERS (state, payload) {
     state.answers = payload
   },
