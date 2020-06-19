@@ -27,8 +27,10 @@ export default {
     ValidationProvider,
     ValidationObserver
   }, 
-  data: () => ({}),
-  mounted() {},
+  model: {
+    prop: 'value',
+    event: 'input'
+  },
   props: {
     value: {
       type: String,
