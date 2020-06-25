@@ -44,7 +44,18 @@
                                       dense
                                       full-width
                                     )
+                                template(v-else-if="answer.question.type === 'integer'")
+                                  v-text-field(
+                                    v-model="answer.body"
+                                    :label="answer.question.text"
+                                  )
+                                template(v-else-if="answer.question.type === 'text'")
+                                  v-text-field(
+                                    v-model="answer.body"
+                                    :label="answer.question.text"
+                                  )
                                 template(v-else-if="answer.question.type === 'textarea'")
+                                  header {{ answer.question.text }}
                                   v-textarea(
                                     solo
                                     :label="answer.question.text"
@@ -60,19 +71,18 @@
                                       :label="n"
                                       :value="n"
                                     )
-                                template(v-else)
-                                  v-text-field(
-                                    v-model="answer.body"
-                                    :label="answer.question.text"
-                                  )
                               v-col(
                                 cols="12"
                               )
-                                uploader(
-                                  v-model="photo"
-                                  title="Загрузите фото"
-                                  :autoUpload="false"
-                                )
+                                ValidationProvider(rules="required" v-slot="{ errors }")
+                                  uploader(
+                                    v-model="fileList"
+                                    title="Загрузите фото"
+                                    :autoUpload="false"
+                                  )
+                                  div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
+                                    div.v-messages__wrapper
+                                      div.v-messages__message.message-transition-enter-to {{ errors[0] }}
                     v-card-actions
                       v-spacer
                       v-btn(

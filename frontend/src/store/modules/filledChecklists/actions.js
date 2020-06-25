@@ -1,122 +1,111 @@
-import ApiService from "@/services/api.js";
-import { format } from "date-fns";
-import download from "downloadjs";
-import XLSX from "xlsx";
+import ApiService from '@/services/api.js'
+import { format } from 'date-fns'
+import download from 'downloadjs'
+import XLSX from 'xlsx'
 
 export default {
-  async FETCH_FILLED_CHECKLIST({ commit }, { id }) {
-    this.commit("SET_LOADING_STATUS", true);
-    ApiService.setHeader();
+  async FETCH_FILLED_CHECKLIST ({ commit }, { id }) {
+    ApiService.setHeader()
     try {
-      const { data } = (
-        await Promise.all([
-          ApiService.get(`api/v1/response`, id),
-          new Promise(resolve => setTimeout(() => resolve(), 500))
-        ])
-      )[0];
-      await this.dispatch("checklists/FETCH_CHECKLIST", data.survey);
-      const { questions } = this.state.checklists.list;
-      const responseAnswers = data.answers
+      const { data } = (await Promise.all([
+        ApiService.get('api/v1/response', id),
+        new Promise(resolve => setTimeout(() => resolve(), 500))
+      ]))[0]
+      await this.dispatch('checklists/FETCH_CHECKLIST', data.survey)
+      const { questions } = this.getters['checklists/currentList']
+      const answers = {}
 
-      // [...questions, ...responseQuestions].filter(question => question.)
-
-      let answers = {}
-
-      for (let question of questions) {
-        if (question.type === 'select-image') {
-          console.log(question)
-        } else {
-          answers[question.text] = {
-            body: "",
-            question
+      for (const { question } of questions) {
+        if (question.type !== 'select-image') {
+          const answer = data.answers.find(answer => question.id === answer.question.id)
+          if (answer) {
+            answers[question.id] = {
+              body: answer.body,
+              question
+            }
           }
         }
       }
 
-      for (let answer of responseAnswers) {
-        answers[answer.question.text] = answer
-      }
+      const response = Object.assign({}, data, { answers: Object.keys(answers).map(id => answers[id]) })
 
-      commit("SET_FILLED_LIST", Object.assign({}, data, {
-        answers: Object.keys(answers).map(key => answers[key])
-      }));
-      this.commit("SET_LOADING_STATUS", false);
+      commit('SET_FILLED_LIST', response)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      console.log(error)
     }
   },
-  async FETCH_FILLED_CHECKLISTS(state) {
+  async FETCH_FILLED_CHECKLISTS (state) {
     try {
-      this.commit("SET_LOADING_STATUS", true);
-      ApiService.setHeader();
+      this.commit('SET_LOADING_STATUS', true)
+      ApiService.setHeader()
       const response = (
         await Promise.all([
-          ApiService.get("api/v1/responses"),
+          ApiService.get('api/v1/responses'),
           await new Promise(resolve => setTimeout(() => resolve(), 500))
         ])
-      )[0];
-      state.commit("SET_FILLED_LISTS", response.data);
-      this.commit("SET_LOADING_STATUS", false);
+      )[0]
+      state.commit('SET_FILLED_LISTS', response.data)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   },
-  async CREATE_EXCEL(store, { excelData }) {
+  async CREATE_EXCEL (context, { excelData }) {
     try {
-      this.commit("SET_LOADING_STATUS", true);
-      ApiService.setHeader();
-      const { data: responses } = await ApiService.get("api/v1/responses", "", {
+      console.log(context, excelData)
+      this.commit('SET_LOADING_STATUS', true)
+      ApiService.setHeader()
+      const { data: responses } = await ApiService.get('api/v1/responses', '', {
         params: {
-          from: excelData.date_from,
-          to: excelData.date_to,
+          from: excelData.date_from || '',
+          to: excelData.date_to || '',
           lists: excelData.checklists
         }
-      });
+      })
 
-      const wb = XLSX.utils.book_new();
-      const currentChecklist = this.state.checklists.lists.filter(item => item.id === excelData.checklists)[0];
+      const wb = XLSX.utils.book_new()
+      const currentChecklist = this.state.checklists.lists.filter(item => item.id === excelData.checklists)[0]
       const sortedResponses = {
-        "Ссылка": [],
-        "Номер ответа": [],
-        "Дата создания": [],
-        "Почта": []
+        Ссылка: [],
+        'Номер ответа': [],
+        'Дата создания': [],
+        Почта: []
       }
 
       for (const response of responses) {
-        const { id, created, answers, user_text } = response
-        for (let { question, body } of answers) {
-          let key = `${question.text}`
+        const { id, created, answers, user_text: userText } = response
+        for (const { question } of answers) {
+          const key = `${question.text}`
           sortedResponses[key] = []
         }
-        sortedResponses['Ссылка'].push(`http://checklist.landfinance.ru/response/${id}`)
-        sortedResponses['Номер ответа'].push(id)
-        sortedResponses['Дата создания'].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"))
-        sortedResponses['Почта'].push(user_text)
+        sortedResponses['Ссылка'].push(XLSX.utils.decode_col(`http://checklist.landfinance.ru/response/${id}`))
+        sortedResponses['Номер ответа'].push(XLSX.utils.decode_col(id))
+        sortedResponses['Дата создания'].push(XLSX.utils.decode_col(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss")))
+        sortedResponses['Почта'].push(XLSX.utils.decode_col(userText))
       }
 
       for (let index = 0; index < responses.length; index++) {
-        const { id, created, answers, user_text } = responses[index]
-        const answersHeadersList = ["Ссылка", "Номер ответа", "Дата создания", "Почта"]
-        
-        for (let header of Object.keys(sortedResponses)) {
-          const test = answers.reduce(function(acc, answer) {
+        const { answers } = responses[index]
+        const answersHeadersList = ['Ссылка', 'Номер ответа', 'Дата создания', 'Почта']
+
+        for (const header of Object.keys(sortedResponses)) {
+          const test = answers.reduce(function (acc, answer) {
             acc[answer.question.text] = answer.body
             return acc
           }, {})
           if (!(answersHeadersList.includes(header))) {
-            sortedResponses[header][index] = test[header]
+            sortedResponses[header][index] = XLSX.utils.decode_col(test[header])
           }
         }
       }
 
-      let rows = []
-      let sortedResponsesValues = Object.values(sortedResponses)[0]
+      const rows = []
+      const sortedResponsesValues = Object.values(sortedResponses)[0]
 
       for (let i = 0; i < sortedResponsesValues.length; i++) {
-        let row = []
-        for (let header of Object.keys(sortedResponses)) {
+        const row = []
+        for (const header of Object.keys(sortedResponses)) {
           row.push(sortedResponses[header][i])
         }
         rows.push(row)
@@ -124,69 +113,69 @@ export default {
 
       const wsData = XLSX.utils.json_to_sheet([Object.keys(sortedResponses), ...rows], { skipHeader: true })
       XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
-      const str = XLSX.write(wb, { bookType: "xlsx", type: "binary" })
-      download(str, `${currentChecklist.name}.xlsx`, "application/vnd.ms-excel")
-      this.commit("SET_LOADING_STATUS", false)
+      const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+      download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   },
-  async FETCH_MAP({ commit }) {
-    this.commit("SET_LOADING_STATUS", true);
-    ApiService.setHeader();
+  async FETCH_MAP ({ commit }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
     try {
-      const { data } = await ApiService.get("api/v1/maps");
+      const { data } = await ApiService.get('api/v1/maps')
       const handler = {
-        get: function(target, name) {
-          return target.hasOwnProperty(name) ? target[name] : [];
+        get: function (target, name) {
+          return target.hasOwnProperty(name) ? target[name] : []
         }
-      };
-      const proxyPoints = new Proxy({}, handler);
-      for (let point of data) {
-        let key = `${point.lat}-${point.lon}`;
-        proxyPoints[key] = proxyPoints[key].concat(point);
       }
-      const points = Object.assign({}, proxyPoints);
+      const proxyPoints = new Proxy({}, handler)
+      for (const point of data) {
+        const key = `${point.lat}-${point.lon}`
+        proxyPoints[key] = proxyPoints[key].concat(point)
+      }
+      const points = Object.assign({}, proxyPoints)
       const mappedPoints = Object.keys(points).map(i => {
-        const [lat, lon] = i.split("-");
-        return { lat, lon, points: points[i] };
-      });
+        const [lat, lon] = i.split('-')
+        return { lat, lon, points: points[i] }
+      })
 
-      commit("SET_MAP", mappedPoints);
-      this.commit("SET_LOADING_STATUS", false);
+      commit('SET_MAP', mappedPoints)
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   },
-  async UPDATE_FILLED_CHECKLIST({ commit, dispatch, state }) {
-    this.commit("SET_LOADING_STATUS", true);
-    ApiService.setHeader();
+  async UPDATE_FILLED_CHECKLIST ({ dispatch, state }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
     try {
-      const { id, survey, answers, photo } = state.filledList;
-      await ApiService.put("api/v1/response", id, {
+      const { id, survey, answers, photo } = state.filledList
+      await ApiService.put('api/v1/response', id, {
         survey,
         answers,
         photo
-      });
-      dispatch("FETCH_FILLED_CHECKLIST", { id });
-      this.commit("SET_LOADING_STATUS", false);
+      })
+      dispatch('FETCH_FILLED_CHECKLIST', { id })
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   },
-  async DELETE_FILLED_CHECKLIST({ commit, dispatch, state }, { responseId }) {
-    this.commit("SET_LOADING_STATUS", true);
-    ApiService.setHeader();
+  async DELETE_FILLED_CHECKLIST ({ dispatch }, { responseId }) {
+    this.commit('SET_LOADING_STATUS', true)
+    ApiService.setHeader()
     try {
-      await ApiService.delete("api/v1/response", responseId);
-      await dispatch("FETCH_FILLED_CHECKLISTS");
-      this.commit("SET_LOADING_STATUS", false);
+      await ApiService.delete('api/v1/response', responseId)
+      await dispatch('FETCH_FILLED_CHECKLISTS')
+      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
-      this.commit("SET_LOADING_STATUS", false);
-      console.log(error);
+      this.commit('SET_LOADING_STATUS', false)
+      console.log(error)
     }
   }
-};
+}

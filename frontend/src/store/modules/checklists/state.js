@@ -1,7 +1,10 @@
 export default () => ({
-  list: {},
+  list: {
+    questions: []
+  },
+  photo: [],
   lists: [],
-  answers: [],
+  answers: {},
   entries: [],
   autocomplete: '',
   autocompleteId: 0
