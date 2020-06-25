@@ -53,7 +53,6 @@ export default {
   },
   async CREATE_EXCEL (context, { excelData }) {
     try {
-      console.log(context, excelData)
       this.commit('SET_LOADING_STATUS', true)
       ApiService.setHeader()
       const { data: responses } = await ApiService.get('api/v1/responses', '', {
@@ -79,10 +78,10 @@ export default {
           const key = `${question.text}`
           sortedResponses[key] = []
         }
-        sortedResponses['Ссылка'].push(XLSX.utils.decode_col(`http://checklist.landfinance.ru/response/${id}`))
-        sortedResponses['Номер ответа'].push(XLSX.utils.decode_col(id))
-        sortedResponses['Дата создания'].push(XLSX.utils.decode_col(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss")))
-        sortedResponses['Почта'].push(XLSX.utils.decode_col(userText))
+        sortedResponses['Ссылка'].push(`http://checklist.landfinance.ru/response/${id}`)
+        sortedResponses['Номер ответа'].push(XLSX.utils.format_cell(id))
+        sortedResponses['Дата создания'].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"))
+        sortedResponses['Почта'].push(userText)
       }
 
       for (let index = 0; index < responses.length; index++) {
@@ -91,11 +90,11 @@ export default {
 
         for (const header of Object.keys(sortedResponses)) {
           const test = answers.reduce(function (acc, answer) {
-            acc[answer.question.text] = answer.body
+            acc[answer.question.text] = Number(answer.body) || answer.body
             return acc
           }, {})
           if (!(answersHeadersList.includes(header))) {
-            sortedResponses[header][index] = XLSX.utils.decode_col(test[header])
+            sortedResponses[header][index] = test[header]
           }
         }
       }
@@ -111,7 +110,7 @@ export default {
         rows.push(row)
       }
 
-      const wsData = XLSX.utils.json_to_sheet([Object.keys(sortedResponses), ...rows], { skipHeader: true })
+      const wsData = XLSX.utils.aoa_to_sheet([Object.keys(sortedResponses), ...rows], { skipHeader: true })
       XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
       const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
       download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
