@@ -79,7 +79,7 @@ export default {
           const key = `${question.text}`
           sortedResponses[key] = []
         }
-        sortedResponses['Ссылка'].push(XLSX.utils.decode_col(`http://checklist.landfinance.ru/response/${id}`)d)
+        sortedResponses['Ссылка'].push(XLSX.utils.decode_col(`http://checklist.landfinance.ru/response/${id}`))
         sortedResponses['Номер ответа'].push(XLSX.utils.decode_col(id))
         sortedResponses['Дата создания'].push(XLSX.utils.decode_col(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss")))
         sortedResponses['Почта'].push(XLSX.utils.decode_col(userText))
