@@ -3,6 +3,7 @@ from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, \
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.pagination import PageNumberPagination
 
 from . import models, serializers
 from datetime import datetime
@@ -19,6 +20,9 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
     serializer_class = serializers.ResponseListSerializer
 
     def list(self, request, *args, **kwargs):
+        self.pagination_class = PageNumberPagination
+        self.page_size = 5
+        self.pagination_class.page_size = 5
         queryset = models.Response.objects \
             .prefetch_related('answers', 'answers__question', 'user') \
             .all()
