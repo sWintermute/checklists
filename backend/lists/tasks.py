@@ -4,31 +4,30 @@ import json
 from . import models
 
 
-def create_mapnode(answer):
+def update_mapnode(answer):
     request_data = json.dumps({"query": answer.body, "count": 1})
     response = get_dadata_suggestion(request_data)
 
-    models.MapNode.objects.create(
-        name=response["suggestions"][0]["unrestricted_value"],
-        lat=response["suggestions"][0]["data"]["geo_lat"],
-        lon=response["suggestions"][0]["data"]["geo_lon"],
-        response=answer.response,
-        answer=answer
-    )
+    suggestion = response["suggestions"][0]
+    unvalue = suggestion["unrestricted_value"]
+    geo_lat = suggestion["data"]["geo_lat"]
+    geo_lon = suggestion["data"]["geo_lon"]
 
-
-def update_mapnode(answer):
     nodes = [x for x in models.MapNode.objects.filter(answer=answer)]
     if nodes:
-        request_data = json.dumps({"query": answer.body, "count": 1})
-        response = get_dadata_suggestion(request_data)
         for node in nodes:
-            node.name = response["suggestions"][0]["unrestricted_value"]
-            node.lat = response["suggestions"][0]["data"]["geo_lat"]
-            node.lon = response["suggestions"][0]["data"]["geo_lon"]
+            node.name = unvalue
+            node.lat = geo_lat
+            node.lon = geo_lon
             node.save()
     else:
-        return create_mapnode(answer)
+        models.MapNode.objects.create(
+            name=unvalue,
+            lat=geo_lat,
+            lon=geo_lon,
+            response=answer.response,
+            answer=answer
+        )
 
 
 def get_dadata_suggestion(request_data):
