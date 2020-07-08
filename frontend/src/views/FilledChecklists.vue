@@ -204,7 +204,7 @@ export default {
   },
   async created () {
     const currentUserPage = this.$route.query.page
-    if (!currentUserPage || isNaN(currentUserPage) || parseInt(currentUserPage) <= 0) this.$router.replace('/responses/?page=1')
+    if (!currentUserPage || isNaN(currentUserPage) || parseInt(currentUserPage) <= 0) this.$router.replace('/responses?page=1')
     // await this.FETCH_FILLED_CHECKLISTS()
   },
   methods: {

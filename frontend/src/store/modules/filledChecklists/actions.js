@@ -41,16 +41,15 @@ export default {
   },
   async FETCH_FILLED_CHECKLISTS ({ commit, dispatch }, { pagination, currentUserPage }) {
     try {
-      if (!currentUserPage) router.replace('/?page=1')
+      if (!currentUserPage) router.replace('/responses?page=1')
       dispatch('resetFilledChecklistsState')
       ApiService.setHeader()
-      const data = (
-        await Promise.all([
-          await Vue.axios.get(`api/v1/responses/?page=${pagination.page || 1}`),
-          await this.dispatch('checklists/FETCH_CHECKLISTS'),
-          await new Promise(resolve => setTimeout(() => resolve(), 500))
-        ])
-      )[0]
+      const data = (await Promise.all([
+        await Vue.axios.get(`api/v1/responses/?page=${pagination.page || 1}`),
+        await this.dispatch('checklists/FETCH_CHECKLISTS'),
+        await new Promise(resolve => setTimeout(() => resolve(), 500))
+      ]))[0]
+      router.replace(`/responses?page=${pagination.page}`)
       commit('SET_FILLED_LISTS', data)
       // await this.dispatch('getAllLists', { method: 'get' })
     } catch (error) {
@@ -60,8 +59,21 @@ export default {
   async CREATE_EXCEL (context, { excelData }) {
     try {
       ApiService.setHeader()
-      const { data: responses } = await ApiService.get('api/v1/responses', '', {
+      // const { data: responses } = await ApiService.get('api/v1/responses', '', {
+      //   params: {
+      //     from: excelData.date_from || '',
+      //     to: excelData.date_to || '',
+      //     lists: excelData.checklists
+      //   }
+      // })
+
+      await this.dispatch('getAllLists', {
+        method: 'get',
+        // action,
+        // mutation,
+        path: '/api/v1/responses/',
         params: {
+          page: 1,
           from: excelData.date_from || '',
           to: excelData.date_to || '',
           lists: excelData.checklists
@@ -69,7 +81,8 @@ export default {
       })
 
       const wb = XLSX.utils.book_new()
-      const currentChecklist = this.state.checklists.lists.filter(item => item.id === excelData.checklists)[0]
+      const currentChecklist = this.getters['checklists/nameOfList'](excelData.checklists)[0]
+      const responses = this.state.paginationList
       const sortedResponses = {
         Ссылка: [],
         'Номер ответа': [],
@@ -94,12 +107,12 @@ export default {
         const answersHeadersList = ['Ссылка', 'Номер ответа', 'Дата создания', 'Почта']
 
         for (const header of Object.keys(sortedResponses)) {
-          const test = answers.reduce(function (acc, answer) {
+          const reducedAnswers = answers.reduce(function (acc, answer) {
             acc[answer.question.text] = Number(answer.body) || answer.body
             return acc
           }, {})
           if (!(answersHeadersList.includes(header))) {
-            sortedResponses[header][index] = test[header]
+            sortedResponses[header][index] = reducedAnswers[header]
           }
         }
       }

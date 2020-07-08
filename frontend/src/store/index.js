@@ -42,21 +42,28 @@ const store = new Vuex.Store({
       state.paginationPrevLink = prevLink
     },
     SET_PAGINATION_LIST (state, payload) {
-      state.paginationList = payload
+      console.log(payload)
+      state.paginationList.push(...payload)
     }
   },
   actions: {
-    async getAllLists ({ commit, dispatch }, { method, action, mutation }) {
-      console.log(this.state.paginationNextLink)
-      if (this.state.paginationNextLink) {
+    async getAllLists ({ commit, dispatch }, { method, action, mutation, path, params }) {
+      try {
         const response = await Vue.axios({
           method,
-          url: this.state.paginationNext
+          url: path,
+          params
         })
-        console.log(response, this.state.paginationNextLink)
+        // debugger
         commit('SET_PAGINATION_LIST', response)
-        // if (action) dispatch(action)
-        console.log(this)
+        // debugger
+        if (this.state.paginationNextLink) {
+          params.page = this.state.paginationNext
+          await this.dispatch('getAllLists', { method, action, mutation, path, params })
+          // debugger
+        }
+      } catch (error) {
+        console.log(error)
       }
     }
   },

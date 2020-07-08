@@ -76,15 +76,15 @@ export default {
     })
   },
   watch: {
-    options: {
-      async handler (pagination) {
-        await this.FETCH_CHECKLISTS({
-          pagination,
-          currentUserPage: this.$route.query.page
-        })
-      },
-      deep: true
-    }
+    // options: {
+    //   async handler (pagination) {
+    //     await this.FETCH_CHECKLISTS({
+    //       pagination,
+    //       currentUserPage: this.$route.query.page
+    //     })
+    //   },
+    //   deep: true
+    // }
   },
   async created () {
     await this.FETCH_CHECKLISTS()

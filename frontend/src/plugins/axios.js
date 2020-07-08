@@ -27,7 +27,7 @@ Vue.axios.interceptors.response.use(function ({ data }) {
       count: data.count,
       next,
       previous,
-      nextLink: data.next,
+      nextLink: data.next ? data.next.split('http://localhost')[1] : data.next,
       previousLink: data.previous
     })
     return data.results
