@@ -139,12 +139,12 @@ export default {
   }),
   computed: {
     // ...mapFields(`user`, { userProfile: 'userProfile' }),
-    ...mapFields(`checklists`, {
+    ...mapFields('checklists', {
       photo: 'photo',
       entries: 'entries',
       list: 'list'
     }),
-    ...mapMultiRowFields(`checklists`, { questions: 'list.questions' }),
+    ...mapMultiRowFields('checklists', { questions: 'list.questions' }),
     ...mapState({
       userProfile: state => state.user.userProfile
     }),
@@ -154,22 +154,22 @@ export default {
         const value = entry.data ? [entry.data.city, entry.data.street, entry.data.house].join(' ') : entry
         return Object.assign({}, entry, { value })
       })
-    },
+    }
   },
   watch: {
     search (value, prevValue) {
       if (!value) return
       this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
-    },
+    }
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
   },
   methods: {
     ...mapActions({
-        FETCH_CHECKLIST: 'checklists/FETCH_CHECKLIST',
-        SEND_CHECKLIST: 'checklists/SEND_CHECKLIST',
-        CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
+      FETCH_CHECKLIST: 'checklists/FETCH_CHECKLIST',
+      SEND_CHECKLIST: 'checklists/SEND_CHECKLIST',
+      CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
     }),
     async sendChecklist () {
       // this.$store.commit('checklists/SET_field.bodyS', this.field.bodys)

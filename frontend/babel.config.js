@@ -6,7 +6,7 @@ module.exports = {
     '@babel/plugin-transform-runtime'
   ],
   env: {
-    development :{
+    development: {
       sourceMaps: true,
       retainLines: true
     },

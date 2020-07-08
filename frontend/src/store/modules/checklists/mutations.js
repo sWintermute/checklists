@@ -1,7 +1,11 @@
-import { getField, updateField } from "vuex-map-fields";
+import { updateField } from 'vuex-map-fields'
+import { getDefaultState } from '@/store/modules/checklists/state'
 
 export default {
   updateField,
+  resetState (state) {
+    Object.assign(state, getDefaultState())
+  },
   SET_ANSWERS (state, payload) {
     state.answers = payload
   },

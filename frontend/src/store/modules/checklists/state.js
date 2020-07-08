@@ -1,3 +1,9 @@
+export const getDefaultState = () => {
+  return {
+    lists: []
+  }
+}
+
 export default () => ({
   list: {
     questions: []

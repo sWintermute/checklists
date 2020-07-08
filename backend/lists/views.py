@@ -21,8 +21,8 @@ class ResponseListViewset(GenericViewSet, ListModelMixin):
 
     def list(self, request, *args, **kwargs):
         self.pagination_class = PageNumberPagination
-        self.page_size = 5
-        self.pagination_class.page_size = 5
+        self.page_size = 20
+        self.pagination_class.page_size = 20
         queryset = models.Response.objects \
             .prefetch_related('answers', 'answers__question', 'user') \
             .all()

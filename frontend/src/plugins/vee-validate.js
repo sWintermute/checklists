@@ -11,6 +11,6 @@ extend('min', min)
 localize('ru', {
   messages: {
     ...ru.messages,
-    required: "Поле обязательно для заполнения"
+    required: 'Поле обязательно для заполнения'
   }
 })
