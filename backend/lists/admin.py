@@ -55,3 +55,8 @@ class AttachmentAdmin(admin.ModelAdmin):
 @admin.register(MapNode)
 class MapNodeAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_filter = ("survey",)
