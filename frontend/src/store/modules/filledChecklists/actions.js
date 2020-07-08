@@ -139,7 +139,7 @@ export default {
   async FETCH_MAP ({ commit }) {
     ApiService.setHeader()
     try {
-      const { data } = await ApiService.get('api/v1/maps')
+      const data = await ApiService.get('api/v1/maps')
       const handler = {
         get: function (target, name) {
           return target.hasOwnProperty(name) ? target[name] : []
@@ -155,7 +155,6 @@ export default {
         const [lat, lon] = i.split('-')
         return { lat, lon, points: points[i] }
       })
-
       commit('SET_MAP', mappedPoints)
     } catch (error) {
       console.log(error)

@@ -28,17 +28,21 @@
               l-tile-layer(
                 :url="url"
               )
-              l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]" :key="i")
-                l-popup(style="margin:0;")
-                  v-list(max-height="400px" dense class="overflow-y-auto")
-                    v-subheader Ответы
-                    v-list-item-group
-                      v-list-item(v-for="(point, i) in item.points" v-text="point.name" :to="`/response/${point.response}`" :key="i")
+              v-marker-cluster(:options="clusterOptions")
+                l-marker(v-for="(item, i) in address" :lat-lng="[item.lat, item.lon]" :key="i")
+                  l-popup(style="margin:0;")
+                    v-list(max-height="400px" dense class="overflow-y-auto")
+                      v-subheader Ответы
+                      v-list-item-group
+                        v-list-item(v-for="(point, i) in item.points" v-text="point.name" :to="`/response/${point.response}`" :key="i")
 </template>
 
 <script>
 import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from 'vue2-leaflet'
-import { latLng } from 'leaflet'
+import { latLng, Icon, icon } from 'leaflet'
+import Vue2LeafletMarkercluster from '@/components/Vue2LeafletMarkercluster'
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 
 import { mapState, mapActions } from 'vuex'
 
@@ -49,26 +53,30 @@ export default {
     LTileLayer,
     LMarker,
     LPopup,
-    LTooltip
+    LTooltip,
+    'v-marker-cluster': Vue2LeafletMarkercluster
   },
-  data () {
-    return {
-      zoom: 13,
-      center: latLng(53.764315, 87.1142745),
-      url: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      attribution:
-        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(47.41322, -1.219482),
-      withTooltip: latLng(47.41422, -1.250482),
-      currentZoom: 11.5,
-      currentCenter: latLng(47.41322, -1.219482),
-      showParagraph: false,
-      mapOptions: {
-        zoomSnap: 0.5
-      },
-      showMap: true
-    }
-  },
+  data: () => ({
+    icon: icon(Object.assign({},
+      Icon.Default.prototype.options,
+      { iconUrl, shadowUrl }
+    )),
+    zoom: 13,
+    center: latLng(53.764315, 87.1142745),
+    url: 'https://{s}.tile.osm.org/{z}/{x}/{y}.png',
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    withPopup: latLng(47.41322, -1.219482),
+    withTooltip: latLng(47.41422, -1.250482),
+    currentZoom: 11.5,
+    currentCenter: latLng(47.41322, -1.219482),
+    showParagraph: false,
+    mapOptions: {
+      zoomSnap: 0.5
+    },
+    showMap: true,
+    clusterOptions: {}
+  }),
   computed: {
     ...mapState({
       filledLists: state => state.filledChecklists.filledLists,
@@ -76,13 +84,21 @@ export default {
       address: state => state.filledChecklists.address
     }),
     getFilledListsByChecklistId (checklistId) {
-      this.filledLists
+      return this.filledLists
         .filter(item => item.id === checklistId)
         .reduce((accumulator, currentValue, i, arr) => {
           this.FETCH_FILLED_CHECKLIST(currentValue.id)
           accumulator.push()
         }, [])
     }
+  },
+  mounted () {
+    setTimeout(() => {
+      console.log('done')
+      this.$nextTick(() => {
+        this.clusterOptions = { disableClusteringAtZoom: 11 }
+      })
+    }, 5000)
   },
   created () {
     this.FETCH_CHECKLISTS()
@@ -99,8 +115,11 @@ export default {
 </script>
 
 <style scoped>
-.leaflet-popup-content {
-  margin: 0;
-  background: blue;
-}
+  @import "~leaflet/dist/leaflet.css";
+  @import "~leaflet.markercluster/dist/MarkerCluster.css";
+  @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+  .leaflet-popup-content {
+    margin: 0;
+    background: blue;
+  }
 </style>
