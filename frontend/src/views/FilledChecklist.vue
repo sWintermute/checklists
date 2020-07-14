@@ -94,9 +94,9 @@
 </template>
 
 <script>
-import { createHelpers } from "vuex-map-fields"
+import { createHelpers, mapMultiRowFields, mapFields } from 'vuex-map-fields'
 import { mapState, mapActions } from 'vuex'
-import { mapMultiRowFields, mapFields } from 'vuex-map-fields'
+
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import Uploader from '@/components/checklist/Uploader.vue'
 
@@ -108,11 +108,11 @@ export default {
     ValidationProvider
   },
   data: () => ({
-    search: null,
+    fileList: [],
+    search: null
   }),
   computed: {
-    ...mapFields(`filledChecklists`, { photo: 'filledList.photo' }),
-    ...mapMultiRowFields(`filledChecklists`, { answers: 'filledList.answers' }),
+    ...mapMultiRowFields('filledChecklists', { answers: 'filledList.answers' }),
     ...mapState({
       entries: state => state.checklists.entries,
       filledList: state => state.filledChecklists.filledList
@@ -122,7 +122,7 @@ export default {
       return this.entries.map((entry) => {
         console.log(entry)
         const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
-        
+
         return Object.assign({}, entry, { value })
       })
     }
@@ -142,7 +142,7 @@ export default {
       FETCH_FILLED_CHECKLIST: 'filledChecklists/FETCH_FILLED_CHECKLIST',
       UPDATE_FILLED_CHECKLIST: 'filledChecklists/UPDATE_FILLED_CHECKLIST',
       CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
-    }),
+    })
   }
 }
 </script>

@@ -10,10 +10,10 @@ export default {
     commit('resetState')
   },
   async FETCH_FILLED_CHECKLIST ({ commit }, { id }) {
-    ApiService.setHeader()
     try {
-      const { data } = (await Promise.all([
-        ApiService.get('api/v1/response', id),
+      ApiService.setHeader()
+      const data = (await Promise.all([
+        await ApiService.get('api/v1/response', id),
         new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
       await this.dispatch('checklists/FETCH_CHECKLIST', data.survey)

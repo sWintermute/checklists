@@ -94,11 +94,11 @@ export default {
       default: () => []
     },
     limit: {
-      type: Number | String,
+      type: [Number, String],
       default: 5
     },
     capture: {
-      type: Boolean | String,
+      type: [Boolean, String],
       default: false
     },
     enableCompress: {
@@ -106,18 +106,20 @@ export default {
       default: true
     },
     maxWidth: {
-      type: String | Number,
+      type: [String, Number],
       default: 1024
     },
     quality: {
-      type: String | Number,
+      type: [String, Number],
       default: 0.92
     },
     url: {
-      type: String
+      type: String,
+      default: ''
     },
     params: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     name: {
       type: String,
@@ -128,7 +130,7 @@ export default {
       default: true
     },
     multiple: {
-      type: String | Boolean,
+      type: String || Boolean,
       default: ''
     },
     readonly: {

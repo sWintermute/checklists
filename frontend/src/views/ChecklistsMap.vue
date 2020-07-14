@@ -93,14 +93,13 @@ export default {
     }
   },
   mounted () {
-    setTimeout(() => {
-      console.log('done')
-      this.$nextTick(() => {
-        this.clusterOptions = { disableClusteringAtZoom: 11 }
-      })
-    }, 5000)
+    this.$nextTick(() => {
+      this.$store.commit('SET_LOADING_STATUS', false)
+      this.clusterOptions = { disableClusteringAtZoom: 11 }
+    })
   },
   created () {
+    // this.$store.commit('SET_LOADING_STATUS', true)
     this.FETCH_CHECKLISTS()
     this.FETCH_MAP()
   },

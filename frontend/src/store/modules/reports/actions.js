@@ -15,7 +15,6 @@ export default {
       ApiService.setHeader()
       const data = await ApiService.get('api/v1/reports')
       commit('SET_REPORTS', data)
-      this.commit('SET_LOADING_STATUS', false)
     } catch (error) {
       console.log(error)
     }
