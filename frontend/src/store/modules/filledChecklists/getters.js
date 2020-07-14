@@ -1,5 +1,6 @@
-import { getField, updateField } from "vuex-map-fields";
+import { getField } from 'vuex-map-fields'
 
 export default {
-    getField
+  getField,
+  getFilledChecklists: state => state.filledLists
 }

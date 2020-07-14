@@ -51,7 +51,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-        userProfile: 'user/userProfile'
+      userProfile: 'user/userProfile'
     })
   },
   created () {
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     ...mapActions({
-        PROFILE: 'user/PROFILE'
+      PROFILE: 'user/PROFILE'
     })
   }
 }

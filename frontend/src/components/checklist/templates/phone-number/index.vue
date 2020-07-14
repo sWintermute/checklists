@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import VuePhoneNumberInput from 'vue-phone-number-input';
-import 'vue-phone-number-input/dist/vue-phone-number-input.css';
+import VuePhoneNumberInput from 'vue-phone-number-input'
+import 'vue-phone-number-input/dist/vue-phone-number-input.css'
 
-import { ValidationProvider, ValidationObserver } from "vee-validate";
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
 
 export default {
   components: {
@@ -34,7 +34,7 @@ export default {
   props: {
     value: {
       type: String,
-      default: () => ""
+      default: () => ''
     },
     question: {
       type: Object,
@@ -43,21 +43,21 @@ export default {
   },
   data: () => ({
     translations: {
-        countrySelectorLabel: 'Код страны',
-        countrySelectorError: 'Выберите код страны',
-        phoneNumberLabel: 'Номер телефона',
-        example: 'Пример :'
+      countrySelectorLabel: 'Код страны',
+      countrySelectorError: 'Выберите код страны',
+      phoneNumberLabel: 'Номер телефона',
+      example: 'Пример :'
     }
   }),
   computed: {
     internalValue: {
-      get() {
-        return this.value;
+      get () {
+        return this.value
       },
-      set(value) {
-        this.$emit("input", value);
+      set (value) {
+        this.$emit('input', value)
       }
     }
   }
-};
+}
 </script>

@@ -8,7 +8,7 @@ import '@/plugins/axios'
 import '@/plugins/vee-validate'
 
 import VueToast from 'vue-toast-notification'
-import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toast-notification/dist/theme-default.css'
 
 import DateFilter from '@/filters/dateFormat.filter.js'
 

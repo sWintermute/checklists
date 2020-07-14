@@ -23,7 +23,8 @@ const router = new VueRouter({
     {
       path: '/',
       component: Checklists,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
+      props: (route) => ({ page: route.query.page })
     },
     {
       path: '/checklist/:id',
@@ -47,7 +48,8 @@ const router = new VueRouter({
     {
       path: '/responses',
       component: FilledChecklists,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
+      props: (route) => ({ page: route.query.page })
     },
     {
       path: '/response/:id',
@@ -63,22 +65,19 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/*', redirect: '/login',
-    },
+      path: '/*', redirect: '/login'
+    }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-
-  const isLoggedIn = store.getters["user/isLoggedIn"];
-
+  const isLoggedIn = store.getters['user/isLoggedIn']
   if (isLoggedIn) {
     if (to.path === '/login') {
-      next('/');
+      next('/')
     }
   }
-
-  next();
+  next()
 })
 
 export default router

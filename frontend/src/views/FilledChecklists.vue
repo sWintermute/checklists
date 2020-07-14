@@ -8,10 +8,18 @@
       )
         v-col
           v-data-table(
-              :headers="headers"
-              :items="filledLists"
-              item-key="id"
-              sort-by="id"
+            :headers="headers"
+            :items="filledLists"
+            :items-per-page="20"
+            disable-filtering
+            disable-sort
+            :footer-props="{ disableItemsPerPage : true }"
+            :page="parseInt($route.query.page) || 1"
+            :options.sync="options"
+            :server-items-length="pagination.paginationCount"
+            :loading="loading"
+            loading-text="Загрузка данных..."
+            no-data-text="Данных нет"
           )
             template(v-slot:top)
               v-toolbar(flat color="white")
@@ -78,7 +86,7 @@
                 tr(v-for="(item, i) in items" :key="i")
                   td {{ item.id }}
                   td(class="text-xs-right") {{ item.created | date }}
-                  td(v-text="test(item.survey)")
+                  td(v-text="checklistName(item.survey)")
                   td
                     v-btn(
                       :to="'response/' + item.id"
@@ -116,12 +124,11 @@ export default {
   data: () => ({
     mdiDelete,
     mdiPencil,
-
     headers: [
       { text: 'ID', align: 'left', value: 'id' },
       { text: 'Дата создания', value: 'created' },
       { text: 'Чеклист', value: 'survey' },
-      { text: 'Действия', value: 'actions', sortable: false },
+      { text: 'Действия', value: 'actions', sortable: false }
     ],
     date: new Date().toISOString().substr(0, 10),
     dates: [],
@@ -139,12 +146,25 @@ export default {
       dates: ['2019-09-10', '2019-09-20'],
       name: ''
     },
-    selectedChecklists: []
+    selectedChecklists: [],
+    options: {}
   }),
   computed: {
     ...mapState({
+      loading: state => state.loading,
       filledLists: state => state.filledChecklists.filledLists,
-      lists: state => state.checklists.lists
+      lists: state => state.checklists.lists,
+      pagination: state => {
+        return {
+          paginationPage: state.paginationPage,
+          paginationItemsPerPage: state.paginationItemsPerPage,
+          paginationCount: state.paginationCount,
+          paginationNext: state.paginationNext,
+          paginationPrev: state.paginationPrev,
+          paginationNextLink: state.paginationNextLink,
+          paginationPrevLink: state.paginationPrevLink
+        }
+      }
     }),
     selectedAllChecklists () {
       return this.editedItem.checklists.length === this.lists.length
@@ -162,10 +182,6 @@ export default {
       return this.formatDate(this.date)
     }
   },
-  async created () {
-    await this.FETCH_CHECKLISTS()
-    await this.FETCH_FILLED_CHECKLISTS()
-  },
   watch: {
     dialog (val) {
       val || this.close()
@@ -175,7 +191,21 @@ export default {
         this.editedItem.date_from = format(new Date(val[0] + ' 00:00:00'), "yyyy-MM-dd'T'hh:mm:ss")
         this.editedItem.date_to = format(new Date(val[1] + ' 00:00:00'), "yyyy-MM-dd'T'hh:mm:ss")
       }
+    },
+    options: {
+      async handler (pagination) {
+        await this.FETCH_FILLED_CHECKLISTS({
+          pagination,
+          currentUserPage: this.$route.query.page
+        })
+      },
+      deep: true
     }
+  },
+  async created () {
+    const currentUserPage = this.$route.query.page
+    if (!currentUserPage || isNaN(currentUserPage) || parseInt(currentUserPage) <= 0) this.$router.replace('/responses?page=1')
+    // await this.FETCH_FILLED_CHECKLISTS()
   },
   methods: {
     ...mapActions({
@@ -193,8 +223,9 @@ export default {
         }
       })
     },
-    test (survey) {
-      return this.lists.find(checklist => checklist.id === survey).name
+    checklistName (survey) {
+      const checklist = this.lists.find(checklist => checklist.id === survey)
+      return checklist.name
     },
     close () {
       this.dialog = false
@@ -202,7 +233,7 @@ export default {
     sendReport () {
       this.CREATE_EXCEL({ excelData: this.editedItem })
       this.close()
-    },
+    }
   }
 }
 </script>

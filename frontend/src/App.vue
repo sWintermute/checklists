@@ -61,7 +61,7 @@
           text
           @click="LOGOUT"
         ) Выйти
-    v-content
+    v-main
       router-view
       loading(
         :active.sync="loading"
@@ -112,7 +112,7 @@ export default {
   computed: {
     ...mapState(['loading']),
     ...mapGetters({
-      isLoggedIn: 'user/isLoggedIn',
+      isLoggedIn: 'user/isLoggedIn'
     })
   },
   methods: {
