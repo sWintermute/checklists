@@ -28,12 +28,15 @@ export default {
               body: answer.body,
               question
             }
+          } else {
+            answers[question.id] = {
+              body: '',
+              question
+            }
           }
         }
       }
-
       const response = Object.assign({}, data, { answers: Object.keys(answers).map(id => answers[id]) })
-
       commit('SET_FILLED_LIST', response)
     } catch (error) {
       console.log(error)
