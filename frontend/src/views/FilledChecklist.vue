@@ -30,20 +30,11 @@
                                 :key="i"
                               )
                                 template(v-if="answer.question.type === 'address-autocomplete'")
-                                  header {{ answer.question.text }}
-                                  ValidationProvider(:rules="answer.question.required ? 'required' : ''" v-slot="{ errors }")
-                                    v-autocomplete(
-                                      v-model="answer.body"
-                                      :label="answer.body || `Введите адрес...`"
-                                      :items="items"
-                                      :search-input.sync="search"
-                                      :error-messages="errors"
-                                      color="white"
-                                      item-text="value"
-                                      item-value="value"
-                                      dense
-                                      full-width
-                                    )
+                                  autocomplete(
+                                    :header="answer.question.text"
+                                    :rules="answer.question.required"
+                                    :body="answer.body"
+                                  )
                                 template(v-else-if="answer.question.type === 'integer'")
                                   v-text-field(
                                     v-model="answer.body"
@@ -55,7 +46,6 @@
                                     :label="answer.question.text"
                                   )
                                 template(v-else-if="answer.question.type === 'textarea'")
-                                  header {{ answer.question.text }}
                                   v-textarea(
                                     solo
                                     :label="answer.question.text"
@@ -74,7 +64,7 @@
                               v-col(
                                 cols="12"
                               )
-                                ValidationProvider(rules="required" v-slot="{ errors }")
+                                ValidationProvider(v-slot="{ errors }")
                                   uploader(
                                     v-model="fileList"
                                     title="Загрузите фото"
@@ -98,11 +88,13 @@ import { createHelpers, mapMultiRowFields, mapFields } from 'vuex-map-fields'
 import { mapState, mapActions } from 'vuex'
 
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 import Uploader from '@/components/checklist/Uploader.vue'
 
 export default {
   name: 'FilledChecklist',
   components: {
+    autocomplete,
     Uploader,
     ValidationObserver,
     ValidationProvider
@@ -114,23 +106,8 @@ export default {
   computed: {
     ...mapMultiRowFields('filledChecklists', { answers: 'filledList.answers' }),
     ...mapState({
-      entries: state => state.checklists.entries,
       filledList: state => state.filledChecklists.filledList
-    }),
-    items () {
-      if (!this.entries.length) return []
-      return this.entries.map((entry) => {
-        console.log(entry)
-        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
-
-        return Object.assign({}, entry, { value })
-      })
-    }
-  },
-  watch: {
-    search (value) {
-      this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
-    }
+    })
   },
   async created () {
     await this.FETCH_FILLED_CHECKLIST({
@@ -140,8 +117,7 @@ export default {
   methods: {
     ...mapActions({
       FETCH_FILLED_CHECKLIST: 'filledChecklists/FETCH_FILLED_CHECKLIST',
-      UPDATE_FILLED_CHECKLIST: 'filledChecklists/UPDATE_FILLED_CHECKLIST',
-      CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
+      UPDATE_FILLED_CHECKLIST: 'filledChecklists/UPDATE_FILLED_CHECKLIST'
     })
   }
 }
