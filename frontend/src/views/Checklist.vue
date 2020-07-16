@@ -27,24 +27,11 @@
                                 div(v-for="(field, i) in questions" :key="i")
                                   phone-number(v-if="field.question.type === 'phone-number'" v-model="field.body" :question="field.question")
                                   template(v-else-if="field.question.type === 'address-autocomplete'")
-                                    header {{ field.question.text }}
-                                    ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }")
-                                      v-autocomplete(
-                                        v-model="field.body"
-                                        :items="autocompleteItems"
-                                        :search-input.sync="search"
-                                        :error-messages="errors"
-                                        color="white"
-                                        item-text="value"
-                                        item-value="value"
-                                        dense
-                                        full-width
-                                        hide-no-data
-                                        hide-selected
-                                        ref="myComboBox"
-                                      )
-                                        template(v-slot="label")
-                                          | {{search}}
+                                    autocomplete(
+                                      :header="field.question.text"
+                                      :rules="field.question.required"
+                                      :body="field.body"
+                                    )
                                   template(v-else-if="field.question.type === 'textarea'")
                                     ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }")
                                       header {{ field.question.text }}
@@ -133,34 +120,17 @@ export default {
     phoneNumber
   },
   data: () => ({
-    autocomplete: null,
-    search: null,
     fileList: []
   }),
   computed: {
-    // ...mapFields(`user`, { userProfile: 'userProfile' }),
     ...mapFields('checklists', {
       photo: 'photo',
-      entries: 'entries',
       list: 'list'
     }),
     ...mapMultiRowFields('checklists', { questions: 'list.questions' }),
     ...mapState({
       userProfile: state => state.user.userProfile
-    }),
-    autocompleteItems () {
-      if (!this.entries.length) return []
-      return this.entries.map((entry) => {
-        const value = entry.data ? [entry.data.city, entry.data.street, entry.data.house].join(' ') : entry
-        return Object.assign({}, entry, { value })
-      })
-    }
-  },
-  watch: {
-    search (value, prevValue) {
-      if (!value) return
-      this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
-    }
+    })
   },
   created () {
     this.FETCH_CHECKLIST(this.$route.params.id)
@@ -168,8 +138,7 @@ export default {
   methods: {
     ...mapActions({
       FETCH_CHECKLIST: 'checklists/FETCH_CHECKLIST',
-      SEND_CHECKLIST: 'checklists/SEND_CHECKLIST',
-      CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
+      SEND_CHECKLIST: 'checklists/SEND_CHECKLIST'
     }),
     async sendChecklist () {
       // this.$store.commit('checklists/SET_field.bodyS', this.field.bodys)
