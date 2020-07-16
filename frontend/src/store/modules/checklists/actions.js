@@ -69,7 +69,7 @@ export default {
           { kladr_id: '4200001200000' }
         ]
       })
-      commit('SET_ENTRIES', [search, ...response.data.suggestions])
+      commit('SET_ENTRIES', [search, ...response.suggestions])
     } catch (error) {
       console.log(error)
     }

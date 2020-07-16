@@ -1,94 +1,74 @@
 <template lang="pug">
-    div
-      header {{ title }}
+  v-container(fluid pa-0 ma-0)
+    header {{ header }}
+    ValidationProvider(:rules="rules ? 'required' : ''" v-slot="{ errors }")
       v-autocomplete(
-        v-model="autocomplete"
+        v-model="body"
         :items="items"
-        :loading="isLoading"
         :search-input.sync="search"
+        :error-messages="errors"
         color="white"
         item-text="value"
         item-value="value"
-        placeholder="Введите адрес..."
-        return-object
-        cache-items
         dense
         full-width
-        @input="tesrt"
+        hide-no-data
+        hide-selected
       )
+        template(v-slot="label")
+          | {{search}}
 </template>
 
 <script>
-import ApiService from '@/services/api.js'
-import tokenService from '@/services/tokenService.js'
-import axios from 'axios'
-import { mapState, mapActions, commit } from 'vuex'
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { mapFields } from 'vuex-map-fields'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'AddressAutocomplete',
+  components: {
+    ValidationObserver,
+    ValidationProvider
+  },
   props: {
-    title: String,
-    id: Number
+    header: {
+      type: String,
+      default: ''
+    },
+    rules: {
+      type: Boolean,
+      default: false
+    },
+    body: {
+      type: String,
+      default: ''
+    }
   },
   data: () => ({
-    ...mapState(['autocomplete']),
-    count: 5,
-    value: '',
-    isLoading: false,
-    model: null,
-    search: null,
-    entries: []
+    search: null
   }),
   computed: {
-    fields () {
-      if (!this.model) return []
-
-      return Object.keys(this.model).map(key => {
-        return {
-          key,
-          value: this.model[key] || 'n/a'
-        }
-      })
-    },
+    ...mapFields('checklists', {
+      entries: 'entries'
+    }),
     items () {
       if (!this.entries.length) return []
       return this.entries.map((entry) => {
-        const value = [entry.data.city, entry.data.street, entry.data.house].join(' ')
+        const value = entry.data ? [entry.data.city, entry.data.street, entry.data.house].join(' ') : entry
         return Object.assign({}, entry, { value })
       })
     }
   },
   watch: {
-    search (val) {
-      if (this.isLoading) return
-      this.isLoading = true
-      ApiService.setHeader(process.env.VUE_APP_DADATA_KEY)
-      ApiService.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-        count: this.count,
-        query: 'Кемеровская область - Кузбасс,' + this.search,
-        locations_boost: [
-          { kladr_id: '4200001200000' }
-        ]
-      })
-        .then(res => {
-          this.entries = res.data.suggestions
-        })
-        .catch(err => {
-          console.log(err)
-        })
-        .finally(() => (this.isLoading = false))
+    search (value, prevValue) {
+      if (!value) return
+      this.CHECKLIST_AUTOCOMPLETE_FIELD({ search: value })
     }
-  },
-  mounted () {
-    this.$store.commit('SET_TEST', this.id)
   },
   methods: {
     ...mapActions({
       CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
-    }),
-    tesrt () {
-      this.$store.commit('SET_AUTOCOMPLETE', this.autocomplete)
-    }
+    })
   }
 }
 </script>
