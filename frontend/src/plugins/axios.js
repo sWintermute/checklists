@@ -35,8 +35,8 @@ Vue.axios.interceptors.response.use(function ({ data }) {
   return data
 }, function (error) {
   store.commit('SET_LOADING_STATUS', false)
+  if (error.response.status === 401) store.dispatch('user/LOGOUT')
   if (error || error.response.status === 400) ApiService.removeHeader()
-  else if (error.response.status === 401) store.dispatch('user/LOGOUT')
-  else router.push('/?page=1')
+  else router.replace('/?page=1')
   return Promise.reject(error)
 })
