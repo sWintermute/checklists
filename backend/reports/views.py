@@ -17,7 +17,7 @@ class ExcelView(APIView):
             .filter(created__date__gt=date_from, created__date__lt=date_to)
         data = create_file(responses)
         filename = 'report.xlsx'
-        response = HttpResponse(str(data),
+        response = HttpResponse(data,
                                 content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = f'attachment; filename={filename}'
         return response
