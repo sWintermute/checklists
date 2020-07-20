@@ -25,13 +25,18 @@
                         ValidationObserver(ref="observer" v-slot="{ handleSubmit }" tag="div")
                             v-form(@submit.prevent="handleSubmit(sendChecklist)" id="check-login-form")
                                 div(v-for="(field, i) in questions" :key="i")
-                                  phone-number(v-if="field.question.type === 'phone-number'" v-model="field.body" :question="field.question")
-                                  template(v-else-if="field.question.type === 'address-autocomplete'")
-                                    autocomplete(
-                                      :header="field.question.text"
-                                      :rules="field.question.required"
-                                      :body="field.body"
-                                    )
+                                  phone-number(
+                                    v-if="field.question.type === 'phone-number'"
+                                    v-model="field.body"
+                                    :question="field.question"
+                                  )
+                                  autocomplete(
+                                    v-else-if="field.question.type === 'address-autocomplete'"
+                                    :header="field.question.text"
+                                    :rules="field.question.required"
+                                    :address="field.body"
+                                    v-on:update:address="field.body = $event"
+                                  )
                                   template(v-else-if="field.question.type === 'textarea'")
                                     ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }")
                                       header {{ field.question.text }}
@@ -55,9 +60,8 @@
                                           :label="n"
                                           :value="n"
                                         )
-                                      span {{ field.body }}
                                   template(v-else-if="field.question.type === 'select-image'")
-                                    ValidationProvider(rules="required" v-slot="{ errors }")
+                                    ValidationProvider(v-slot="{ errors }")
                                       uploader(
                                         v-model="fileList"
                                         title="Загрузите фото"
@@ -89,7 +93,6 @@
                                         label="Введите текст..."
                                         :error-messages="errors"
                                       )
-                                      span {{ field.body }}
                     v-card-actions(class="justify-center pa-6")
                         v-spacer
                         v-btn(

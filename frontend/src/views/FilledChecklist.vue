@@ -29,12 +29,13 @@
                                 v-for="(answer, i) in answers"
                                 :key="i"
                               )
-                                template(v-if="answer.question.type === 'address-autocomplete'")
-                                  autocomplete(
-                                    :header="answer.question.text"
-                                    :rules="answer.question.required"
-                                    :body="answer.body"
-                                  )
+                                autocomplete(
+                                  v-if="answer.question.type === 'address-autocomplete'"
+                                  :header="answer.question.text"
+                                  :rules="answer.question.required"
+                                  :address="answer.body"
+                                  v-on:update:address="answer.body = $event"
+                                )
                                 template(v-else-if="answer.question.type === 'integer'")
                                   v-text-field(
                                     v-model="answer.body"
