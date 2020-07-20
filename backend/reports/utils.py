@@ -3,13 +3,12 @@ from openpyxl.styles import Protection, PatternFill
 from openpyxl.styles.colors import Color
 from tempfile import NamedTemporaryFile
 
-from datetime import datetime
-
 
 def create_file(query):
     wb = Workbook(write_only=True)
     stream = None
     ws = wb.create_sheet()
+
     # HEADER
     ws.append(create_header(query))
     row = ws.row_dimensions[1]
@@ -23,6 +22,7 @@ def create_file(query):
     body = get_data_from_query_as_lists(query)
     for data in body:
         ws.append(data)
+    
     with NamedTemporaryFile() as tmp:
         wb.save(tmp.name)
         tmp.seek(0)
