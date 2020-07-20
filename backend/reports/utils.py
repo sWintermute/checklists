@@ -22,7 +22,7 @@ def create_file(query):
     body = get_data_from_query_as_lists(query)
     for data in body:
         ws.append(data)
-    
+
     with NamedTemporaryFile() as tmp:
         wb.save(tmp.name)
         tmp.seek(0)
@@ -34,7 +34,6 @@ def create_header(query):
     result = ['Ссылка', 'Номер ответа', 'Дата создания', 'Почта']
     for answer in query.first().answers.all():
         result.append(answer.question.text)
-    print(result)
     return result
 
 
