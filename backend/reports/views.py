@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework.views import APIView
 
 from datetime import datetime
@@ -15,5 +16,7 @@ class ExcelView(APIView):
             .prefetch_related('answers', 'answers__question', 'user')\
             .filter(created__date__gt=date_from, created__date__lt=date_to)
         data = create_file(responses)
-
-        return Response({'response': str(data)})
+        filename = 'report.xlsx'
+        return HttpResponse(str(data),
+                        headers={'Content-Disposition': f'attachment; filename={filename}'},
+                        content_type='application/vnd.ms-excel')
