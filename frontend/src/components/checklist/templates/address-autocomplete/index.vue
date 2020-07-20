@@ -1,9 +1,10 @@
 <template lang="pug">
   v-container(fluid pa-0 ma-0)
     header {{ header }}
-    ValidationProvider(:rules="rules ? 'required' : ''" v-slot="{ errors }")
+    ValidationProvider(ref="validator" :rules="rules ? 'required' : ''" v-slot="{ errors }")
       v-autocomplete(
-        v-model="body"
+        :value="address"
+        :label="address"
         :items="items"
         :search-input.sync="search"
         :error-messages="errors"
@@ -14,9 +15,8 @@
         full-width
         hide-no-data
         hide-selected
+        @input="handleAutocompleteChange"
       )
-        template(v-slot="label")
-          | {{search}}
 </template>
 
 <script>
@@ -39,7 +39,7 @@ export default {
       type: Boolean,
       default: false
     },
-    body: {
+    address: {
       type: String,
       default: ''
     }
@@ -68,7 +68,16 @@ export default {
   methods: {
     ...mapActions({
       CHECKLIST_AUTOCOMPLETE_FIELD: 'checklists/CHECKLIST_AUTOCOMPLETE_FIELD'
-    })
+    }),
+    async handleAutocompleteChange (newAddress) {
+      this.$refs.validator.syncValue(newAddress)
+      await this.$refs.validator.validate()
+      this.$refs.validator.setFlags({
+        dirty: true,
+        pristine: false
+      })
+      this.$emit('update:address', newAddress)
+    }
   }
 }
 </script>
