@@ -62,7 +62,8 @@ export default {
       const data = await ApiService.get('api/v1/excel', '', {
         params: {
           from: excelData.date_from || '',
-          to: excelData.date_to || ''
+          to: excelData.date_to || '',
+          lists: excelData.checklists
         },
         responseType: 'blob'
       })
