@@ -1,5 +1,4 @@
 import ApiService from '@/services/api.js'
-import { format } from 'date-fns'
 import download from 'downloadjs'
 import router from '@/router'
 import Vue from 'vue'
@@ -53,7 +52,6 @@ export default {
       ]))[0]
       router.replace(`/responses?page=${pagination.page}`)
       commit('SET_FILLED_LISTS', data)
-      // await this.dispatch('getAllLists', { method: 'get' })
     } catch (error) {
       console.log(error)
     }
@@ -68,7 +66,7 @@ export default {
         },
         responseType: 'blob'
       })
-      download(data, `${format(excelData.date_from)}-${format(excelData.date_to)}.xlsx`)
+      download(data, `${excelData.date_from}-${excelData.date_to}.xlsx`)
     } catch (error) {
       console.log(error)
     }
