@@ -10,8 +10,10 @@ from .utils import create_file
 
 class ExcelView(APIView):
     def get(self, request):
-        date_from = request.GET.get('from', datetime.min)
-        date_to = request.GET.get('to', datetime.max)
+        date_from = request.GET.get('from', str(datetime.min))
+        date_to = request.GET.get('to', str(datetime.max))
+        date_from =datetime.strptime(date_from, '%Y-%m-%dT%H:%M:%S')
+        date_to = datetime.strptime(date_to, '%Y-%m-%dT%H:%M:%S')
         survey = request.GET.get('lists')
         questions = Question.objects.filter(survey=survey)
         responses = Response.objects\
