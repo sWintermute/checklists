@@ -2,7 +2,6 @@ import ApiService from '@/services/api.js'
 import { format } from 'date-fns'
 import download from 'downloadjs'
 import router from '@/router'
-import XLSX from 'xlsx'
 import Vue from 'vue'
 
 export default {
@@ -62,79 +61,14 @@ export default {
   async CREATE_EXCEL (context, { excelData }) {
     try {
       ApiService.setHeader()
-      // const { data: responses } = await ApiService.get('api/v1/responses', '', {
-      //   params: {
-      //     from: excelData.date_from || '',
-      //     to: excelData.date_to || '',
-      //     lists: excelData.checklists
-      //   }
-      // })
-
-      await this.dispatch('getAllLists', {
-        method: 'get',
-        // action,
-        // mutation,
-        path: '/api/v1/responses/',
+      const data = await ApiService.get('api/v1/excel', '', {
         params: {
-          page: 1,
           from: excelData.date_from || '',
-          to: excelData.date_to || '',
-          lists: excelData.checklists
-        }
+          to: excelData.date_to || ''
+        },
+        responseType: 'blob'
       })
-
-      const wb = XLSX.utils.book_new()
-      const currentChecklist = this.getters['checklists/nameOfList'](excelData.checklists)[0]
-      const responses = this.state.paginationList
-      const sortedResponses = {
-        Ссылка: [],
-        'Номер ответа': [],
-        'Дата создания': [],
-        Почта: []
-      }
-
-      for (const response of responses) {
-        const { id, created, answers, user_text: userText } = response
-        for (const { question } of answers) {
-          const key = `${question.text}`
-          sortedResponses[key] = []
-        }
-        sortedResponses['Ссылка'].push(`http://checklist.landfinance.ru/response/${id}`)
-        sortedResponses['Номер ответа'].push(XLSX.utils.format_cell(id))
-        sortedResponses['Дата создания'].push(format(new Date(created), "yyyy-MM-dd'T'hh:mm:ss"))
-        sortedResponses['Почта'].push(userText)
-      }
-
-      for (let index = 0; index < responses.length; index++) {
-        const { answers } = responses[index]
-        const answersHeadersList = ['Ссылка', 'Номер ответа', 'Дата создания', 'Почта']
-
-        for (const header of Object.keys(sortedResponses)) {
-          const reducedAnswers = answers.reduce(function (acc, answer) {
-            acc[answer.question.text] = Number(answer.body) || answer.body
-            return acc
-          }, {})
-          if (!(answersHeadersList.includes(header))) {
-            sortedResponses[header][index] = reducedAnswers[header]
-          }
-        }
-      }
-
-      const rows = []
-      const sortedResponsesValues = Object.values(sortedResponses)[0]
-
-      for (let i = 0; i < sortedResponsesValues.length; i++) {
-        const row = []
-        for (const header of Object.keys(sortedResponses)) {
-          row.push(sortedResponses[header][i])
-        }
-        rows.push(row)
-      }
-
-      const wsData = XLSX.utils.aoa_to_sheet([Object.keys(sortedResponses), ...rows], { skipHeader: true })
-      XLSX.utils.book_append_sheet(wb, wsData, `${currentChecklist.name}`)
-      const str = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
-      download(str, `${currentChecklist.name}.xlsx`, 'application/vnd.ms-excel')
+      download(data, `${format(excelData.date_from)}-${format(excelData.date_to)}.xlsx`)
     } catch (error) {
       console.log(error)
     }
