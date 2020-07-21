@@ -51,10 +51,6 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { format } from 'date-fns'
-
-import download from 'downloadjs'
-import XLSX from 'xlsx'
 
 export default {
   name: 'Report',
