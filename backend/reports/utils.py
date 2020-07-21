@@ -1,25 +1,37 @@
 from openpyxl import Workbook
-from openpyxl.styles import Protection, PatternFill
+from openpyxl.styles import PatternFill, Alignment
 from openpyxl.styles.colors import Color
 from tempfile import NamedTemporaryFile
 
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.cell import Cell
 
-def create_file(query):
-    wb = Workbook(write_only=True)
+
+def create_file(query, questions):
+    wb = Workbook()
     stream = None
-    ws = wb.create_sheet()
+    ws = wb.active
 
     # HEADER
-    ws.append(create_header(query))
+    header, questions_id = create_header(questions)
+    ws.append(header)
     row = ws.row_dimensions[1]
-    p = Protection(locked=True, hidden=False)
     c = Color(indexed=22)
-    f = PatternFill(fill_type='solid', start_color=c, end_color=c)
+    f = PatternFill(fill_type='darkGrid', start_color=c, end_color=c)
+    a = Alignment(horizontal='center', vertical='center', text_rotation=0,
+                  wrap_text=True, shrink_to_fit=False, indent=2)
     row.fill = f
-    row.protection = p
+    row.alignment = a
+    row.height = 50
+    end_cell = Cell(worksheet=ws, column=len(header), row=5)
+    tab = Table(displayName="Table1", ref="A1:" + end_cell.coordinate)
+    style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=True,
+                           showLastColumn=True)
+    tab.tableStyleInfo = style
+    ws.add_table(tab)
 
     # BODY
-    body = get_data_from_query_as_lists(query)
+    body = get_data_from_query_as_lists(query, questions_id)
     for data in body:
         ws.append(data)
 
@@ -30,14 +42,16 @@ def create_file(query):
         return stream
 
 
-def create_header(query):
+def create_header(questions):
     result = ['Ссылка', 'Номер ответа', 'Дата создания', 'Почта']
-    for answer in query.first().answers.all():
-        result.append(answer.question.text)
-    return result
+    questions_id_list = []
+    for question in questions:
+        result.append(question.text)
+        questions_id_list.append(question.id)
+    return result, questions_id_list
 
 
-def get_data_from_query_as_lists(query):
+def get_data_from_query_as_lists(query, questions_id):
     results = list()
     LINK = "http://checklist.landfinance.ru/response/"
     for q in query:
@@ -47,7 +61,13 @@ def get_data_from_query_as_lists(query):
             q.created,
             q.user.email
         ]
-        for answer in q.answers.all():
-            new_piece.append(answer.body)
+        answers = q.answers.all()
+        for q_id in questions_id:
+            item = '-'
+            for answer in answers:
+                if answer.question.id == q_id:
+                    item = answer.body
+                    break
+            new_piece.append(item)
         results.append(new_piece)
     return results
