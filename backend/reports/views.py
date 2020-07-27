@@ -21,7 +21,8 @@ class ExcelView(APIView):
                               'user', 'survey')\
             .filter(survey=survey, created__date__gt=date_from,
                     created__date__lt=date_to)
-        data = create_file(responses, questions)
+        data = create_file(responses, questions,
+                           request.build_absolute_uri('/response/'))
         filename = 'report.xlsx'
         response = HttpResponse(data,
                                 content_type='application/vnd.ms-excel')
