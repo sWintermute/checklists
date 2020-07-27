@@ -7,7 +7,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.cell import Cell
 
 
-def create_file(query, questions):
+def create_file(query, questions, host):
     wb = Workbook()
     stream = None
     ws = wb.active
@@ -31,7 +31,7 @@ def create_file(query, questions):
     ws.add_table(tab)
 
     # BODY
-    body = get_data_from_query_as_lists(query, questions_id)
+    body = get_data_from_query_as_lists(query, questions_id, host)
     for data in body:
         ws.append(data)
 
@@ -51,9 +51,9 @@ def create_header(questions):
     return result, questions_id_list
 
 
-def get_data_from_query_as_lists(query, questions_id):
+def get_data_from_query_as_lists(query, questions_id, host):
     results = list()
-    LINK = "http://checklist.landfinance.ru/response/"
+    LINK = f"{host}"
     for q in query:
         new_piece = [
             f'{LINK}{q.id}',
@@ -66,7 +66,8 @@ def get_data_from_query_as_lists(query, questions_id):
             item = '-'
             for answer in answers:
                 if answer.question.id == q_id:
-                    item = answer.body
+                    item = float(answer.body) if answer.body.isdigit() \
+                            else answer.body
                     break
             new_piece.append(item)
         results.append(new_piece)
