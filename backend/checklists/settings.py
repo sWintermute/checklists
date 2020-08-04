@@ -68,6 +68,7 @@ LOCAL_APPS = [
     'lists',
     'notifications',
     'reports',
+    'info',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
