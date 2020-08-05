@@ -4,5 +4,5 @@ from import_export.admin import ImportExportActionModelAdmin
 
 
 @admin.register(TokenizedAdress)
-class SurveyAdmin(ImportExportActionModelAdmin):
-    list_display = ("unrestricted_value", "answer")
+class TokenizedAdressAdmin(ImportExportActionModelAdmin):
+    list_display = ("unrestricted_value",)

@@ -2,6 +2,7 @@ from django.conf import settings
 import requests
 import json
 from . import models
+from info.models import TokenizedAdress
 
 
 def update_mapnode(answer):
@@ -22,6 +23,12 @@ def update_mapnode(answer):
         if suggestion["data"]["geo_lon"] in (None, ''):
             raise Exception
         geo_lon = suggestion["data"]["geo_lon"]
+
+        postal_code = suggestion["data"]["postal_code"],
+        region = suggestion["data"]["region"],
+        city = suggestion["data"]["city"],
+        street = suggestion["data"]["street"],
+        house = suggestion["data"]["house"]
     except Exception as e:
         raise Exception(
             f"\nRequest query:\n{answer.body}\n\n--- --- ---\n\nResponse:\n{response}").with_traceback(e.__traceback__)
@@ -41,6 +48,30 @@ def update_mapnode(answer):
                 response=answer.response,
                 answer=answer
             )
+
+        # nodes = [x for x in TokenizedAdress.objects.filter(answer=answer)]
+        # if nodes:
+        #     for node in nodes:
+        #         # node.answer = answer
+        #         # node.answer_body = answer.body
+        #         node.unrestricted_value = unvalue
+        #         node.postal_code = postal_code
+        #         node.region = region
+        #         node.city = city
+        #         node.street = street
+        #         node.house = house
+        #         node.save()
+        # else:
+        TokenizedAdress.objects.create(
+            # answer=answer,
+            # answer_body=answer.body,
+            unrestricted_value=unvalue,
+            postal_code=postal_code,
+            region=region,
+            city=city,
+            street=street,
+            house=house
+        )
 
 
 def get_dadata_suggestion(request_data):
