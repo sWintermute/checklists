@@ -37,10 +37,11 @@ THIRD_PARTY_APPS = [
     'import_export',
     'django_q',
     'post_office',
+    'drf_yasg',
 ]
 
 if DEBUG:
-    THIRD_PARTY_APPS = ['silk', 'drf_yasg', ] + THIRD_PARTY_APPS
+    THIRD_PARTY_APPS = ['silk', ] + THIRD_PARTY_APPS
 
     # Silk settings
     SILKY_PYTHON_PROFILER = True
@@ -50,18 +51,18 @@ if DEBUG:
     SILKY_MAX_RESPONSE_BODY_SIZE = -1
     SILKY_META = True
 
-    # Swagger settings
-    SWAGGER_SETTINGS = {
-        'USE_SESSION_AUTH': False,
-        'SECURITY_DEFINITIONS': {
-            'Token': {
-                'type': 'apiKey',
-                'name': 'Authorization',
-                'in': 'header'
-            }
-        },
-        'VALIDATOR_URL': None,
-    }
+# Swagger settings
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'VALIDATOR_URL': None,
+}
 
 LOCAL_APPS = [
     'user_profile.apps.UserProfileConfig',
