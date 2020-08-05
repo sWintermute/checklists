@@ -12,7 +12,7 @@ class ExcelView(APIView):
     def get(self, request):
         date_from = request.GET.get('from', '0001-01-01T00:00:00')
         date_to = request.GET.get('to', '9999-12-31T23:59:59')
-        date_from =datetime.strptime(date_from, '%Y-%m-%dT%H:%M:%S')
+        date_from = datetime.strptime(date_from, '%Y-%m-%dT%H:%M:%S')
         date_to = datetime.strptime(date_to, '%Y-%m-%dT%H:%M:%S')
         survey = request.GET.get('lists')
         questions = Question.objects.filter(survey=survey)
