@@ -37,37 +37,39 @@ THIRD_PARTY_APPS = [
     'import_export',
     'django_q',
     'post_office',
+    'drf_yasg',
 ]
 
 if DEBUG:
-    THIRD_PARTY_APPS = ['silk', 'drf_yasg', ] + THIRD_PARTY_APPS
+    THIRD_PARTY_APPS = ['silk', ] + THIRD_PARTY_APPS
 
     # Silk settings
     SILKY_PYTHON_PROFILER = True
-    SILKY_PYTHON_PROFILER_BINARY = True
-    SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'profiles')
+    # SILKY_PYTHON_PROFILER_BINARY = True
+    # SILKY_PYTHON_PROFILER_RESULT_PATH = os.path.join(BASE_DIR, 'profiles')
     SILKY_MAX_REQUEST_BODY_SIZE = -1  # Silk takes anything <0 as no limit
     SILKY_MAX_RESPONSE_BODY_SIZE = -1
     SILKY_META = True
 
-    # Swagger settings
-    SWAGGER_SETTINGS = {
-        'USE_SESSION_AUTH': False,
-        'SECURITY_DEFINITIONS': {
-            'Token': {
-                'type': 'apiKey',
-                'name': 'Authorization',
-                'in': 'header'
-            }
-        },
-        'VALIDATOR_URL': None,
-    }
+# Swagger settings
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'VALIDATOR_URL': None,
+}
 
 LOCAL_APPS = [
     'user_profile.apps.UserProfileConfig',
     'lists',
     'notifications',
     'reports',
+    'info',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -235,3 +237,38 @@ POST_OFFICE = {
 }
 
 DADATA_KEY = get_env('VUE_APP_DADATA_KEY')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
