@@ -49,29 +49,28 @@ def update_mapnode(answer):
                 answer=answer
             )
 
-        # nodes = [x for x in TokenizedAdress.objects.filter(answer=answer)]
-        # if nodes:
-        #     for node in nodes:
-        #         # node.answer = answer
-        #         # node.answer_body = answer.body
-        #         node.unrestricted_value = unvalue
-        #         node.postal_code = postal_code
-        #         node.region = region
-        #         node.city = city
-        #         node.street = street
-        #         node.house = house
-        #         node.save()
-        # else:
-        TokenizedAdress.objects.create(
-            # answer=answer,
-            # answer_body=answer.body,
-            unrestricted_value=unvalue,
-            postal_code=postal_code,
-            region=region,
-            city=city,
-            street=street,
-            house=house
-        )
+        nodes = [x for x in TokenizedAdress.objects.filter(
+            response=answer.response)]
+        if nodes:
+            for node in nodes:
+                node.response = answer.response
+                node.unrestricted_value = unvalue
+                node.postal_code = postal_code
+                node.region = region
+                node.city = city
+                node.street = street
+                node.house = house
+                node.save()
+        else:
+            TokenizedAdress.objects.create(
+                response=answer.response,
+                unrestricted_value=unvalue,
+                postal_code=postal_code,
+                region=region,
+                city=city,
+                street=street,
+                house=house
+            )
 
 
 def get_dadata_suggestion(request_data):

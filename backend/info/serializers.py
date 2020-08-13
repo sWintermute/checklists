@@ -2,11 +2,14 @@ from rest_framework import serializers
 
 
 class AddressResultSerializer(serializers.Serializer):
-    state = serializers.BooleanField(label="state")
+    states = serializers.ListField(label="states",
+                                   allow_empty=True,
+                                   child=serializers.CharField(max_length=400))
+    # state = serializers.BooleanField(label="state")
 
     class Meta:
         fields = (
-            'state',
+            'states',
         )
 
 
