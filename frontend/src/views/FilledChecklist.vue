@@ -48,7 +48,8 @@
                                   )
                                 template(v-else-if="answer.question.type === 'textarea'")
                                   v-textarea(
-                                    solo
+                                    rows="1"
+                                    auto-grow
                                     :label="answer.question.text"
                                     class="mt-3"
                                     v-model="answer.body"
@@ -114,6 +115,7 @@ export default {
     await this.FETCH_FILLED_CHECKLIST({
       id: this.$route.params.id
     })
+    this.fileList = [...this.filledList.photo]
   },
   methods: {
     ...mapActions({
