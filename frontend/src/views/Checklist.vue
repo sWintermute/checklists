@@ -41,7 +41,8 @@
                                     ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }")
                                       header {{ field.question.text }}
                                       v-textarea(
-                                        solo
+                                        rows="1"
+                                        auto-grow
                                         label="Оставьте замечания..."
                                         class="mt-3"
                                         v-model="field.body"
