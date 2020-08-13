@@ -21,7 +21,10 @@
                         v-toolbar-title Ответ {{ filledList.id }}
                     v-card-text(class="px-6 pt-6 pb-0")
                       ValidationObserver(ref="observer" v-slot="{ handleSubmit }" tag="div")
-                        v-form(@submit.prevent="handleSubmit(UPDATE_FILLED_CHECKLIST)" id="check-login-form")
+                        v-form(
+                          @submit.prevent="handleSubmit(UPDATE_FILLED_CHECKLIST({ fileList }))"
+                          id="check-login-form"
+                        )
                           v-container
                             v-row
                               v-col(

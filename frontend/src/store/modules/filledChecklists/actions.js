@@ -7,7 +7,7 @@ export default {
   resetFilledChecklistsState ({ commit }) {
     commit('resetState')
   },
-  async FETCH_FILLED_CHECKLIST ({ commit }, { id }) {
+  async FETCH_FILLED_CHECKLIST ({ commit }, { id, }) {
     try {
       ApiService.setHeader()
       const data = (await Promise.all([
@@ -34,7 +34,14 @@ export default {
           }
         }
       }
-      const response = Object.assign({}, data, { answers: Object.keys(answers).map(id => answers[id]) })
+      const response = Object.assign(
+        {},
+        data,
+        {
+          answers: Object.keys(answers)
+            .map(id => answers[id])
+        }
+      )
       commit('SET_FILLED_LIST', response)
     } catch (error) {
       console.log(error)
@@ -96,14 +103,14 @@ export default {
       console.log(error)
     }
   },
-  async UPDATE_FILLED_CHECKLIST ({ dispatch, state }) {
+  async UPDATE_FILLED_CHECKLIST ({ dispatch, state }, { fileList }) {
     ApiService.setHeader()
     try {
       const { id, survey, answers, photo } = state.filledList
       await ApiService.put('api/v1/response', id, {
         survey,
         answers,
-        photo
+        photo: fileList
       })
       dispatch('FETCH_FILLED_CHECKLIST', { id })
     } catch (error) {
