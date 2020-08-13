@@ -30,15 +30,16 @@ class AddressViewSet(viewsets.ViewSet):
             print(js_res)
             un_value = js_res["suggestions"][0]["unrestricted_value"]
 
-            vs = [x for x in TokenizedAdress.objects.all()
+            vs = [f"{request.build_absolute_uri('/response/')}{x.response.id}"
+                  for x in TokenizedAdress.objects.all()
                   .filter(unrestricted_value=un_value)]
         except:
             vs = []
         finally:
             res = {}
-            res["state"] = False
+            res["states"] = []
             if len(vs):
-                res["state"] = True
+                res["states"] = vs
 
         serializer = AddressResultSerializer(res, many=False)
         return Response(serializer.data)

@@ -38,8 +38,7 @@ class Command(BaseCommand):
 
                 try:
                     bulk_mgr.add(TokenizedAdress(
-                        answer=answer,
-                        answer_body=answer.body,
+                        response=answer.response,
                         unrestricted_value=sugg["suggestions"][0]["unrestricted_value"],
                         postal_code=sugg["suggestions"][0]["data"]["postal_code"],
                         region=sugg["suggestions"][0]["data"]["region"],

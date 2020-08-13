@@ -1,13 +1,13 @@
 from django.db import models
-# from django.apps import apps
+from lists.models.response import Response
 
 
 class TokenizedAdress(models.Model):
     """Model definition for TokenizedAdress."""
 
-    # answer = models.ForeignKey(apps.get_model('lists.models.Answer'),
-    #                            on_delete=models.CASCADE)
-    # answer_body = models.CharField("Текст из ответа", max_length=250)
+    response = models.ForeignKey(Response,
+                                 on_delete=models.CASCADE,
+                                 default=434)
     unrestricted_value = models.CharField(
         "Адрес одной строкой (полный, с индексом)", max_length=250)
     postal_code = models.CharField(
