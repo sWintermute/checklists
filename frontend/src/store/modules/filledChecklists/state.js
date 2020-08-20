@@ -1,6 +1,12 @@
 export const getDefaultState = () => {
   return {
-    filledLists: []
+    filledList: {
+      answers: [],
+      photo: []
+    },
+    filledLists: [],
+    address: [],
+    excel: []
   }
 }
 

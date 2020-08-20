@@ -11,7 +11,7 @@ export default {
     try {
       ApiService.setHeader()
       const data = (await Promise.all([
-        await ApiService.get('api/v1/response', id),
+        ApiService.get('api/v1/response', id),
         new Promise(resolve => setTimeout(() => resolve(), 500))
       ]))[0]
       await this.dispatch('checklists/FETCH_CHECKLIST', data.survey)

@@ -24,76 +24,54 @@
                     v-card-text(class="px-6 pt-6 pb-0")
                         ValidationObserver(ref="observer" v-slot="{ handleSubmit }" tag="div")
                             v-form(@submit.prevent="handleSubmit(sendChecklist)" id="check-login-form")
-                                div(v-for="(field, i) in questions" :key="i")
-                                  phone-number(
-                                    v-if="field.question.type === 'phone-number'"
-                                    v-model="field.body"
-                                    :question="field.question"
+                                v-row(v-for="({ question, body }, i) in questions" :key="i")
+                                  span {{question.type}} - {{body}}
+                                  checklist-address(
+                                    v-if="question.type === 'address-autocomplete'"
+                                    :question="question"
+                                    :address="body"
+                                    v-on:update:address="body = $event"
                                   )
-                                  autocomplete(
-                                    v-else-if="field.question.type === 'address-autocomplete'"
-                                    :header="field.question.text"
-                                    :rules="field.question.required"
-                                    :address="field.body"
-                                    v-on:update:address="field.body = $event"
+                                  checklist-integer(
+                                    v-else-if="question.type === 'integer'"
+                                    :question="question"
+                                    v-model="body"
                                   )
-                                  template(v-else-if="field.question.type === 'textarea'")
-                                    ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }")
-                                      header {{ field.question.text }}
-                                      v-textarea(
-                                        rows="1"
-                                        auto-grow
-                                        label="Оставьте замечания..."
-                                        class="mt-3"
-                                        v-model="field.body"
-                                        :error-messages="errors"
-                                      )
-                                  template(v-else-if="field.question.type === 'radio'")
-                                    header {{ field.question.text }}
-                                    ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }" name="")
-                                      v-radio-group(
-                                        v-model="field.body"
-                                        :error-messages="errors"
-                                      )
-                                        v-radio(
-                                          v-for="n in field.question.choices.split(';')"
-                                          :key="n"
-                                          :label="n"
-                                          :value="n"
-                                        )
-                                  template(v-else-if="field.question.type === 'select-image'")
-                                    ValidationProvider(v-slot="{ errors }")
-                                      uploader(
-                                        v-model="fileList"
-                                        title="Загрузите фото"
-                                        :autoUpload="false"
-                                      )
-                                      div.v-messages.theme--light.error--text(v-if="errors[0]" role="alert")
-                                        div.v-messages__wrapper
-                                          div.v-messages__message.message-transition-enter-to {{ errors[0] }}
-                                  template(v-else-if="field.question.type === 'select'")
-                                    ValidationProvider(rules="required" v-slot="{ errors }")
-                                      header {{ field.question.text }}
-                                      v-select(
-                                        v-model="field.body"
-                                        :items="field.question.choices.split(';')",
-                                        label="Выберите вариант ответа"
-                                        :error-messages="errors"
-                                      )
-                                  template(v-else-if="field.question.type === 'select-multiple'")
-                                    header {{ field.question.text }}
-                                    select-multiple(
-                                      v-model="field.body"
-                                      :headers="field.question.choices.split(';')"
-                                    )
-                                  template(v-else)
-                                    ValidationProvider(:rules="field.question.required ? 'required' : ''" v-slot="{ errors }" name="")
-                                      header {{ field.question.text }}
-                                      v-text-field(
-                                        v-model="field.body"
-                                        label="Введите текст..."
-                                        :error-messages="errors"
-                                      )
+                                  checklist-phone(
+                                    v-else-if="question.type === 'phone-number'"
+                                    :question="question"
+                                    v-model="question.body"
+                                  )
+                                  checklist-radio(
+                                    v-else-if="question.type === 'radio'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
+                                  checklist-select(
+                                    v-else-if="question.type === 'select'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
+                                  checklist-image(
+                                    v-else-if="question.type === 'select-image'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
+                                  checklist-multiple(
+                                    v-else-if="question.type === 'select-multiple'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
+                                  checklist-text(
+                                    v-else-if="question.type === 'text'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
+                                  checklist-textarea(
+                                    v-else-if="question.type === 'textarea'"
+                                    :question="question"
+                                    v-model="body"
+                                  )
                     v-card-actions(class="justify-center pa-6")
                         v-spacer
                         v-btn(
@@ -108,20 +86,32 @@
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import { mapState, mapActions } from 'vuex'
 import { mapMultiRowFields, mapFields } from 'vuex-map-fields'
-import Uploader from '@/components/checklist/Uploader.vue'
-import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
-import phoneNumber from '@/components/checklist/templates/phone-number'
-import selectMultiple from '@/components/checklist/templates/select-multiple'
+
+const ChecklistAddress = () => import('@/components/checklist/templates/address-autocomplete')
+const ChecklistInteger = () => import('@/components/checklist/templates/integer')
+const ChecklistPhone = () => import('@/components/checklist/templates/phone-number')
+const ChecklistRadio = () => import('@/components/checklist/templates/radio')
+const ChecklistSelect = () => import('@/components/checklist/templates/select')
+const ChecklistImage = () => import('@/components/checklist/templates/select-image')
+const ChecklistMultiple = () => import('@/components/checklist/templates/select-multiple')
+const ChecklistText = () => import('@/components/checklist/templates/text')
+const ChecklistTextarea = () => import('@/components/checklist/templates/textarea')
 
 export default {
   name: 'Checklist',
   components: {
-    Uploader,
     ValidationObserver,
     ValidationProvider,
-    autocomplete,
-    selectMultiple,
-    phoneNumber
+
+    ChecklistAddress,
+    ChecklistInteger,
+    ChecklistPhone,
+    ChecklistRadio,
+    ChecklistSelect,
+    ChecklistImage,
+    ChecklistMultiple,
+    ChecklistText,
+    ChecklistTextarea
   },
   data: () => ({
     fileList: []

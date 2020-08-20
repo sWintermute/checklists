@@ -20,5 +20,9 @@ export default {
   },
   SET_MAP (state, payload) {
     state.address = payload
+  },
+  SET_PHOTO (state, payload) {
+    state.filledList.photo = [...payload]
+    console.log(state.filledList.photo)
   }
 }

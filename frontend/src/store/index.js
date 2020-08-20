@@ -4,11 +4,14 @@ import user from './modules/user'
 import checklists from './modules/checklists'
 import filledChecklists from './modules/filledChecklists'
 import reports from './modules/reports'
+import createLogger from 'vuex/dist/logger'
 
 Vue.use(Vuex)
 
+const debug = process.env.NODE_ENV !== 'production'
+
 const store = new Vuex.Store({
-  strict: process.env.NODE_ENV !== 'production',
+  strict: debug,
   state: {
     status: '',
     loading: false,
@@ -72,7 +75,8 @@ const store = new Vuex.Store({
     reports,
     checklists,
     filledChecklists
-  }
+  },
+  plugins: debug ? [createLogger()] : []
 })
 
 export default store

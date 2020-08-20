@@ -125,10 +125,6 @@ export default {
       type: String,
       default: 'file'
     },
-    autoUpload: {
-      type: Boolean,
-      default: true
-    },
     multiple: {
       type: String || Boolean,
       default: ''
@@ -166,9 +162,7 @@ export default {
         maxWidth,
         quality,
         limit,
-        fileList,
-        autoUpload,
-        uploadFile
+        fileList
       } = this
       const target = e.target || e.srcElement
       const inputChangeFiles = target.files
@@ -200,17 +194,8 @@ export default {
                   fileItem[key] = file[key]
                 }
               }
-              if (autoUpload) {
-                uploadFile(blob, fileItem).then((result) => {
-                  fileList.push(fileItem)
-                  this.$emit('on-change', fileItem, fileList)
-                }).catch(e => {
-                  fileList.push(fileItem)
-                })
-              } else {
-                fileList.push(fileItem)
-                this.$emit('on-change', fileItem, fileList)
-              }
+              fileList.push(fileItem)
+              this.$emit('on-change', fileItem, fileList)
             })
           })
         ).then(() => {
@@ -246,52 +231,11 @@ export default {
       } else {
         delFn()
       }
-    },
-    uploadFile (blob, fileItem) {
-      return new Promise((resolve, reject) => {
-        const me = this
-        const { url, params, name } = me
-        me.$set(fileItem, 'fetchStatus', 'progress')
-        me.$set(fileItem, 'progress', 0)
-        const formData = new FormData()
-        const xhr = new XMLHttpRequest()
-        formData.append(name, blob)
-        if (params) {
-          for (const key in params) {
-            formData.append(key, params[key])
-          }
-        }
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              const result = JSON.parse(xhr.responseText)
-              me.$emit('on-success', result, fileItem)
-              me.$set(fileItem, 'fetchStatus', 'success')
-              resolve(result)
-            } else {
-              me.$emit('on-error', xhr)
-              me.$set(fileItem, 'fetchStatus', 'fail')
-              reject(xhr)
-            }
-          }
-        }
-        xhr.upload.addEventListener(
-          'progress',
-          function (evt) {
-            if (evt.lengthComputable) {
-              const precent = Math.ceil((evt.loaded / evt.total) * 100)
-              me.$set(fileItem, 'progress', precent)
-            }
-          },
-          false
-        )
-        xhr.open('POST', url, true)
-        xhr.send(formData)
-      })
     }
   }
 }
 </script>
+
 <style lang="scss">
     @font-face {
         font-weight: normal;

@@ -40,7 +40,10 @@ export default {
         .sort((question, prevQuestion) => {
           if (question.order < prevQuestion.order) return -1
         })
-        .map(question => ({ question, body: '' }))
+        .map(question => {
+          if (question.type === 'select-image') return { question, body: [] }
+          return { question, body: '' }
+        })
       commit('SET_LIST', list)
     } catch (error) {
       console.log(error.response)

@@ -21,8 +21,13 @@
             loading-text="Загрузка данных..."
             no-data-text="Данных нет"
           )
-            template(v-slot:top)
-              v-toolbar(flat color="white")
+            template(
+              v-slot:top
+            )
+              v-toolbar(
+                flat
+                color="white"
+              )
                   v-toolbar-title Ответы
                   v-divider(
                       class="mx-4"
@@ -30,8 +35,13 @@
                       vertical
                   )
                   v-spacer
-                  v-dialog(v-model="dialog" max-width="700px")
-                      template(v-slot:activator="{ on }")
+                  v-dialog(
+                    v-model="dialog"
+                    max-width="700px"
+                  )
+                      template(
+                        v-slot:activator="{ on }"
+                      )
                           v-btn(
                             color="primary"
                             tile
@@ -41,10 +51,14 @@
                           ) Создать excel
                       v-card
                           v-card-text
-                            ValidationObserver(v-slot="{ passes }")
+                            ValidationObserver(
+                              v-slot="{ passes }"
+                            )
                               form
                                 v-row
-                                  v-col(cols="12")
+                                  v-col(
+                                    cols="12"
+                                  )
                                     ValidationProvider(
                                       name="чеклисты"
                                       rules="required"

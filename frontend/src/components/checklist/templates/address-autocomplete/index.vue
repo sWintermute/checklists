@@ -1,7 +1,7 @@
 <template lang="pug">
-  v-container(fluid pa-0 ma-0)
-    header {{ header }}
-    ValidationProvider(ref="validator" :rules="rules ? 'required' : ''" v-slot="{ errors }")
+  v-col(cols="12")
+    header {{ question.text }}
+    ValidationProvider(ref="validator" :rules="question.rules ? 'required' : ''" v-slot="{ errors }")
       v-autocomplete(
         :value="address"
         :label="address"
@@ -20,24 +20,19 @@
 </template>
 
 <script>
-import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import { ValidationProvider } from 'vee-validate'
 import { mapFields } from 'vuex-map-fields'
 import { mapActions } from 'vuex'
 
 export default {
   name: 'AddressAutocomplete',
   components: {
-    ValidationObserver,
     ValidationProvider
   },
   props: {
-    header: {
-      type: String,
-      default: ''
-    },
-    rules: {
-      type: Boolean,
-      default: false
+    question: {
+      type: Object,
+      default: () => {}
     },
     address: {
       type: String,

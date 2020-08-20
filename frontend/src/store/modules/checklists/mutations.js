@@ -15,6 +15,11 @@ export default {
   SET_LIST_QUESTIONS (state, payload) {
     state.list.questions = payload
   },
+  SET_LIST_QUESTION (state, { newQuestion, body }) {
+    state.list.questions = state.list.questions.map(({ question }) => {
+      if (question.id === newQuestion.id) return { question, body }
+    })
+  },
   SET_LISTS (state, payload) {
     state.lists = payload
   },
