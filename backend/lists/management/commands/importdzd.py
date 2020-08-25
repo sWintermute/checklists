@@ -27,19 +27,22 @@ class Command(BaseCommand):
             tmp = Response(created=date,
                            updated=date,
                            survey=Survey.objects.get(pk=6),
-                           user=UserProfile.objects.get(id=4))
+                           user=UserProfile.objects.get(email=row[0].value))
             tmp.save()
-            self.add_answer(tmp, Question.objects.get(pk=66), -1, date)
+            self.add_answer(tmp, Question.objects.get(
+                pk=66), int(row[2].value), date)
             self.add_answer(tmp, Question.objects.get(
                 pk=69), "Договор заключен", date)
             self.add_answer(tmp, Question.objects.get(
-                pk=67), row[5].value, date)
+                pk=67), row[3].value, date)
             self.add_answer(tmp, Question.objects.get(
-                pk=68), row[6].value, date)
+                pk=68), row[4].value, date)
             self.add_answer(tmp, Question.objects.get(
-                pk=65), row[8].value, date)
-            # print(
-            #     f'{row[1].value};{row[2].value};{row[5].value};{row[6].value};{row[8].value};Басина;01-01-2020')
+                pk=65), row[1].value, date)
+            self.add_answer(tmp, Question.objects.get(
+                pk=74), row[6].value, date)
+            print(
+                f'{row[0].value};{row[1].value};{row[2].value};{row[3].value};{row[4].value};{row[5].value};{row[6].value};')
 
     def add_answer(self, response, question, value, datetime):
         res = Answer(question=question,
