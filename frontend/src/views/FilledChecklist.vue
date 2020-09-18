@@ -32,6 +32,11 @@
                                 v-for="(answer, i) in answers"
                                 :key="i"
                               )
+                                phone-number(
+                                  v-if="answer.question.type === 'phone-number'"
+                                  v-model="answer.body"
+                                  :question="answer.question"
+                                )
                                 autocomplete(
                                   v-if="answer.question.type === 'address-autocomplete'"
                                   :header="answer.question.text"
@@ -66,6 +71,13 @@
                                       :label="n"
                                       :value="n"
                                     )
+                                template(v-else-if="answer.question.type === 'select'")
+                                  header {{ answer.question.text }}
+                                  v-autocomplete(
+                                    v-model="answer.body"
+                                    :items="answer.question.choices.split(';')",
+                                    label="Выберите вариант ответа"
+                                  )
                               v-col(
                                 cols="12"
                               )
@@ -95,12 +107,14 @@ import { mapState, mapActions } from 'vuex'
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import autocomplete from '@/components/checklist/templates/address-autocomplete/index.vue'
 import Uploader from '@/components/checklist/Uploader.vue'
+import phoneNumber from '@/components/checklist/templates/phone-number'
 
 export default {
   name: 'FilledChecklist',
   components: {
     autocomplete,
     Uploader,
+    phoneNumber,
     ValidationObserver,
     ValidationProvider
   },
