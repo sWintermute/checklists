@@ -74,7 +74,7 @@
                                   template(v-else-if="field.question.type === 'select'")
                                     ValidationProvider(rules="required" v-slot="{ errors }")
                                       header {{ field.question.text }}
-                                      v-select(
+                                      v-autocomplete(
                                         v-model="field.body"
                                         :items="field.question.choices.split(';')",
                                         label="Выберите вариант ответа"
