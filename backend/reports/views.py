@@ -19,8 +19,8 @@ class ExcelView(APIView):
         responses = Response.objects\
             .prefetch_related('answers', 'answers__question',
                               'user', 'survey')\
-            .filter(survey=survey, created__date__gt=date_from,
-                    created__date__lt=date_to)
+            .filter(survey=survey, created__date__gte=date_from,
+                    created__date__lte=date_to)
         data = create_file(responses, questions,
                            request.build_absolute_uri('/response/'))
         filename = 'report.xlsx'
