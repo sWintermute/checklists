@@ -26,7 +26,7 @@ def create_file(query, questions, host):
     # end_cell = Cell(worksheet=ws, column=len(header), row=5)
     # tab = Table(displayName="Table1", ref="A1:" + end_cell.coordinate)
     # style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=True,
-                           showLastColumn=True)
+    #                       showLastColumn=True)
     # tab.tableStyleInfo = style
     # ws.add_table(tab)
 
