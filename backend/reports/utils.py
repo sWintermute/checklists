@@ -66,8 +66,11 @@ def get_data_from_query_as_lists(query, questions_id, host):
             item = '-'
             for answer in answers:
                 if answer.question.id == q_id:
-                    item = float(answer.body) if (answer.body
-                            and answer.body.isdigit()) else answer.body
+                    # Not save, not secure, not smart
+                    item = answer.body
+                    # But work :(
+                    #Better but 
+                    #float(answer.body) if (answer.body and answer.body.isdigit()) else answer.body
                     break
             new_piece.append(item)
         results.append(new_piece)
