@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 Django = "==2.2.16"
-djangorestframework = "==3.11.1"
+djangorestframework = "==3.11.2"
 djoser = "==2.0.5"
 psycopg2-binary = "==2.8.5"
 Pillow = "==7.2.0"
