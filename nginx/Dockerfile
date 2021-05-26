@@ -11,7 +11,7 @@ COPY .env /app/.env
 RUN npm run build
 
 # Stage 2 - nginx & frontend dist
-FROM nginx:1.17-alpine
+FROM nginx:1.21.0-alpine
 
 COPY nginx/prod.conf /etc/nginx/nginx.conf
 COPY --from=build-deps /app/dist/ /app/
