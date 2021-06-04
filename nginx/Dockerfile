@@ -1,5 +1,5 @@
 # Stage 1 - build frontend app
-FROM node:14.2.0-alpine3.11 as build-deps
+FROM node:16.3.0-alpine3.11 as build-deps
 
 WORKDIR /app/
 
